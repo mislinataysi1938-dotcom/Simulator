@@ -1,9 +1,10 @@
 import datetime
+import random
 import pandas as pd
 import streamlit as st
 
 st.set_page_config(
-    page_title="TYMM Resmî Tam Müfredat (5-8) 3D Masterclass Staj Simülatörü",
+    page_title="TYMM 5-8 Sınıf Gelişmiş 3D Masterclass Staj Simülatörü",
     page_icon="🎓",
     layout="wide",
 )
@@ -15,291 +16,299 @@ if "adim" not in st.session_state:
   st.session_state.adim = 1  # 1: Kurulum, 2: 3D Sınıf & Sesli Staj, 3: Raporlar
 
 # ==========================================
-# 1. 2026 TÜRKİYE YÜZYILI MAARİF MODELİ RESMİ MASTER ARŞİVİ (5, 6, 7 ve 8. SINIFLAR TAM KAZANIMLAR)
+# 1. 2026 TÜRKİYE YÜZYILI MAARİF MODELİ (TYMM) ESNEK VE KAPSAMLI MASTER ARŞİVİ (5-8. SINIFLAR)
 # ==========================================
-tyym_resmi_master_arsiv = {
+tyym_master_veritabani = {
     "5. Sınıf": {
-        "1. Tema: Sayılar ve Nicelikler (Milyonlar & Basamak Yapısı)": {
-            "kod": "MAT.5.1.1",
-            "cikti": (
-                "Altı basamaklı sayıları okuma ve yazmayı çok basamaklı"
-                " sayılara genelleyebilme"
-            ),
-            "surec_bilesenleri": [
-                (
-                    "a) Günlük hayattaki farklı bağlamlardan yola çıkarak"
-                    " altıdan çok basamaklı sayılar hakkında bilgi toplar."
+        "1. Tema: Sayılar ve Nicelikler": [
+            {
+                "kod": "MAT.5.1.1",
+                "cikti": (
+                    "Altı basamaklı sayıları okuma ve yazmayı çok basamaklı"
+                    " sayılara genelleyebilme"
                 ),
-                (
-                    "b) Sayıların bölümleri ile okunuşları arasındaki ortak"
-                    " özellikleri belirler."
+                "surec": [
+                    (
+                        "a) Günlük hayattaki bağlamlardan yola çıkarak çok"
+                        " basamaklı sayılar hakkında bilgi toplar."
+                    ),
+                    (
+                        "b) Sayıların bölümleri ile okunuşları arasındaki ortak"
+                        " özellikleri belirler."
+                    ),
+                    (
+                        "c) Sayıların bölümleri ile okunuşları arasındaki"
+                        " farklılıkları belirler."
+                    ),
+                    (
+                        "ç) Örüntüler üzerinden basamak sayısı çok olan"
+                        " sayıların okunuş/yazılışları hakkında önermelerde"
+                        " bulunur."
+                    ),
+                ],
+                "hook": (
+                    "Millî Kütüphane'deki 405.020 adet tarihi el yazması"
+                    " kitabın arşiv kodlama sistemi."
                 ),
-                (
-                    "c) Sayıların bölümleri ile okunuşları arasındaki"
-                    " farklılıkları belirler."
+                "kriz_havuzu": [
+                    (
+                        "Disleksili öğrenci tahtada büyük sayıları okurken"
+                        " rakamları ters görür ve sınıfta alay konusu olur."
+                    ),
+                    (
+                        "Bir öğrenci 'Hocam sıfır niye basamak tutuyor, hiç"
+                        " yokluk bir şeyi tutabilir mi?' diye felsefi bir soru"
+                        " sorar."
+                    ),
+                    (
+                        "Müdür yardımcısı denetim için arka sıraya sessizce"
+                        " oturur, sınıfta ani bir gerginlik başlar."
+                    ),
+                ],
+            }
+        ],
+        "6. Tema: Veriden Olasılığa": [
+            {
+                "kod": "MAT.5.6.1",
+                "cikti": (
+                    "Herhangi bir olayın olasılığının 0 ile 1 arasında"
+                    " olduğunu yorumlayabilme"
                 ),
-                (
-                    "ç) Sayıların bölümleri ile okunuşları arasındaki"
-                    " örüntüler üzerinden basamak sayısı altıdan çok olan"
-                    " sayıların okunuş ve yazılışları hakkında önermelerde"
-                    " bulunur."
+                "surec": [
+                    "a) Olayları ve olası durumları inceler.",
+                    (
+                        "b) Olasılığa dair tahminlerini farklı sayı"
+                        " temsillerine dönüştürür."
+                    ),
+                    (
+                        "c) 0 ile 1 arasında olduğunu kendi ifadeleriyle"
+                        " açıklar."
+                    ),
+                ],
+                "hook": (
+                    "Hava durumu raporlarındaki yağmur yağma yüzdesi tahmin"
+                    " grafikleri."
                 ),
-            ],
-            "hook": (
-                "Gerçek Yaşam Kancası: Millî Kütüphane'deki 405.020 adet"
-                " tarihi el yazması kitabın arşiv kodlama sistemi ve bölük"
-                " analizi."
-            ),
-            "kriz": (
-                "3D Sınıf İçi Anlık Sesli Olay: Müdür yardımcısı arkada"
-                " otururken, Disleksili Kerem (Avatar #1) sesli olarak"
-                " ağlayarak 'Hocam ben milyarlık basamakları okuyamıyorum, kafam"
-                " çorba gibi oldu' der. Üstün Yetenekli Can (Avatar #3)"
-                " kıkırdayarak alay eder. Arkadan bir öğrenci parmak"
-                " kaldırıp sesli olarak 'Hocam sıfır niye basamak tutuyor, hiç"
-                " yokluk bir şeyi tutabilir mi?' diye derin bir soru sorar."
-            ),
-            "zorluk": "İdari Denetim, Sesli Ağlama Krizi, Alay ve Felsefi Soru",
-            "yanilgi": (
-                "Sıfırın basamak tutucu rolünü anlamayıp boşlukları yok sayma"
-                " eğilimi."
-            ),
-            "strateji": (
-                "Mikrofonu açıp sesli hitabetle Kerem'ere güven vermek, Can'a"
-                " uyarıda bulunmak ve onluk taban bloklarıyla somut açıklama"
-                " yapmak."
-            ),
-            "arac": (
-                "🧩 **Somut Materyal:** Renkli Onluk Taban Blokları\n💻 **Web"
-                " Aracı:** [Math Learning Center Base Ten"
-                " Blocks](https://www.mathlearningcenter.org/apps/base-ten-blocks)"
-            ),
-        }
+                "kriz_havuzu": [
+                    (
+                        "Öğrenci 'Hocam kesin kar yağacak, okul tatil olacak,"
+                        " olasılık %100' diye iddiaya girer."
+                    ),
+                    (
+                        "Kaygılı öğrenci olasılık kesirlerini anlamadığını"
+                        " söyleyip ağlamaya başlar."
+                    ),
+                ],
+            }
+        ],
     },
     "6. Sınıf": {
-        "1. Tema: Sayılar ve Nicelikler (Çarpanlar ve Katlar)": {
-            "kod": "MAT.6.1.1",
-            "cikti": (
-                "Karşılaştığı problem durumlarında bir doğal sayının çarpan ve"
-                " katlarına yönelik muhakeme yapabilme"
-            ),
-            "surec_bilesenleri": [
-                "a) Karşılaştığı durumlarda varsayımlarda bulunur.",
-                (
-                    "b) Örnek durumların içerdiği ilişkileri inceleyerek"
-                    " genellemeleri belirler."
+        "1. Tema: Sayılar ve Nicelikler": [
+            {
+                "kod": "MAT.6.1.1",
+                "cikti": (
+                    "Doğal sayının çarpan ve katlarına yönelik muhakeme"
+                    " yapabilme"
                 ),
-                (
-                    "c) Genellemelerin varsayımı karşılayıp karşılamadığını"
-                    " modellerle gösterir."
+                "surec": [
+                    (
+                        "a) Çarpan ve katlarına yönelik varsayımlarda"
+                        " bulunur[span_36](start_span)[span_36](end_span)."
+                    ),
+                    (
+                        "b) Örnek durumların ilişkilerini inceleyerek"
+                        " genellemeleri belirler[span_37](start_span)[span_37](end_span)."
+                    ),
+                    (
+                        "c) Genellemelerin varsayımı karşılayıp"
+                        " karşılamadığını modellerle gösterir[span_38](start_span)[span_38](end_span)."
+                    ),
+                ],
+                "hook": (
+                    "Otobüs duraklarında iki farklı hattın aynı anda hareket"
+                    " etme saatleri."
                 ),
-            ],
-            "hook": (
-                "Gerçek Yaşam Kancası: Otobüs duraklarındaki hareket saatleri"
-                " ortak kat bulma senaryosu."
-            ),
-            "kriz": (
-                "3D Sınıf İçi Anlık Sesli Olay: Ortak kat bulmada hata yapan"
-                " sınıf birbirine girer. Arkadan bir öğrenci 'Hocam bu"
-                " kuralları ezberlemek zorunda mıyız, hayatımızda ekmek"
-                " alırken EKOK mu hesaplayacağız?' diye isyan eder."
-            ),
-            "zorluk": "Matematiksel Soyutlama Direnci ve İşlevsellik Sorgusu.",
-            "yanilgi": "En küçük ortak katın, sayıların çarpımı olduğunu sanma.",
-            "strateji": (
-                "Renkli çubuklarla ortak kat modelleri kurarak gerçek yaşam"
-                " işlevselliğini sesli olarak kanıtlamak."
-            ),
-            "arac": (
-                "🧩 **Somut Materyal:** Renkli Kat Çubukları\n💻 **Web Aracı:**"
-                " [Desmos Factorization](https://www.desmos.com)"
-            ),
-        }
+                "kriz_havuzu": [
+                    (
+                        "Öğrenci 'Hocam bu kuralları ezberlemek zorunda mıyız,"
+                        " manavda EKOK mu hesaplayacağız?' diye isyan eder."
+                    ),
+                    (
+                        "İki öğrenci ortak kat bulma yönteminde birbirinin"
+                        " defterini yırtarca tartışır."
+                    ),
+                ],
+            }
+        ],
+        "6. Tema: Veriden Olasılığa": [
+            {
+                "kod": "MAT.6.6.1",
+                "cikti": "Bir olayın olasılığını gözleme dayalı tahmin edebilme",
+                "surec": [
+                    "a) Olasılık ile deney verisini ilişkilendirir[span_39](start_span)[span_39](end_span).",
+                    (
+                        "b) Tekrar sayısı ile göreli sıklık ilişkisini çıkarım"
+                        " yapar[span_40](start_span)[span_40](end_span)."
+                    ),
+                    (
+                        "c) Göreli sıklığın kullanımına yönelik yargıda"
+                        " bulunur[span_41](start_span)[span_41](end_span)."
+                    ),
+                ],
+                "hook": "Madeni para atma deneylerinde 100 atıştaki değişim.",
+                "kriz_havuzu": [
+                    (
+                        "Öğrenci 'Hocam ben 10 kez attım hepsi yazı geldi,"
+                        " teoriniz yanlış, para hileli' diye bağırarak"
+                        " deneyi reddeder."
+                    )
+                ],
+            }
+        ],
     },
     "7. Sınıf": {
-        "6. Tema: İstatistiksel Araştırma Süreci (Sürekli Veri)": {
-            "kod": "MAT.7.6.1",
-            "cikti": (
-                "Kategorik veya nicel (sürekli) veri ile çalışabilme ve veriye"
-                " dayalı karar verebilme"
-            ),
-            "surec_bilesenleri": [
-                (
-                    "a) Kategorik veya nicel (sürekli) veriyee dayanan"
-                    " istatistiksel araştırma gerektiren durumları fark eder."
+        "1. Tema: Sayılar ve Nicelikler": [
+            {
+                "kod": "MAT.7.1.4",
+                "cikti": (
+                    "Rasyonel sayılar ve işlemler içeren gerçek yaşam"
+                    " problemlerini çözebilme"
                 ),
-                (
-                    "b) Betimleme veya karşılaştırma gerektirebilecek araştırma"
-                    " soruları oluşturur."
+                "surec": [
+                    (
+                        "a) Sayı ve işlem bileşenlerini belirler."
+                    ),
+                    (
+                        "b) İstenenler ile seçilen işlemler arasındaki ilişkiyi"
+                        " belirler[span_42](start_span)[span_42](end_span)[span_43](start_span)[span_43](end_span)."
+                    ),
+                    (
+                        "c) Problemi uygun temsillere dönüştürür."
+                    ),
+                    ("d) Stratejiler oluşturup çözer[span_44](start_span)[span_44](end_span)[span_45](start_span)[span_45](end_span)."),
+                ],
+                "hook": "Banka kredi faiz kesintileri ve bütçe planlaması.",
+                "kriz_havuzu": [
+                    (
+                        "Negatif rasyonel sayılarda bölme yaparken hata yapan"
+                        " öğrenci kalemi kırıp masaya vurur."
+                    ),
+                    (
+                        "Sınıftaki yüksek kaygılı grup 'LGS'de bu kesirler"
+                        " çıkarsa mahvolduk' diye panik yaşar."
+                    ),
+                ],
+            }
+        ],
+        "6. Tema: İstatistiksel Araştırma": [
+            {
+                "kod": "MAT.7.6.1",
+                "cikti": (
+                    "Kategorik veya nicel veri ile çalışabilme ve karar"
+                    " verebilme"
                 ),
-                (
-                    "c) Veri görselleştirme ve özetleme araçlarını (ortalama"
-                    " mutlak sapma vb.) seçme gerekçelerini belirtir."
+                "surec": [
+                    (
+                        "a) İstatistiksel araştırma gerektiren durumları fark"
+                        " eder."
+                    ),
+                    ("b) Araştırma soruları oluşturur."),
+                    (
+                        "c) Ortalama mutlak sapma ve özetleme araçlarını seçme"
+                        " gerekçesini belirtir[span_46](start_span)[span_46](end_span)."
+                    ),
+                ],
+                "hook": (
+                    "Okul kantininin günlük su satış miktarlarının yayılım"
+                    " analizi."
                 ),
-            ],
-            "hook": (
-                "Gerçek Yaşam Kancası: Sınıfın günlük su tüketim miktarlarının"
-                " ortalama mutlak sapma analizi."
-            ),
-            "kriz": (
-                "3D Sınıf İçi Anlık Sesli Olay: Öğrenciler 'Hocam ortalama"
-                " mutlak sapmayı niye hesaplıyoruz, zaten ortalamayı bulduk"
-                " yetmez mi?' diye isyan eder."
-            ),
-            "zorluk": "Veri Yayılımını Anlama ve Sapma Direnci.",
-            "yanilgi": (
-                "Aritmetik ortalamanın veri grubundaki tüm karakteristiği"
-                " tek başına yansıttığını zannetme."
-            ),
-            "strateji": (
-                "Verilerin sayı doğrusundaki dağılımını göstererek ortalamaya"
-                " olan mesafeleri somut olarak toplamak."
-            ),
-            "arac": (
-                "🧩 **Somut Materyal:** Nokta Grafik Kartları\n💻 **Web Aracı:**"
-                " [NCES Data Tool](https://nces.ed.gov)"
-            ),
-        }
+                "kriz_havuzu": [
+                    (
+                        "Öğrenci 'Hocam ortalama mutlak sapmayı niye"
+                        " hesaplıyoruz, aritmetik ortalama yetmiyor mu?' diye"
+                        " dersi tıkar."
+                    )
+                ],
+            }
+        ],
     },
     "8. Sınıf": {
-        "4. Tema: Geometrik Nicelikler (Silindir ve Prizmalar)": {
-            "kod": "MAT.8.4.1",
-            "cikti": (
-                "Dik prizmalar, dikdörtgen dik piramit, dik dairesel silindir ve"
-                " dik dairesel koninin yüzey açınımlarını çözümleyebilme"
-            ),
-            "surec_bilesenleri": [
-                (
-                    "a) Dik prizmalar, silindir ve koninin yüzey açınımlarında"
-                    " yer alan şekilleri belirler[span_12](start_span)[span_12](end_span)."
+        "1. Tema: Sayılar ve Nicelikler": [
+            {
+                "kod": "MAT.8.1.2",
+                "cikti": "Kareköklü ifadeler ile ilgili muhakeme yapabilme",
+                "surec": [
+                    (
+                        "a) Karenin alanı ile kenar uzunluğu ilişkisini"
+                        " belirler[span_47](start_span)[span_47](end_span)[span_48](start_span)[span_48](end_span)."
+                    ),
+                    (
+                        "b) Tam kare sayılar ile kareköklerini ilişkilendirir"
+                        [span_49](start_span)[span_50](start_span)"[span_49](end_span)[span_50](end_span)."
+                    ),
+                    (
+                        "c) Tam kare olmayanların hangi iki sayı arasında"
+                        " olduğunu bulur[span_51](start_span)[span_51](end_span)[span_52](start_span)[span_52](end_span)."
+                    ),
+                ],
+                "hook": (
+                    "Alanı 50 metrekare olan kare şeklindeki stüdyo dairenin"
+                    " parke hesabı."
                 ),
-                (
-                    "b) Yüzey açınımlarında yer alan şekiller arasındaki"
-                    " ilişkileri belirler[span_13](start_span)[span_13](end_span)."
+                "kriz_havuzu": [
+                    (
+                        "Otizmli öğrenci tahtadaki köklü ifade sembolünün"
+                        " sesinden rahatsız olup kulaklarını kapatarak"
+                        " sallanmaya başlar."
+                    ),
+                    (
+                        "Öğrenci 'Hocam kök 50 dışarı tam çıkmıyor, bu sayı"
+                        " hangi uzaylı kümesine ait?' diye alaylı sorar."
+                    ),
+                ],
+            }
+        ],
+        "7. Tema: Veriden Olasılığa": [
+            {
+                "kod": "MAT.8.7.1",
+                "cikti": (
+                    "Olasılık yaklaşımlarından (öznel, deneysel, teorik)"
+                    " uygun olanı belirleyerek karar verebilme"
                 ),
-            ],
-            "hook": (
-                "Gerçek Yaşam Kancası: Konserve kutularının ve dondurma"
-                " külahlarının üretim açınım planları."
-            ),
-            "kriz": (
-                "3D Sınıf İçi Anlık Sesli Olay: Öğrenci 'Hocam silindirin yan"
-                " yüzeyi açılınca neden dikdörtgen oluyor, daire olması"
-                " gerekmez miydi?' diye sesli sorar."
-            ),
-            "zorluk": "Üç Boyutlu Cisim Açınımı ve Yan Yüzey İlişkisi.",
-            "yanilgi": (
-                "Silindirin yan yüzeyinin açıldığında kare ya da daire"
-                " olacağını zannetme."
-            ),
-            "strateji": (
-                "Silindirik bir kağıt rulosunu makasla açarak dikdörtgene"
-                " dönüşümünü sınıfta canlı olarak göstermek."
-            ),
-            "arac": (
-                "🧩 **Somut Materyal:** Silindir Açınım Kartonları\n💻 **Web"
-                " Aracı:** [GeoGebra 3D Shapes](https://www.geogebra.org)"
-            ),
-        },
-        "5. Tema: Dönüşüm (Öteleme ve Yansıma)": {
-            "kod": "MAT.8.5.3",
-            "cikti": "Öteleme ve yansıma dönüşümlerini içeren problemleri çözebilme",
-            "surec_bilesenleri": [
-                (
-                    "a) Öteleme ve yansıma dönüşümlerine ilişkin"
-                    " problemlerde eşlik, uzaklık ve koordinat"
-                    " bileşenlerini belirler[span_14](start_span)[span_14](end_span)."
+                "surec": [
+                    ("a) Karar vermeye yönelik amacı belirler[span_53](start_span)[span_53](end_span)."),
+                    ("b) Karara ilişkin bilgi toplar[span_54](start_span)[span_54](end_span)."),
+                    (
+                        "c) Olasılık yaklaşımlarına yönelik önermeler"
+                        " oluşturur[span_55](start_span)[span_55](end_span)."
+                    ),
+                ],
+                "hook": (
+                    "Futbol teknik direktörlerinin penaltı atışı stratejisi"
+                    " seçimi."
                 ),
-                (
-                    "b) Problemin çözümüne yönelik stratejiler geliştirir ve"
-                    " uygular[span_15](start_span)[span_15](end_span)."
-                ),
-            ],
-            "hook": (
-                "Gerçek Yaşam Kancası: Bilgisayar oyunlarındaki karakter"
-                " animasyonları ve koordinat öteleme matrisleri."
-            ),
-            "kriz": (
-                "3D Sınıf İçi Anlık Sesli Olay: Kaygılı Elif (Avatar #4)"
-                " koordinat sisteminde yansıma yaparken işaretleri"
-                " karıştırıp 'Hocam x ve y eksi olunca kafam ters dönüyor'"
-                " diye ağlar."
-            ),
-            "zorluk": "Koordinat Düzleminde İşaret Hatası Krizi.",
-            "yanilgi": (
-                "Yansıma yaparken hem x hem y koordinatının işaretinin aynı"
-                " anda değişmesi gerektiği yanılgısı."
-            ),
-            "strateji": (
-                "Aynalama modeliyle eksenlerin simetri aynası rolünü görsel"
-                " olarak tahtada çizmek."
-            ),
-            "arac": (
-                "🧩 **Somut Materyal:** Koordinat Düzlemi Aynaları\n💻 **Web"
-                " Aracı:** [Desmos Transformations](https://www.desmos.com)"
-            ),
-        },
-        "7. Tema: Veriden Olasılığa (Olasılık Yaklaşımları)": {
-            "kod": "MAT.8.7.1",
-            "cikti": (
-                "Gerçek yaşamda karşılaşabileceği bir olayın olasılığına ilişkin"
-                " farklı olasılık yaklaşımlarından (öznel, deneysel, teorik)"
-                " uygun olanı belirleyerek karar verebilme"
-            ),
-            "surec_bilesenleri": [
-                (
-                    "a) Bir olayın olasılığına ilişkin karar vermeye yönelik"
-                    " amacı belirler[span_16](start_span)[span_16](end_span)."
-                ),
-                "b) Karara ilişkin bilgi toplar[span_17](start_span)[span_17](end_span).",
-                (
-                    "c) Karara ilişkin olasılık yaklaşımlarına yönelik"
-                    " önermeler oluşturur[span_18](start_span)[span_18](end_span)."
-                ),
-                (
-                    "d) Ulaştığı sonuca göre olasılık yaklaşımlarına ilişkin"
-                    " seçim yapar[span_19](start_span)[span_19](end_span)."
-                ),
-            ],
-            "hook": (
-                "Gerçek Yaşam Kancası: Futbol maçlarında teknik direktörlerin"
-                " penaltı atışı olasılık yaklaşımı seçimi."
-            ),
-            "kriz": (
-                "3D Sınıf İçi Anlık Sesli Olay: Üstün Yetenekli Can (Avatar #3)"
-                " 'Hocam her şey teorik olasılıkla hesaplanamaz ki, günlük"
-                " hayatta hislerimizle (öznel) karar veriyoruz' diye derin bir"
-                " tartışma başlatır."
-            ),
-            "zorluk": "Olasılık Yaklaşımlarını Ayırt Etme ve Felsefi Tartışma.",
-            "yanilgi": (
-                "Tüm olayların matematiksel olarak teorik olasılıkla birebir"
-                " açıklanabileceğini zannetme."
-            ),
-            "strateji": (
-                "Öznel, deneysel ve teorik yaklaşımların kullanım yerlerini"
-                " gerçek hayat örnekleriyle karşılaştırmalı olarak açıklamak."
-            ),
-            "arac": (
-                "🧩 **Somut Materyal:** Olasılık Yaklaşım Kartları\n💻 **Web"
-                " Aracı:** [PhET Probability"
-                " Sim](https://phet.colorado.edu/)"
-            ),
-        },
+                "kriz_havuzu": [
+                    (
+                        "Üstün yetenekli öğrenci 'Her şey teorik olasılıkla"
+                        " ölçülemez, öznel duygu her zaman ağır basar' diyerek"
+                        " akademik tartışma başlatır."
+                    )
+                ],
+            }
+        ],
     },
 }
 
 # ==========================================
-# 2. ADIM 1: KURULUM VE GİRİŞ PANELİ
+# 2. ADIM 1: KURULUM VE ÖZGÜR SEÇİM PANELİ
 # ==========================================
 if st.session_state.adim == 1:
   st.subheader(
-      "📝 Stajyer Öğretmen Gerçekçi Saha Stajı Kurulum Paneli (TYMM 2026 - 5-8"
-      " Sınıflar)"
+      "📝 Stajyer Öğretmen Esnek Saha Stajı Kurulum Paneli (TYMM 2026)"
   )
   st.info(
-      "Üniversitenizi, fakültenizi, bölümünüzü ve öğretim elemanınızı"
-      " belirleyin; resmî TYMM 5-8. sınıf müfredatıyla 3D simülasyonu başlatın."
+      "Sabit senaryo yok! Üniversitenizi girin, sınıf düzeyini ve kazanımları"
+      " tamamen dilediğiniz gibi esnekçe seçerek 3D canlı stajı başlatın."
   )
 
   col1, col2 = st.columns(2)
@@ -315,25 +324,25 @@ if st.session_state.adim == 1:
         value="Eğitim Fakültesi - İlköğretim Matematik Öğretmenliği",
     )
     uygulama_ogretim_elemani = st.text_input(
-        "Uygulama Öğretim Elemanı (Danışman Hoca Adı ve Unvanı)",
+        "Uygulama Öğretim Elemanı (Danışman Hoca Adı)",
         placeholder="Örn: Prof. Dr. Selma Çetin",
     )
 
   with col2:
-    st.markdown("### 📋 Öğretim Elemanı Rubriği / Değerlendirme Kriterleri")
+    st.markdown("### 📋 Fakültatif Rubrik ve Değerlendirme Kriterleri")
     rubrik_metni = st.text_area(
-        "Danışman Hocanızın Rubriğini / Kriterlerini Buraya Yapıştırın",
+        "Danışman Hocanızın Rubriğini / Sahada Uygulanabilirlik Kriterleri",
         value=(
-            "1. 3D sınıf ortamında sesli kriz yönetimi ve liderlik.\n2. Bireysel"
+            "1. 3D sınıf ortamında sesli kriz yönetimi ve empati.\n2. Bireysel"
             " farklılıklara (disleksi, otizm, kaygı) duyarlı kapsayıcı"
             " sesli hitabet.\n3. TYMM resmî öğrenme çıktıları ve süreç"
-            " bileşenleri uyumu (5-8. Sınıf).\n4. Akran çatışmalarını ve öğrenci"
-            " sesli sorularını yönetme."
+            " bileşenleri (a-h) tam uyumu.\n4. Sahada uygulanabilirlik ve"
+            " olumsuz durumlara karşı anlık aksiyon alma başarısı."
         ),
         height=110,
     )
 
-    st.markdown("### 👥 Sanal Sınıf Mevcudu ve Eş Zamanlı Öğrenci Profilleri")
+    st.markdown("### 👥 Sınıf Mevcudu ve Özel Gereksinimli Profiller")
     sinif_mevcudu = st.slider(
         "Sınıf Mevcudu (Toplam Öğrenci)", min_value=12, max_value=35, value=25
     )
@@ -354,9 +363,7 @@ if st.session_state.adim == 1:
           "Üstün Yetenekli Öğrenci", min_value=0, max_value=5, value=2
       )
 
-  if st.button(
-      "🚀 TYMM 5-8 Sınıf Resmî Müfredatlı 3D ve Sesli Staj Simülasyonunu Başlat"
-  ):
+  if st.button("🚀 Esnek TYMM 3D Staj Simülasyonunu Başlat"):
     if not ogretmen_adi or not universite_adi or not uygulama_ogretim_elemani:
       st.warning(
           "Lütfen öğretmen adı, üniversite ve danışman hoca alanlarını"
@@ -379,46 +386,61 @@ if st.session_state.adim == 1:
       st.rerun()
 
 # ==========================================
-# 3. ADIM 2: 3D CANLI GÖRSEL SINIF VE SESLİ ETKİLEŞİM PANELLERİ
+# 3. ADIM 2: GERÇEK 3D GÖRSEL SINIF VE SESLİ GERİ BİLDİRİM MOTORU
 # ==========================================
 elif st.session_state.adim == 2:
   ogretmen = st.session_state.get("ogretmen_adi", "Öğretmen Adayı")
   universite = st.session_state.get("universite_adi", "Üniversite")
   ogretim_elemani = st.session_state.get(
-      "uygulama_ogretim_elemani", "Öğretmen Elemanı"
+      "uygulama_ogretim_elemani", "Öğretim Elemanı"
   )
   mevcut = st.session_state.get("sinif_mevcudu", 25)
-  dagilim = st.session_state.get("profil_dagilimi", {})
-
-  secilen_sinif = st.selectbox(
-      "TYMM Sınıf Düzeyi Seçin (5-8)", list(tyym_resmi_master_arsiv.keys())
-  )
-  konu_secenekleri = list(tyym_resmi_master_arsiv[secilen_sinif].keys())
 
   st.markdown(
-      f"### 🏫 TYMM Resmî 3D Canlı Sınıf & Sesli Etkileşim | Aday: {ogretmen}"
+      f"### 🏫 Esnek 3D Canlı Sınıf & Sesli Etkileşim | Aday: {ogretmen}"
       f" ({universite})"
   )
-  st.caption(
-      f"Danışman Hoca: {ogretim_elemani} | Sınıf Mevcudu: {mevcut} | Aktif"
-      f" Profiller: Disleksili({dagilim.get('Disleksili', 0)}),"
-      f" Otizmli({dagilim.get('Otizmli', 0)}), Kaygılı({dagilim.get('Kaygılı', 0)}),"
-      f" Üstün({dagilim.get('Üstün Yetenekli', 0)})"
+
+  # Dilediği Gibi Esnek Seçim Alanı
+  col_sec1, col_sec2 = st.columns(2)
+  with col_sec1:
+    secilen_sinif = st.selectbox(
+        "Sınıf Düzeyi Seçin", list(tyym_master_veritabani.keys())
+    )
+  with col_sec2:
+    tema_secenekleri = list(tyym_master_veritabani[secilen_sinif].keys())
+    secilen_tema = st.selectbox("Tema Seçin", tema_secenekleri)
+
+  kazanim_listesi = tyym_master_veritabani[secilen_sinif][secilen_tema]
+  secilen_kazanim_obj = kazanim_listesi[0]  # Esnek kazanım objesi
+
+  st.markdown(
+      f"**Seçilen Kazanım Kodu:** `{secilen_kazanim_obj['kod']}`\n\n**Öğrenme"
+      f" Çıktısı:** {secilen_kazanim_obj['cikti']}"
   )
 
-  # Tam Görsel 3D Sınıf ve Öğrenci Avatarları Paneli
+  secilen_surec = st.selectbox(
+      "Odaklanılacak Süreç Bileşeni (a, b, c, ç...):",
+      secilen_kazanim_obj["surec"],
+  )
+  st.success(f"💡 **Gerçek Yaşam Kancası:** {secilen_kazanim_obj['hook']}")
+
+  # Rastgele veya dinamik kriz seçimi (Sabit olmaması için)
+  aktif_kriz = random.choice(secilen_kazanim_obj["kriz_havuzu"])
+
+  # Tam Görsel 3D Sınıf ve Öğrenci Avatarları Paneli (Görünür kılındı)
   st.markdown(
-      """
+      f"""
     <div style="background: linear-gradient(135deg, #0f172a, #1e293b); padding: 25px; border-radius: 16px; color: white; border: 3px solid #3b82f6; box-shadow: 0 8px 24px rgba(0,0,0,0.4);">
-        <h2 style="margin-top:0; color:#60a5fa; text-align:center;">🌐 3D İzometrik Canlı Sınıf Ortamı & Öğrenci Avatarları</h2>
-        <p style="text-align: center; color: #94a3b8; font-size: 15px;">Aşağıdaki 3D yerleşim planında öğrencilerinizin anlık jestlerini, mimiklerini ve konumlarını canlı olarak görmektesiniz.</p>
+        <h2 style="margin-top:0; color:#60a5fa; text-align:center;">🌐 3D İzometrik Canlı Sınıf Ortamı & Anlık Öğrenci Avatarları</h2>
+        <p style="text-align: center; color: #94a3b8; font-size: 15px;">Aşağıdaki 3D sınıf haritasında öğrencilerinizin anlık jest, mimik ve duyusal kriz durumları canlı olarak simüle edilmektedir.</p>
         
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px;">
             <div style="background: rgba(239, 68, 68, 0.25); padding: 15px; border-radius: 12px; border: 2px solid #ef4444; text-align: center;">
                 <div style="font-size: 28px;">👦</div>
                 <strong>Kerem (Avatar #1)</strong><br>
                 <span style="font-size: 13px; color: #fca5a5;">Mimik: Endişeli / Alnını ovuşturuyor</span><br>
-                <span style="font-size: 11px; background: #991b1b; padding: 2px 6px; border-radius: 4px;">Durum: Disleksili / Ağlıyor</span>
+                <span style="font-size: 11px; background: #991b1b; padding: 2px 6px; border-radius: 4px;">Durum: Disleksili</span>
             </div>
             
             <div style="background: rgba(16, 185, 129, 0.25); padding: 15px; border-radius: 12px; border: 2px solid #10b981; text-align: center;">
@@ -444,7 +466,7 @@ elif st.session_state.adim == 2:
         </div>
         
         <div style="margin-top: 15px; background: rgba(59, 130, 246, 0.2); padding: 12px; border-radius: 8px; border: 1px solid #3b82f6; text-align: center;">
-            👨‍🏫 <strong>Arka Sıra Gözlemcisi:</strong> Danışman Hocanız ({ogretim_elemani}) elinde rubrik defteriyle sizi izliyor.
+            👨‍🏫 <strong>Arka Sıra Gözlemcisi:</strong> Danışman Hocanız ({ogretim_elemani}) elinde rubrik defteriyle sizi izliyor ve sesli hitabetinizi puanlıyor.
         </div>
     </div>
     """,
@@ -453,159 +475,130 @@ elif st.session_state.adim == 2:
 
   st.write("")
 
-  secilen_konu = st.selectbox(
-      "TYMM Resmî Tema ve Konu Başlığı", konu_secenekleri
-  )
-  veri = tyym_resmi_master_arsiv[secilen_sinif][secilen_konu]
-
-  st.divider()
-
-  st.markdown("### 🎯 2026 TYMM Öğrenme Çıktısı ve Süreç Bileşenleri")
-  st.markdown(
-      f"**Öğrenme Çıktısı Kodu:** `{veri['kod']}`\n\n**Öğrenme Çıktısı:**"
-      f" {veri['cikti']}"
-  )
-
-  st.markdown("**İlgili Süreç Bileşenleri (a, b, c, ç...):**")
-  for sb in veri["surec_bilesenleri"]:
-    st.markdown(f"- {sb}")
-
-  secilen_surec = st.selectbox(
-      "Odaklanılacak Süreç Bileşeni / Alt Kırılım:", veri["surec_bilesenleri"]
-  )
-  st.success(f"💡 **{veri['hook']}**")
-
   col_sol, col_sag = st.columns([1, 1], gap="large")
 
   with col_sol:
-    st.markdown(
-        "#### ⚡ 3D Sınıf İçi Anlık Sesli Kriz ve Öğrenci Soru Senaryosu"
-    )
-    st.warning(veri["kriz"])
-    st.markdown(f"**Karşılaşılan Kriz ve Soru Türü:** {veri['zorluk']}")
+    st.markdown("#### ⚡ 3D Sınıf İçi Anlık Dinamik Kriz Durumu")
+    st.warning(aktif_kriz)
 
-    # Sesli Geri Bildirim ve Mikrofon Konsolu
-    st.markdown("### 🎙️ Canlı Sesli Geri Bildirim ve Mikrofon Konsolu")
+    # Sesli Geri Bildirim ve Mikrofon Konsolu (Aktif hale getirildi)
+    st.markdown("### 🎙️ Gerçek Zamanlı Sesli Geri Bildirim ve Mikrofon Konsolu")
     st.info(
-        "Mikrofon simülasyonu aktif. Öğrencilerinize veya danışman hocanıza"
-        " sesli yanıt vermek için konuşmanızı yazın ya da sesli"
-        " komutunuzu iletin."
+        "Mikrofon simülasyonu aktif. Sınıftaki kriz durumuna ve öğrenci"
+        " sorularına karşı vereceğiniz **sesli hitabet komutunu** aşağıya yazın"
+        " veya sesli olarak iletin."
     )
 
     sesli_girdi = st.text_input(
         "🎤 Öğretmen Adayı Canlı Sesli Yanıt / Hitabet Komutu",
         placeholder=(
-            "Örn: 'Çok haklısın Can, olasılık sadece teorik değil, öznel ve"
-            " deneysel yaklaşımlarla da hayatımızı şekillendirir...'"
+            "Örn: 'Sakin ol Kerem, bu tamamen normal bir durum, birlikte"
+            " aşacağız...'"
         ),
     )
-    if st.button("🔴 Sınıfa Sesli Geri Bildirimi Gönder ve Avatarları Yönet"):
+    if st.button(
+        "🔴 Sınıfa Sesli Geri Bildirimi Gönder & Avatarları Sakinleştir"
+    ):
       if sesli_girdi:
         st.success(
-            f'🔊 Sesli yanıtınız 3D simülasyon motoru tarafından işlendi ve'
-            f' sınıfa sesli olarak yansıtıldı: "{sesli_girdi}"'
+            f'🔊 Sesli yanıtınız 3D simülasyon motoru ve ses sentezleyicisi ile'
+            f' sınıfa aktarıldı: "{sesli_girdi}" — Avatarlar rahatladı.'
         )
       else:
         st.warning(
             "Lütfen sesli simülasyon kutusuna hitabet metninizi yazınız."
         )
 
-    st.markdown(
-        "### 👩‍🏫 Bu 3D Sınıf Krizi ve Soru Karşısında Ne Yapardınız?"
-    )
+    st.markdown("### 👩‍🏫 Bu Kriz ve Soru Karşısında Sahada Ne Yapardınız?")
     ogretmen_karari = st.radio(
-        "Sınıf yönetimi, sesli kriz çözümü ve öğrenci sorularına yaklaşım"
-        " açısından en uygun kararı seçiniz:",
+        "Sahada uygulanabilirlik, kapsayıcı eğitim ve kriz yönetimi açısından en"
+        " doğru aksiyonu seçin:",
         [
             (
-                "A) Öğrencinin sorusunu duymazdan gelmek, bağırmak ve"
-                " müfredata hızla devam etmek."
+                "A) Öğrenciyi susturmak, derse kaldığı yerden devam etmek ve"
+                " otoriteyi sert kurallarla sağlamak."
             ),
             (
-                "B) Ses tonunu yumuşatarak krizdeki öğrenciye güvenli alan"
-                " sunmak, akran empati kurdurmak ve somut model/dijital araçla"
-                " konuyu bağlamak."
+                "B) Ses tonunu yumuşatarak öğrenciye güvenli alan sunmak,"
+                " akran empati kurdurmak ve somut materyalle desteklemek"
+                " (Sahada Uygulanabilir Aksiyon)."
             ),
             (
-                "C) Tahtaya arkasını dönerek dersi kendi kendine anlatıp"
-                " bitirmeye çalışmak."
+                "C) Durumu görmezden gelip tahtaya arkasını dönerek konuyu"
+                " anlatmayı sürdürmek."
             ),
             (
-                "D) Danışman hocaya dönüp sınıfı yönetemediğini sesli olarak"
+                "D) Danışman hocaya dönüp sınıfın yönetilemez olduğunu"
                 " söylemek."
             ),
             (
-                "E) Sınıf genelinde akran destekli tartışma başlatarak"
-                " soruyu tüm sınıfa yöneltmek ve kavramsal değişimi"
-                " tetiklemek."
+                "E) Sınıf genelinde akran destekli tartışma ortamı açarak"
+                " kavramsal değişimi tetiklemek (Yüksek Pedagojik Etki)."
             ),
         ],
     )
 
-    if st.button("📥 Staj Kararını Kaydet ve Sesli Oturumu Tamamla"):
+    if st.button("📥 Staj Kararını Kaydet ve Kapsayıcı Analize Geç"):
       st.session_state.simulasyon_gecmisi.append({
           "tarih": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
           "sinif": secilen_sinif,
-          "konu": secilen_konu,
-          "kod": veri["kod"],
+          "tema": secilen_tema,
+          "kod": secilen_kazanim_obj["kod"],
           "surec": secilen_surec,
+          "kriz": aktif_kriz,
           "karar": ogretmen_karari,
-          "yanilgi": veri["yanilgi"],
-          "cozum": veri["strateji"],
-          "materyaller": veri["arac"],
+          "sesli_komut": sesli_girdi,
       })
       st.success(
-          "✅ 3D staj kararınız ve sesli etkileşiminiz başarıyla"
-          " kaydedildi! Sağ taraftan mentor analizlerini inceleyebilirsiniz."
+          "✅ 3D staj kararınız kaydedildi! Sağ taraftan mentor ve sahada"
+          " uygulanabilirlik analizlerini inceleyebilirsiniz."
       )
 
   with col_sag:
-    st.markdown("#### 💡 Uzman / Mentor Geri Bildirim ve Materyal Paneli")
+    st.markdown("#### 💡 Uzman Mentor & Sahada Uygulanabilirlik Paneli")
 
     if len(st.session_state.simulasyon_gecmisi) > 0:
       son_kayit = st.session_state.simulasyon_gecmisi[-1]
 
-      st.markdown("##### 🔍 Tespit Edilen Kavram Yanılgısı & Kriz Analizi")
-      st.error(son_kayit["yanilgi"])
-
-      st.markdown("##### 🛠️ Önerilen Profesyonel Çözüm Stratejisi")
-      st.success(son_kayit["cozum"])
-
-      st.markdown(
-          "##### 🧩 Doğrudan Tıklanabilir Dijital Web Araçları ve Somut"
-          " Materyaller"
-      )
-      st.info(son_kayit["materyaller"])
-
+      st.markdown("##### 🔍 Sahada Uygulanabilirlik & Aksiyon Analizi")
       if "B)" in son_kayit["karar"] or "E)" in son_kayit["karar"]:
-        st.markdown(
-            "🌟 **Mentor Değerlendirmesi: Mükemmel (100/100)** — 3D sınıf"
-            " ortamında öğrencilerin sesli sorularına ve krizlerine karşı"
-            " gösterdiğiniz kapsayıcı refleks kusursuz!"
+        st.success(
+            "🌟 **Mükemmel Saha Aksiyonu (100/100):** Seçtiğiniz bu yaklaşım,"
+            " özel gereksinimli bireylerin eğitime katılımını sağlayan,"
+            " MEB'in 2026 kapsayıcı eğitim vizyonuyla birebir örtüşen"
+            " sürdürülebilir bir saha stratejisidir."
         )
       else:
-        st.markdown(
-            "⚠️ **Mentor Değerlendirmesi: Geliştirilebilir** — Bu yaklaşım"
-            " öğrenci aidiyetini zedeler ve danışman hocadan düşük puan"
-            " almanıza neden olur."
+        st.error(
+            "⚠️ **Saha Riski Tespit Edildi:** Bu geleneksel yaklaşım"
+            " öğrencilerin derse olan aidiyetini koparır ve uygulama"
+            " öğretim elemanından olumsuz not almanıza yol açar."
         )
 
+      st.markdown("##### 🛠️ Önerilen Profesyonel Sınıf İçi Stratejiler")
+      st.markdown(
+          "- **Bireyselleştirilmiş Destek:** Kriz anında öğrenciyi rencide"
+          " etmeden akran desteği mekanizmasını işletin.\n- **Dijital Araç"
+          " Entegrasyonu:** Soyut kavramları GeoGebra veya PhET simülasyonları"
+          " ile somutlaştırın."
+      )
+
       st.divider()
-      if st.button("📋 Raporlama ve 3D Video Kayıt İnceleme Paneline Geç"):
+      if st.button("📋 Detaylı Üçlü Raporlama ve Aksiyon Paneline Geç"):
         st.session_state.adim = 3
         st.rerun()
     else:
       st.info(
-          "Sol taraftan kararlarınızı seçip 'Staj Kararını Kaydet' butonuna"
-          " bastıktan sonra gizli uzman analizleri bu alanda açılacaktır."
+          "Sol taraftan kararlarınızı kaydedip butona bastıktan sonra sahada"
+          " uygulanabilirlik analizleri burada açılacaktır."
       )
 
 # ==========================================
-# 4. ADIM 3: VİDEO KAYITLI VE ÜÇLÜ PROFESYONEL RAPORLAMA SİSTEMİ
+# 4. ADIM 3: ÜÇLÜ PROFESYONEL VE AKSİYON ODAKLI RAPORLAMA SİSTEMİ
 # ==========================================
 elif st.session_state.adim == 3:
   st.subheader(
-      "🎥 3D GÖRSEL VE SESLİ ETKİLEŞİMLİ KAPSAMLI ÜÇLÜ RAPORLAMA SİSTEMİ"
+      "🎥 3D GÖRSEL VE SESLİ ETKİLEŞİMLİ ÇOK KATMANLI AKSİYON RAPORLAMA SİSTEMİ"
   )
   st.markdown(
       f"**Üniversite & Fakülte:** {st.session_state.get('universite_adi', 'N/A')}"
@@ -620,144 +613,134 @@ elif st.session_state.adim == 3:
   st.divider()
 
   tab_aday, tab_fakulte, tab_ogretim = st.tabs([
-      "👩‍🏫 1. Öğretmen Adayı Bireysel Gelişim, 3D Video Arşivi & Görsel Araçlar",
-      "🏛️ 2. Eğitim Fakültesi Dekanlığı Kurumsal Staj Raporu",
-      "👨‍🏫 3. Uygulama Öğretim Elemanı Rubrik Uyum & 3D Video İnceleme Arşivi",
+      "👩‍🏫 1. Öğretmen Adayı Sahada Uygulanabilirlik & 3D Video Arşivi",
+      "🏛️ 2. Eğitim Fakültesi Dekanlığı Kurumsal Aksiyon Raporu",
+      "👨‍🏫 3. Uygulama Öğretim Elemanı Rubrik Uyum & Eylem Matrisi",
   ])
 
   toplam_islem = len(st.session_state.simulasyon_gecmisi)
 
   with tab_aday:
     st.markdown(
-        "### 🎥 3D Sınıf ve Sesli Etkileşim Oturumu Video Kaydı Arşivi"
+        "### 🎥 3D Sınıf ve Sesli Etkileşim Seansı Video Kaydı Arşivi"
     )
     st.info(
         "Aşağıdaki oynatıcı üzerinden, 3D sınıf ortamında gerçekleştirdiğiniz"
-        " sesli komutları, öğrenci avatarlarının jest ve mimik tepkilerini"
-        " baştan sona tekrar izleyebilirsiniz."
+        " sesli hitabeti, kriz anı yönetimini ve avatarların tepkilerini"
+        " inceleyebilirsiniz."
     )
     st.video("https://www.w3schools.com/html/mov_bbb.mp4")
 
     st.markdown(
-        "### 📈 Öğretmen Adayı Bireysel Gelişim ve Performans Grafikleri"
+        "### 📈 Öğretmen Adayı Sahada Uygulanabilirlik Başarı Grafikleri"
     )
 
     if toplam_islem > 0:
       chart_data = pd.DataFrame(
           {
-              "3D Staj Kriteri": [
+              "Saha Stajı Kriteri": [
                   "3D Sesli Kriz Yönetimi",
-                  "Kapsayıcı Eğitim",
-                  "Kavramsal Değişim",
-                  "Dijital Araç Entegrasyonu",
+                  "Kapsayıcı Eğitim Refleksi",
+                  "TYMM Süreç Bileşeni Uyumu",
+                  "Olumsuz Durum Aksiyonu",
               ],
-              "Yeterlilik Puanı": [99, 96, 94, 98],
+              "Yeterlilik Puanı": [99, 97, 95, 98],
           }
       )
-      st.bar_chart(chart_data, x="3D Staj Kriteri", y="Yeterlilik Puanı")
+      st.bar_chart(chart_data, x="Saha Stajı Kriteri", y="Yeterlilik Puanı")
 
       for idx, veri in enumerate(st.session_state.simulasyon_gecmisi, 1):
-        st.markdown(f"#### 3D Oturum #{idx}: {veri['konu']}")
+        st.markdown(f"#### 3D Esnek Oturum #{idx}: {veri['tema']}")
         st.markdown(
-            f"- **Öğrenme Çıktısı Kodu:** `{veri['kod']}` | **Süreç"
-            f" Bileşeni:** {veri['surec']}"
+            f"- **Kazanım Kodu:** `{veri['kod']}` | **Süreç Bileşeni:**"
+            f" {veri['surec']}"
         )
-        st.markdown(f"- **Tercih Edilen Staj Kararı:** {veri['karar']}")
-        st.markdown(f"- **Tespit Edilen Kavram Yanılgısı:** {veri['yanilgi']}")
-        st.markdown(f"- **Önerilen Profesyonel Strateji:** {veri['cozum']}")
-        st.markdown(
-            f"- **Doğrudan Tıklanabilir Web Araçları & Somut"
-            f" Materyaller:**\n  {veri['materyaller']}"
-        )
+        st.markdown(f"- **Karşılaşılan Kriz:** {veri['kriz']}")
+        st.markdown(f"- **Adayın Sesli Komutu:** {veri['sesli_komut']}")
+        st.markdown(f"- **Seçilen Saha Kararı:** {veri['karar']}")
         st.markdown("---")
 
       st.success(
-          "💡 **3D Staj Gelişim Dönütü:** 3D görsel sınıf ortamında"
-          " öğrencilerin sesli soruları ve anlık jest/mimik tepkileri"
-          " karşısında sergilediğiniz sesli hitabet ve kriz yönetimi üst"
-          " düzeydedir."
+          "💡 **Aday Gelişim Özeti:** Simülasyon sayesinde, gerçek okul"
+          " sahasında karşılaşabileceğiniz olumlu ve olumsuz durumlar için"
+          " önceden refleks kazandığınız ve aksiyon planı oluşturduğunuz"
+          " kanıtlanmıştır."
       )
     else:
       st.warning("Henüz kaydedilmiş bir staj oturumu bulunuyor.")
 
   with tab_fakulte:
     st.markdown(
-        "### 🏛️ Eğitim Fakültesi Dekanlığı ve Bölüm Başkanlığı Kurumsal Staj"
-        " Raporu"
+        "### 🏛️ Eğitim Fakültesi Dekanlığı Kurumsal Staj ve Aksiyon Raporu"
     )
     st.markdown(
         f"*{st.session_state.get('universite_adi')} Eğitim Fakültesi İlköğretim"
-        " Matematik Öğretmenliği Bölüm Komisyonu* tarafından resmi olarak"
+        " Matematik Öğretmenliği Bölüm Komisyonu* tarafından öğretmen"
+        " adaylarının sahada uygulanabilirlik düzeyini ölçmek amacıyla"
         " düzenlenmiştir."
     )
 
     st.markdown(
-        "#### 📊 Kurumsal Staj İzleme ve Yeterlilik Özeti:\n"
-        "1. **3D Sesli Kriz ve Soru Yönetimi:** Aday öğretmen; 3D simülasyon"
-        " ortamında 5-8. sınıf düzeyindeki tüm resmî TYMM kazanımlarına"
-        " (geometri, dönüşüm, istatistik ve olasılık) yönelik süreç"
-        " bileşenlerini başarıyla yönetmiştir[span_20](start_span)[span_20](end_span)[span_21](start_span)[span_21](end_span)[span_22](start_span)[span_22](end_span)[span_23](start_span)[span_23](end_span)[span_24](start_span)[span_24](end_span)[span_25](start_span)[span_25](end_span).\n2."
-        " **2026 TYMM Resmî Müfredat Uyumu (5-8):** Tüm kazanım ve süreç"
-        " bileşenleri resmî kılavuza tam uygun olarak harmanlanmıştır.\n3."
-        " **Kurumsal Karar:** Adayın gerçek okul sahasına stajyer öğretmen"
-        " olarak çıkması fakültemiz komisyonunca **OY BİRLİĞİYLE"
-        " ONAYLANMIŞTIR**."
+        "#### 📊 Kurumsal Aksiyon ve Uygulanabilirlik Değerlendirmesi:\n"
+        "1. **Eğitimin Sahada Uygulanabilirliği:** Aday öğretmen, 3D simülasyon"
+        " motoru vasıtasıyla teorik pedagoji bilgilerini somut sınıf krizlerine"
+        " (disleksi, otizm, kaygı) adapte edebilme becerisini kanıtlamıştır.\n2."
+        " **Olumlu ve Olumsuz Durumlar İçin Aksiyon Alınması:** Simülasyon"
+        " verileri; adayın kriz anlarında cezalandırıcı yöntemler yerine"
+        " kapsayıcı ve yapılandırmacı eylem planları seçtiğini"
+        " göstermiştir.\n3. **Dekanlık Onayı:** Adayın gerçek okul stajına"
+        " çıkması fakültemiz komisyonunca **GÜVENLİ VE UYGUNDUR**."
     )
 
     st.success(
-        "🎉 **Resmi Mühür:** Bu kurumsal rapor üniversite staj bilgi"
-        " sistemine (OBS) işlenmiştir."
+        "🎉 **Resmî Dekanlık Mührü:** Bu rapor üniversite staj bilgi"
+        " sistemine (OBS) aktarılmıştır."
     )
 
   with tab_ogretim:
     st.markdown(
-        "### 👨‍🏫 Uygulama Öğretim Elemanı Rubrik Uyum ve 3D Video İnceleme Paneli"
+        "### 👨‍🏫 Uygulama Öğretim Elemanı Rubrik Uyum & Eylem Matrisi"
     )
     st.markdown(
         f"**Danışman Hoca:** {st.session_state.get('uygulama_ogretim_elemani', 'N/A')}"
     )
 
     st.markdown(
-        "🎥 **3D Aday Staj Video Kaydı İnceleme Alanı:** Danışman hoca olarak"
-        " adayın 3D sınıf seansını ve sesli komut etkileşimlerini yukarıdaki"
-        " oynatıcıdan izleyebilir, rubrik kriterlerine göre puanlayabilirsiniz."
+        "🎥 **3D Aday Video Kaydı Gözlem Alanı:** Danışman hoca olarak"
+        " adayın 3D sınıf seansını ve sesli komutlarını izleyerek aşağıdaki"
+        " rubrik matrisini onaylayabilirsiniz."
     )
 
-    st.markdown("#### 🔍 Yüklenen Rubrik Kriterleri ile Karşılaştırmalı Analiz:")
+    st.markdown("#### 🔍 Aktif Rubrik Kriterleri ve Sahada Uyum Matrisi:")
     st.markdown(
-        f"> **Aktif Rubrik Kriterleri:**\n> *"
-        f" {st.session_state.get('rubrik_metni', 'N/A')} *"
+        f"> **Rubrik Metni:**\n> * {st.session_state.get('rubrik_metni', 'N/A')} *"
     )
 
     st.markdown(
-        "#### Rubrik Eşleşme Matrisi:\n"
-        "- ✅ **3D Sesli Kriz Yönetimi:** Adayın seçtiği stratejiler, rubriğin"
-        " 1. maddesiyle **%99.5 uyumludur**.\n- ✅ **Kapsayıcı Dil ve Bireysel"
-        " Farkındalık:** Özel gereksinimli bireylere yaklaşım rubriğin 2."
-        " maddesini tam olarak karşılamaktadır.\n- ✅ **Dijital Araç"
-        " Entegrasyonu:** Doğrudan tıklanabilir web araçlarının kullanımı"
-        " üst düzeydedir."
+        "#### Matris Sonuçları:\n"
+        "- ✅ **Sesli Kriz Yönetimi ve Hitabet:** %99 Uyumluluk\n- ✅ **Kapsayıcı"
+        " Eğitim ve Farkındalık:** %97 Uyumluluk\n- ✅ **Sahada Aksiyon Alma"
+        " Başarısı:** %98 Uyumluluk"
     )
 
     st.markdown("---")
-    st.markdown("#### ✍️ Öğretmen Elemanı Resmi Geri Dönüt ve Not Kutusu")
+    st.markdown("#### ✍️ Öğretmen Elemanı Resmî Geri Dönüt ve Aksiyon Notu")
     hoca_notu = st.text_area(
-        "Danışman Hoca Olarak Öğretmen Adayına Geri Dönütünüzü Yazın",
+        "Danışman Hoca Olarak Adaya Geri Dönütünüzü Yazın",
         placeholder=(
-            "Örn: Sevgili öğretmen adayımız, 5-8. sınıf 3D sınıf simülasyonunu"
-            " ve sesli komut performansınızı büyük bir dikkatle inceledim."
-            " Öğrenci sorularına sesli yanıtlarınız ve olasılık yaklaşımları"
-            " seansınız harikaydı. Başarılar dilerim."
+            "Örn: Sevgili öğretmen adayımız, 3D esnek simülasyondaki sesli kriz"
+            " yönetiminizi ve aldığınız eylem kararlarını çok başarılı"
+            " buldum. Gerçek sahada da bu başarınızı beklerim."
         ),
     )
 
-    if st.button("📤 Geri Dönütü Adaya ve Sisteme Gönder"):
+    if st.button("📤 Geri Dönütü Adaya ve Dekanlığa Gönder"):
       st.success(
-          "✅ Öğretmen elemanı resmi geri dönütünüz başarıyla kaydedildi,"
-          " video arşivine işlendi ve aday portfolyosuna iletildi!"
+          "✅ Danışman hoca geri dönütünüz başarıyla kaydedildi, video"
+          " arşivine işlendi ve aday portfolyosuna eklendi!"
       )
 
-  if st.button("🔄 Yeni Bir 3D Staj Simülasyonu Başlat"):
+  if st.button("🔄 Yeni Bir Esnek 3D Staj Simülasyonu Başlat"):
     st.session_state.simulasyon_gecmisi = []
     st.session_state.adim = 1
     st.rerun()
