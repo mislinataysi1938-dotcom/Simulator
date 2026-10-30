@@ -16,7 +16,7 @@ if "adim" not in st.session_state:
   st.session_state.adim = 1  # 1: Kurulum, 2: 3D Sınıf & Sesli Staj, 3: Raporlar
 
 # ==========================================
-# 1. 2026 TÜRKİYE YÜZYILI MAARİF MODELİ (TYMM) ESNEK VE KAPSAMLI MASTER ARŞİVİ (5-8. SINIFLAR)
+# 1. 2026 TÜRKİYE YÜZYILI MAARİF MODELİ (TYMM) ESNEK MASTER ARŞİVİ (5-8. SINIFLAR)
 # ==========================================
 tyym_master_veritabani = {
     "5. Sınıf": {
@@ -111,17 +111,14 @@ tyym_master_veritabani = {
                     " yapabilme"
                 ),
                 "surec": [
-                    (
-                        "a) Çarpan ve katlarına yönelik varsayımlarda"
-                        " bulunur[span_0](start_span)[span_0](end_span)."
-                    ),
+                    "a) Çarpan ve katlarına yönelik varsayımlarda bulunur.",
                     (
                         "b) Örnek durumların ilişkilerini inceleyerek"
-                        " genellemeleri belirler[span_1](start_span)[span_1](end_span)."
+                        " genellemeleri belirler."
                     ),
                     (
                         "c) Genellemelerin varsayımı karşılayıp"
-                        " karşılamadığını modellerle gösterir[span_2](start_span)[span_2](end_span)."
+                        " karşılamadığını modellerle gösterir."
                     ),
                 ],
                 "hook": (
@@ -135,7 +132,7 @@ tyym_master_veritabani = {
                     ),
                     (
                         "İki öğrenci ortak kat bulma yönteminde birbirinin"
-                        " defterini yırtarca tartışır."
+                        " defterini yırtarcasına tartışır."
                     ),
                 ],
             }
@@ -145,14 +142,14 @@ tyym_master_veritabani = {
                 "kod": "MAT.6.6.1",
                 "cikti": "Bir olayın olasılığını gözleme dayalı tahmin edebilme",
                 "surec": [
-                    "a) Olasılık ile deney verisini ilişkilendirir[span_3](start_span)[span_3](end_span).",
+                    "a) Olasılık ile deney verisini ilişkilendirir.",
                     (
                         "b) Tekrar sayısı ile göreli sıklık ilişkisini çıkarım"
-                        " yapar[span_4](start_span)[span_4](end_span)."
+                        " yapar."
                     ),
                     (
                         "c) Göreli sıklığın kullanımına yönelik yargıda"
-                        " bulunur[span_5](start_span)[span_5](end_span)."
+                        " bulunur."
                     ),
                 ],
                 "hook": "Madeni para atma deneylerinde 100 atıştaki değişim.",
@@ -175,17 +172,13 @@ tyym_master_veritabani = {
                     " problemlerini çözebilme"
                 ),
                 "surec": [
-                    (
-                        "a) Sayı ve işlem bileşenlerini belirler."
-                    ),
+                    "a) Sayı ve işlem bileşenlerini belirler.",
                     (
                         "b) İstenenler ile seçilen işlemler arasındaki ilişkiyi"
-                        " belirler[span_6](start_span)[span_6](end_span)[span_7](start_span)[span_7](end_span)."
+                        " belirler."
                     ),
-                    (
-                        "c) Problemi uygun temsillere dönüştürür."
-                    ),
-                    ("d) Stratejiler oluşturup çözer[span_8](start_span)[span_8](end_span)[span_9](start_span)[span_9](end_span)."),
+                    "c) Problemi uygun temsillere dönüştürür.",
+                    "d) Stratejiler oluşturup çözer.",
                 ],
                 "hook": "Banka kredi faiz kesintileri ve bütçe planlaması.",
                 "kriz_havuzu": [
@@ -212,10 +205,10 @@ tyym_master_veritabani = {
                         "a) İstatistiksel araştırma gerektiren durumları fark"
                         " eder."
                     ),
-                    ("b) Araştırma soruları oluşturur."),
+                    "b) Araştırma soruları oluşturur.",
                     (
                         "c) Ortalama mutlak sapma ve özetleme araçlarını seçme"
-                        " gerekçesini belirtir[span_10](start_span)[span_10](end_span)."
+                        " gerekçesini belirtir."
                     ),
                 ],
                 "hook": (
@@ -240,15 +233,14 @@ tyym_master_veritabani = {
                 "surec": [
                     (
                         "a) Karenin alanı ile kenar uzunluğu ilişkisini"
-                        " belirler[span_11](start_span)[span_11](end_span)[span_12](start_span)[span_12](end_span)."
+                        " belirler."
                     ),
                     (
-                        "b) Tam kare sayılar ile kareköklerini ilişkilendirir"
-                        [span_13](start_span)[span_14](start_span)"[span_13](end_span)[span_14](end_span)."
+                        "b) Tam kare sayılar ile kareköklerini ilişkilendirir."
                     ),
                     (
                         "c) Tam kare olmayanların hangi iki sayı arasında"
-                        " olduğunu bulur[span_15](start_span)[span_15](end_span)[span_16](start_span)[span_16](end_span)."
+                        " olduğunu bulur."
                     ),
                 ],
                 "hook": (
@@ -276,12 +268,9 @@ tyym_master_veritabani = {
                     " uygun olanı belirleyerek karar verebilme"
                 ),
                 "surec": [
-                    ("a) Karar vermeye yönelik amacı belirler[span_17](start_span)[span_17](end_span)."),
-                    ("b) Karara ilişkin bilgi toplar[span_18](start_span)[span_18](end_span)."),
-                    (
-                        "c) Olasılık yaklaşımlarına yönelik önermeler"
-                        " oluşturur[span_19](start_span)[span_19](end_span)."
-                    ),
+                    "a) Karar vermeye yönelik amacı belirler.",
+                    "b) Karara ilişkin bilgi toplar.",
+                    "c) Olasılık yaklaşımlarına yönelik önermeler oluşturur.",
                 ],
                 "hook": (
                     "Futbol teknik direktörlerinin penaltı atışı stratejisi"
@@ -568,7 +557,7 @@ elif st.session_state.adim == 2:
         st.error(
             "⚠️ **Saha Riski Tespit Edildi:** Bu geleneksel yaklaşım"
             " öğrencilerin derse olan aidiyetini koparır ve uygulama"
-            " öğretim elemanından olumsuz not almanıza yol açar."
+            " öğretim elemanından olumsuz net almanıza yol açar."
         )
 
       st.markdown("##### 🛠️ Önerilen Profesyonel Sınıf İçi Stratejiler")
