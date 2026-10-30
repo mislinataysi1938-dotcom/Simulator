@@ -728,4 +728,4 @@ elif st.session_state.adim == 3:
   if st.button("🔄 Yeni Bir Esnek 3D Staj Simülasyonu Başlat"):
     st.session_state.simulasyon_gecmisi = []
     st.session_state.adim = 1
-    st.rerun()
+    st.rerun(
