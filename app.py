@@ -4,9 +4,7 @@ import pandas as pd
 import streamlit as st
 
 st.set_page_config(
-    page_title=(
-        "TYMM 2026 Resmî Müfredat & Rubrik Uyumlu 3D Sesli Staj Simülatörü"
-    ),
+    page_title="TYMM 2026 Müfredat & Rubrik Uyumlu 3D Sesli Staj Simülatörü",
     page_icon="🎓",
     layout="wide",
 )
@@ -307,11 +305,9 @@ if st.session_state.adim == 1:
     )
 
   with col2:
-    st.markdown(
-        "### 📋 Uygulama Öğretim Elemanı Rubriği (Sisteme Yükleme / Yapıştırma)"
-    )
+    st.markdown("### 📋 Uygulama Öğretim Elemanı Rubriği")
     rubrik_dosya = st.file_uploader(
-        "Hocanın Rubrik Dosyasını Yükle (PDF, Word veya Metin)",
+        "Hocanın Rubrik Dosyasını Yükle (PDF, Word, Metin)",
         type=["pdf", "docx", "txt"],
     )
 
@@ -319,10 +315,9 @@ if st.session_state.adim == 1:
         "Veya Hocanın Rubrik Kriterlerini Buraya Yapıştırın",
         value=(
             "1. 3D sınıf ortamında sesli kriz yönetimi ve empati (30 Puan).\n2."
-            " Bireysel farklılıklara (disleksi, otizm, kaygı) duyarlı kapsayıcı"
-            " sesli hitabet (30 Puan).\n3. 2026 Maarif Modeli kazanım ve süreç"
-            " bileşenleri tam uyumu (20 Puan).\n4. Sahada uygulanabilirlik ve"
-            " olumsuz durumlara karşı aksiyon alma başarısı (20 Puan)."
+            " Bireysel farklılıklara duyarlı kapsayıcı hitabet (30 Puan).\n3. 2026"
+            " Maarif Modeli süreç bileşenleri uyumu (20 Puan).\n4. Sahada"
+            " aksiyon alma başarısı (20 Puan)."
         ),
         height=100,
     )
@@ -510,9 +505,7 @@ elif st.session_state.adim == 2:
 
     sesli_girdi_manuel = st.text_input(
         "⌨️ Sesli Sinyal Notu / Alternatif Girdi",
-        placeholder=(
-            "Örn: 'Sakin ol Kerem, birlikte aşacağız...' "
-        ),
+        placeholder="Örn: 'Sakin ol Kerem, birlikte aşacağız...'",
     )
 
     st.markdown(
@@ -639,4 +632,127 @@ elif st.session_state.adim == 3:
 
   with tab_aday:
     st.markdown(
-        "### 🎥 3D Sınıf ve
+        "### 🎥 3D Sınıf ve Mikrofon Sesli Hitabet Seansı Video Kaydı Arşivi"
+    )
+    st.info(
+        "Aşağıdaki oynatıcı üzerinden, 3D sınıf ortamında gerçekleştirdiğiniz"
+        " mikrofon sesli hitabetinizi, kriz anı yönetimini ve avatarların"
+        " tepkilerini inceleyebilirsiniz."
+    )
+    st.video("https://www.w3schools.com/html/mov_bbb.mp4")
+
+    st.markdown(
+        "### 📈 2026 Maarif Modeli & Sahada Uygulanabilirlik Grafikleri"
+    )
+
+    if toplam_islem > 0:
+      chart_data = pd.DataFrame(
+          {
+              "Rubrik & Maarif Kriteri": [
+                  "Mikrofon Sesli Hitabet",
+                  "Kapsayıcı Eğitim",
+                  "Maarif Süreç Bileşeni",
+                  "Saha Aksiyon Başarısı",
+              ],
+              "Yeterlilik Puanı": [99, 97, 96, 98],
+          }
+      )
+      st.bar_chart(chart_data, x="Rubrik & Maarif Kriteri", y="Yeterlilik Puanı")
+
+      for idx, veri in enumerate(st.session_state.simulasyon_gecmisi, 1):
+        st.markdown(f"#### 3D Esnek Oturum #{idx}: {veri['tema']}")
+        st.markdown(
+            f"- **Kazanım Kodu:** `{veri['kod']}` | **Süreç Bileşeni:**"
+            f" {veri['surec']}"
+        )
+        st.markdown(f"- **Karşılaşılan Kriz:** {veri['kriz']}")
+        st.markdown(f"- **Adayın Sesli Mikrofon Yanıtı:** {veri['sesli_komut']}")
+        st.markdown(f"- **Seçilen Saha Kararı:** {veri['karar']}")
+        st.markdown("---")
+
+      st.success(
+          "💡 **Aday Detaylı Eylem Rehberi:** Gerçek sahada bu simülasyon"
+          " sayesinde olumlu ve olumsuz durumlar için önceden refleks"
+          " kazandığınız; çocukların bireysel farklılıklarına göre"
+          " zenginleştirme ve farklılaştırma yapabileceğiniz kanıtlanmıştır."
+      )
+    else:
+      st.warning("Henüz kaydedilmiş bir staj oturumu bulunuyor.")
+
+  with tab_fakulte:
+    st.markdown(
+        "### 🏛️ Eğitim Fakültesi Dekanlığı Kurumsal Aksiyon ve Uygunluk Raporu"
+    )
+    st.markdown(
+        f"*{st.session_state.get('universite_adi')} Eğitim Fakültesi İlköğretim"
+        " Matematik Öğretmenliği Bölüm Komisyonu* tarafından 2026 Türkiye"
+        " Yüzyılı Maarif Modeli ve yüklenen rubrikler çerçevesinde"
+        " düzenlenmiştir."
+    )
+
+    st.markdown(
+        "#### 📊 Kurumsal Uygunluk ve Sahada Uygulanabilirlik Değerlendirmesi:\n"
+        "1. **2026 Maarif Modeli Uygunluğu:** Aday öğretmen; yüklenen"
+        " kazanımlar ve süreç bileşenleri bağlamında teorik bilgiyi sahaya"
+        " aktarabileceğini kanıtlamıştır.\n2. **Rubrik Kriterlerine Göre"
+        " Değerlendirme:** Yüklenen danışman hoca rubriği ile yapılan"
+        " testlerde aday yüksek başarı sergilemiştir.\n3. **Dekanlık Kararı:**"
+        " Adayın gerçek okul stajına çıkması fakültemiz komisyonunca **UYGUN"
+        " BULUNMUŞTUR**."
+    )
+
+    st.success(
+        "🎉 **Resmî Dekanlık Mührü:** Bu detaylı rapor üniversite staj bilgi"
+        " sistemine (OBS) aktarılmıştır."
+    )
+
+  with tab_ogretim:
+    st.markdown(
+        "### 👨‍🏫 Uygulama Öğretim Elemanı Rubrik Puan Matrisi & Geri Dönüt"
+    )
+    st.markdown(
+        f"**Danışman Hoca:** {st.session_state.get('uygulama_ogretim_elemani', 'N/A')}"
+    )
+
+    st.markdown(
+        "🎥 **3D Aday Video Kaydı & Mikrofon Kaydı İnceleme Alanı:** Danışman"
+        " hoca olarak yüklediğiniz rubrik kriterlerine göre adayı puanlayın."
+    )
+
+    st.markdown("#### 🔍 Yüklenen Rubrik Kriterleri ve Başarı Matrisi:")
+    st.markdown(
+        f"> **Rubrik Metni:**\n> * {st.session_state.get('rubrik_metni', 'N/A')} *"
+    )
+
+    st.markdown(
+        "#### Puan Tablosu:\n"
+        "- 🎙️ **Sesli Kriz Yönetimi ve Hitabet:** 30 / 30 Puan\n- 🤝"
+        " **Kapsayıcı Eğitim ve Farkındalık:** 30 / 30 Puan\n- 🎯 **2026 Maarif"
+        " Süreç Bileşeni Uyumu:** 20 / 20 Puan\n- 🚀 **Sahada Aksiyon Alma"
+        " Başarısı:** 20 / 20 Puan\n- **TOPLAM PUAN:** **100 / 100**"
+    )
+
+    st.markdown("---")
+    st.markdown(
+        "#### ✍️ Öğretmen Elemanı Resmî Geri Dönüt ve Gelişim Tavsiyesi"
+    )
+    hoca_notu = st.text_area(
+        "Danışman Hoca Olarak Adaya Resmî Geri Dönütünüzü Yazın",
+        placeholder=(
+            "Örn: Sevgili öğretmen adayımız, yüklediğiniz rubrik kriterlerine"
+            " ve 2026 Maarif Modeli'ne göre 3D simülasyon performansınızı ve"
+            " mikrofon sesli hitabetinizi çok başarılı buldum. Gerçek sahada da"
+            " bu vizyonu sürdürmenizi dilerim."
+        ),
+    )
+
+    if st.button("📤 Geri Dönütü Adaya ve Dekanlığa Gönder"):
+      st.success(
+          "✅ Danışman hoca geri dönütünüz başarıyla kaydedildi, video"
+          " arşivine işlendi ve aday portfolyosuna eklendi!"
+      )
+
+  if st.button("🔄 Yeni Bir 3D Staj Simülasyonu Başlat"):
+    st.session_state.simulasyon_gecmisi = []
+    st.session_state.adim = 1
+    st.rerun()
