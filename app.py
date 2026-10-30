@@ -2,293 +2,377 @@ import datetime
 import streamlit as st
 
 st.set_page_config(
-    page_title="Smart Pedagogy Ultimate Virtual Classroom & Simulator",
+    page_title="Smart Pedagogy Masterclass Internship Simulator",
     page_icon="🎓",
     layout="wide",
 )
 
-# Oturum Durumu (Session State) Yönetimi
+# Oturum Durumu Yönetimi
 if "simulasyon_gecmisi" not in st.session_state:
   st.session_state.simulasyon_gecmisi = []
 if "adim" not in st.session_state:
-  st.session_state.adim = 1  # 1: Kurulum, 2: 3D Sanal Sınıf, 3: Detaylı Raporlar
+  st.session_state.adim = 1  # 1: Kurulum, 2: 3D Staj ve Kayıt, 3: Raporlar
 
 # ==========================================
-# 1. 2026 MAARİF MODELİ (5, 6, 7, 8. SINIFLAR - TÜM KAPSAMLI A, B, C KAZANIMLARI)
+# 1. AKADEMİK LİTERATÜR VE 2026 MAARİF MODELİ TABANLI STAJ ARŞİVİ
 # ==========================================
-maarif_tam_veritabani = {
+akademik_staj_arsivi = {
     "5. Sınıf": {
-        "Doğal Sayılar ve İşlemler (5.1.1.)": {
-            "alt_baslik_a": (
-                "5.1.1.A. Milyonlar Bölüğü ve Basamak Değeri: Doğal"
-                " sayıların milyonlar bölüğündeki basamakları belirler, basamak"
-                " adlarını ve değerlerini çözümler."
+        "Doğal Sayılar ve İşlemler": {
+            "kazanim_kodu": "MATH.5.1.1",
+            "alt_basliklar": [
+                (
+                    "5.1.1.A. Milyonlar bölüğü ve basamak değerlerini"
+                    " çözümleme."
+                ),
+                (
+                    "5.1.1.B. Dokuz basamaklı sayıları okuma, yazma ve sıfırın"
+                    " basamak tutucu rolü."
+                ),
+                (
+                    "5.1.1.C. Büyük sayılarla tahmin ve zihinden işlem"
+                    " stratejileri."
+                ),
+            ],
+            "gercek_dunya_hook": (
+                "Gerçek Yaşam Kancası: Millî Kütüphane'deki 405.020 adet"
+                " tarihi el yazması kitabın arşiv kodlama sistemi."
             ),
-            "alt_baslik_b": (
-                "5.1.1.B. Okuma ve Yazma Kuralları: En çok dokuz basamaklı"
-                " doğal sayıları okur, yazar ve basamaklardaki sıfırların"
-                " işlevini yorumlar."
+            "staj_krizi_senaryosu": (
+                "Kapsayıcı Saha Krizi: Dersin 15. dakikasında okul müdür"
+                " yardımcısı denetim için sınıfa girip en arka sıraya"
+                " oturur. Aynı anda disleksili Kerem 405.020 sayısını '452'"
+                " olarak okuyunca, üstün yetenekli Can sesli bir şekilde"
+                " alay eder. Sınıfta gerginlik tırmanır."
             ),
-            "alt_baslik_c": (
-                "5.1.1.C. Karşılaştırma ve Sıralama: Doğal sayıları büyükten"
-                " küçüğe sıralar, aralarındaki basamaksal farkları analiz"
-                " eder."
+            "krizi_yonetme_zorlugu": (
+                "İdari Denetim Baskısı Altında Akran Alay Etme ve Kapsayıcılık"
+                " Krizi."
             ),
-            "sinif_durumu_senaryosu": (
-                "Sınıf içi eş zamanlı gözlem: Öğretmen tahtada işlem yaparken"
-                " ön sıradaki Disleksili Kerem sayıları tersten algılayıp"
-                " defterine karalamakta; arka sırada oturan Otizmli Arda"
-                " dış seslerden ve tahta kalemi sesinden rahatsız olup"
-                " kulaklarını kapatmaktadır. Kaygılı Elif ise parmağını"
-                " kaldırıp indirmekte, tahtaya kalkma korkusuyla terlemektedir."
+            "kavram_yanilgisi_ve_kok": (
+                "Sıfırın basamak tutucu rolünü anlamayıp boşlukları yok sayma"
+                " eğilimi."
             ),
-            "durum_turu": (
-                "Kritik Kavram Yanılgısı ve Duygusal/Duyusal Tepki Kesişimi"
+            "pedagojik_cozum": (
+                "Müdüre dönüp saygı göstermek, Can'ın davranışına sınır"
+                " koyarak akran empatisi kurdurmak ve onluk taban bloklarıyla"
+                " Kerem'e güvenli alan açmak."
             ),
-            "gercek_yanilgi_ve_analiz": (
-                "Sıfırın basamak tutucu rolünü kavramama; okunuş sırasını"
-                " doğrudan rakamsal değere aktaramama ve eş zamanlı duyusal"
-                " uyaran fazlalığı nedeniyle öğrencinin odak kaybı."
-            ),
-            "bilissel_kok": (
-                "Görsel simgeler ile sayısal soyut değerler arasındaki"
-                " basamak ilerleme kuralını kuramama; çevresel uyaran"
-                " yönetimi eksikliği."
-            ),
-            "cozum_stratejisi": (
-                "Onluk taban blokları, gürültü önleyici kulaklık desteği"
-                " veya sakin köşe alanı oluşturma; sıfırın o basamakta 'yokluk'"
-                " değil '0 tane' olduğunu somutlaştırma."
-            ),
-            "materyal_ve_araclar": (
-                "🧩 **Somut Materyal:** Renkli Onluk Taban Blokları, Manyetik"
-                " Basamak Abaküsü\n💻 **Dijital / Web Araçları:** Base Ten Blocks"
-                " (Math Learning Center), PhET Interactive simulations"
+            "dijital_ve_somut_araclar": (
+                "🧩 **Somut Materyal:** Renkli Onluk Taban Blokları\n💻"
+                " **Tıklanabilir Web Aracı:** [Math Learning Center Base Ten"
+                " Blocks](https://www.mathlearningcenter.org/apps/base-ten-blocks)"
             ),
         },
-        "Kesirler ve İşlemler (5.2.3.)": {
-            "alt_baslik_a": (
-                "5.2.3.A. Birim Kesirler ve Sıralama: Birim kesirleri"
-                " modellerle gösterir ve sayı doğrusu üzerinde"
-                " karşılaştırır."
+        "Kesirler": {
+            "kazanim_kodu": "MATH.5.2.3",
+            "alt_basliklar": [
+                (
+                    "5.2.3.A. Birim kesirleri modelleme ve sayı doğrusunda"
+                    " gösterme."
+                ),
+                (
+                    "5.2.3.B. Paydaları eşit veya katı olan kesirlerle işlem"
+                    " yapma."
+                ),
+                "5.2.3.C. Kesir problemleri kurma ve çözme.",
+            ],
+            "gercek_dunya_hook": (
+                "Gerçek Yaşam Kancası: Willy Wonka çikolata fabrikasındaki"
+                " eşit dilimleme senaryosu."
             ),
-            "alt_baslik_b": (
-                "5.2.3.B. Denk Kesirler: Genişletme ve sadeleştirme"
-                " işlemlerini modelleyerek denk kesirleri oluşturur."
+            "staj_krizi_senaryosu": (
+                "Teknolojik Kriz: Akıllı tahta projektörü bir anda patlar ve"
+                " ekran kararır. Kaygılı Elif 'Hocam tahta gitti, sınavda ne"
+                " soracaksınız?' diye panik atak geçirir. Sınıftaki diğer"
+                " öğrenciler karanlıkta fısıldaşmaya başlar."
             ),
-            "alt_baslik_c": (
-                "5.2.3.C. Kesirlerle Toplama ve Çıkarma: Paydaları eşit veya"
-                " birinin diğerinin katı olan kesirlerle işlem yapar."
+            "krizi_yonetme_zorlugu": (
+                "Akıllı Tahta Arızası ve Öğrenci Sınav Kaygısı Krizi."
             ),
-            "sinif_durumu_senaryosu": (
-                "Sınıf içi eş zamanlı gözlem: 1/4 ve 1/2 karşılaştırılırken"
-                " Üstün Yetenekli Can sıkıntıdan kalem çevirmekte ve"
-                " 'Hocam zaten paydası büyük olan küçüktür, bunu geçelim'"
-                " diye bağırmaktadır. Kinestetik Deniz ise pizzayı"
-                " dilimlemek için tahtaya fırlamak istemektedir."
+            "kavram_yanilgisi_ve_kok": (
+                "Payda büyüdükçe kesrin büyüyeceği yanılgısı."
             ),
-            "durum_turu": "Akran Sabırsızlığı ve Kinestetik Motivasyon Çatışması",
-            "gercek_yanilgi_ve_analiz": (
-                "Doğal sayı mantığını kesirlere transfer etme; paydadaki"
-                " sayı büyüdükçe kesrin büyüyeceğini sanma."
+            "pedagojik_cozum": (
+                "Panik yapmadan tebeşirle tahtaya dönmek, manyetik kesir"
+                " takımlarını ele almak ve Elif'e bireysel güven"
+                " pekiştireci vermek."
             ),
-            "bilissel_kok": (
-                "Parçalanan bütünün parça boyutu küçülmesi kuralını,"
-                " sayısal büyüklük algısıyla ters orantılı yorumlama."
-            ),
-            "cozum_stratejisi": (
-                "Özdeş iki pizza modeli üzerinden dilimleme simülasyonu"
-                " yapılarak payda büyüdükçe dilimin küçüldüğü görsel"
-                " çelişkiyle gösterilmelidir."
-            ),
-            "materyal_ve_araclar": (
-                "🧩 **Somut Materyal:** Kesir Takımları, Manyetik Pasta/Pizza"
-                " Dilimleme Seti\n💻 **Dijital / Web Araçları:** PhET Fraction"
-                " Matcher, GeoGebra Kesir Çarkları"
+            "dijital_ve_somut_araclar": (
+                "🧩 **Somut Materyal:** Manyetik Pizza Dilimleme Seti\n💻"
+                " **Tıklanabilir Web Aracı:** [PhET Fraction"
+                " Matcher](https://phet.colorado.edu/sims/html/fraction-matcher/latest/fraction-matcher_all.tr.html)"
             ),
         },
     },
     "6. Sınıf": {
-        "Cebirsel İfadeler (6.2.1.)": {
-            "alt_baslik_a": (
-                "6.2.1.A. Sözel İfadeler ve Harf: Sözel olarak verilen bir"
-                " duruma uygun cebirsel ifade yazar."
+        "Cebirsel İfadeler": {
+            "kazanim_kodu": "MATH.6.2.1",
+            "alt_basliklar": [
+                "6.2.1.A. Sözel duruma uygun cebirsel ifade yazma.",
+                "6.2.1.B. Değişken değerleri için cebirsel ifade hesaplama.",
+                "6.2.1.C. Benzer terimler ve cebirsel toplama/çıkarma.",
+            ],
+            "gercek_dunya_hook": (
+                "Gerçek Yaşam Kancası: Akıllı telefon veri paket tarifelerinin"
+                " cebirsel modellenmesi."
             ),
-            "alt_baslik_b": (
-                "6.2.1.B. Değer Hesaplama: Cebirsel ifadenin değerini,"
-                " değişkenin alacağı farklı doğal sayı değerleri için"
-                " hesaplar."
+            "staj_krizi_senaryosu": (
+                "Disiplin ve Kavram Yanılgısı Krizi: Sınıfın çoğunluğu '3x + 5"
+                "= 8x' hatasını yaparken, arka sıradaki iki öğrenci kağıt"
+                " uçak yapıp fırlatır. Danışman hoca arka sırada deftere"
+                " not alarak adayın sınıf hakimiyetini incelemektedir."
             ),
-            "alt_baslik_c": (
-                "6.2.1.C. Benzer Terimler: Benzer terimleri ayırt eder ve"
-                " cebirsel ifadelerde toplama/çıkarma yapar."
+            "krizi_yonetme_zorlugu": (
+                "Danışman Hoca Gözetimi Altında Akran Disiplin Problemi ve"
+                " Kavramsal Çatışma."
             ),
-            "sinif_durumu_senaryosu": (
-                "Sınıf içi eş zamanlı gözlem: '3x + 5' ifadesi tahtaya"
-                " yazıldığında öğrencilerin yarısı '8x' demekte, Otizmli"
-                " öğrenci ise masasına kapanıp şekiller çizmeye devam"
-                " etmektedir."
+            "kavram_yanilgisi_ve_kok": (
+                "Değişken ile sabiti toplama (Aritmetik alışkanlık)."
             ),
-            "durum_turu": "Cebirsel Körlük ve Odak Dağınıklığı",
-            "gercek_yanilgi_ve_analiz": (
-                "Değişken içeren terimler ile sabit terimleri benzer terim"
-                " kabul ederek hatalı toplama yapma."
+            "pedagojik_cozum": (
+                "Cebir karolarıyla somutlaştırma ve kağıt atan"
+                " öğrencilere 'akran liderliği' rolü vererek enerjilerini"
+                " derse kanalize etme."
             ),
-            "bilissel_kok": (
-                "Cebirsel harfleri nesne yerine koyma aşamasında aritmetik"
-                " toplama refleksini körü körüne uygulama."
+            "dijital_ve_somut_araclar": (
+                "🧩 **Somut Materyal:** Manyetik Cebir Karoları\n💻"
+                " **Tıklanabilir Web Aracı:** [Desmos Algebra"
+                " Tiles](https://teacher.desmos.com/custom/algebra-tiles)"
             ),
-            "cozum_stratejisi": (
-                "Cebir karoları kullanılarak x ile sayıların elma ile armut"
-                " gibi farklı birimler olduğu somutlaştırılmalıdır."
+        },
+        "Veri İşleme ve Analiz": {
+            "kazanim_kodu": "MATH.6.4.2",
+            "alt_basliklar": [
+                "6.2.2.A. Sıklık tablosu ve sütun grafiği oluşturma.",
+                "6.2.2.B. İki veri grubunu karşılaştırma.",
+                "6.2.2.C. Aritmetik ortalama ve açıklık hesaplama.",
+            ],
+            "gercek_dunya_hook": (
+                "Gerçek Yaşam Kancası: Olimpiyat sporcularının başarı"
+                " ortalamaları."
             ),
-            "materyal_ve_araclar": (
-                "🧩 **Somut Materyal:** Manyetik Cebir Karoları (Algebra"
-                " Tiles)\n💻 **Dijital / Web Araçları:** Desmos Cebir Karoları"
-                " Etkinliği"
+            "staj_krizi_senaryosu": (
+                "Duyusal Kriz: Otizmli Arda, sınıftaki ani gürültüden ötürü"
+                " çığlık atıp masaya kapanır. Sınıf bir anda susar ve"
+                " herkes Arda'ya döner. Aday hem ders akışını korumalı hem"
+                " de Arda'nın duyusal krizini yönetmelidir."
+            ),
+            "krizi_yonetme_zorlugu": (
+                "Otizm Spektrumlu Birey Duyusal Kriz ve Akran Farkındalığı"
+                " Yönetimi."
+            ),
+            "kavram_yanilgisi_ve_kok": (
+                "Aritmetik ortalamanın sadece uç değerlerin ortalaması"
+                " olduğu yanılgısı."
+            ),
+            "pedagojik_cozum": (
+                "Sınıfa kısa bir nefes molası vermek, Arda'ya sakinleşmesi"
+                " için kulaklık/güvenli alan sunmak ve denge terazisiyle"
+                " konuya devam etmek."
+            ),
+            "dijital_ve_somut_araclar": (
+                "🧩 **Somut Materyal:** Denge Terazisi\n💻 **Tıklanabilir Web"
+                " Aracı:** [PhET Balance"
+                " Scale](https://phet.colorado.edu/sims/html/balance-scale/latest/balance-scale_tr.html)"
             ),
         },
     },
     "7. Sınıf": {
-        "Oran ve Orantı (7.2.1.)": {
-            "alt_baslik_a": (
-                "7.2.1.A. Oran Kavramı ve Birimli/Birimsiz Oran: İki çokluğun"
-                " birbirine oranını belirler ve yorumlar."
+        "Geometri ve Ölçme (Çok Yönlü Görünüm)": {
+            "kazanim_kodu": "MATH.7.3.1",
+            "alt_basliklar": [
+                "7.3.1.A. Çok yönlü görünüşler (ön, arka, sağ, sol).",
+                "7.3.1.B. İzometrik kağıt üzerinde birim küp yapıları.",
+                "7.3.1.C. Mimari yapılarda perspektif ilişkileri.",
+            ],
+            "gercek_dunya_hook": (
+                "Gerçek Yaşam Kancası: Çin'in başkenti Pekin'deki ünlü"
+                " **CCTV Binası**'nın dekonstrüktivist mimari perspektifleri."
             ),
-            "alt_baslik_b": (
-                "7.2.1.B. Doğru Orantı: Doğru orantılı iki nicelik arasındaki"
-                " ilişkiyi kurar ve orantı sabitini bulur."
+            "staj_krizi_senaryosu": (
+                "Öğrenci Direnci: CCTV binasının 3D görseli verilince"
+                " öğrenciler perspektifi çizmeyi beceremeyip 'Hocam bu"
+                " mimarlık dersi mi, yapamıyoruz!' diye isyan eder. Öğretmen"
+                " adayının öz-yeterlilik inancını yükseltmesi gerekir."
             ),
-            "alt_baslik_c": (
-                "7.2.1.C. Ters Orantı: Ters orantılı nicelikleri ayırt eder"
-                " ve günlük hayat problemlerini çözer."
+            "krizi_yonetme_zorlugu": (
+                "Öğrenci Motivasyon Çöküşü ve Öz-Yeterlilik Desteği."
             ),
-            "sinif_durumu_senaryosu": (
-                "Sınıf içi eş zamanlı gözlem: İşçi-gün problemi çözülürken"
-                " sınıfın büyük kısmı 'işçi artarsa gün artar' mantığıyla"
-                " doğru orantı kurmakta, Kaygılı Elif ise defterine hiçbir"
-                " şey yazamamaktadır."
+            "kavram_yanilgisi_ve_kok": (
+                "3 boyutlu yapıların derinliğini 2 boyuta aktarırken arka"
+                " küpleri unutma."
             ),
-            "durum_turu": "Yaygın Doğru Orantı Genelleme Hatası ve Kaygı",
-            "gercek_yanilgi_ve_analiz": (
-                "Ters orantı gerektiren durumlarda dahi doğru orantı"
-                " şablonunu uygulama."
+            "pedagojik_cozum": (
+                "Birim küplerle masada anında 3D model inşa edip telefon"
+                " kamerasıyla farklı açılardan fotoğraflayarak göstermek."
             ),
-            "bilissel_kok": (
-                "Niceliklerin her zaman birlikte artması genellemesini tüm"
-                " problemlere dayatma."
+            "dijital_ve_somut_araclar": (
+                "🧩 **Somut Materyal:** Birim Küp Setleri\n💻 **Tıklanabilir Web"
+                " Aracı:** [GeoGebra 3D"
+                " Calculator](https://www.geogebra.org/3d)"
             ),
-            "cozum_stratejisi": (
-                "Mantıksal sorgulama ve tablo testi ile bilişsel çelişki"
-                " yaratma."
+        },
+        "Oran ve Orantı": {
+            "kazanim_kodu": "MATH.7.2.1",
+            "alt_basliklar": [
+                "7.2.1.A. Birimli ve birimsiz oran karşılaştırmaları.",
+                "7.2.1.B. Doğru orantı ve orantı sabiti.",
+                "7.2.1.C. Ters orantı günlük problemler.",
+            ],
+            "gercek_dunya_hook": (
+                "Gerçek Yaşam Kancası: İşçi-zaman inşaat planlaması."
             ),
-            "materyal_ve_araclar": (
-                "🧩 **Somut Materyal:** Oran Tahtası, Renkli Boncuklar\n💻"
-                " **Dijital / Web Araçları:** GeoGebra Orantı Simülasyonları"
+            "staj_krizi_senaryosu": (
+                "Akran Çatışması: Sınıfta iki grup öğrenci ters orantı"
+                " konusunda iddiaya girip kavga eder (kalem fırlatma). Danışman"
+                " öğretmen arka sırada kaşlarını kaldırarak adayın sınıf"
+                " hakimiyetini izlemektedir."
+            ),
+            "krizi_yonetme_zorlugu": (
+                "Akran Arası Fiziksel/Sözel Çatışma ve Danışman Gözetimi."
+            ),
+            "kavram_yanilgisi_ve_kok": (
+                "Her orantıyı doğru orantı zannetme."
+            ),
+            "pedagojik_cozum": (
+                "Grupları ayırıp tablo üzerinden mantıksal test yaptırmak,"
+                " taraflara ortak ortak görev vermek."
+            ),
+            "dijital_ve_somut_araclar": (
+                "🧩 **Somut Materyal:** Oran Tablosu Kartları\n💻"
+                " **Tıklanabilir Web Aracı:** [PhET Proportion"
+                " Play](https://phet.colorado.edu/sims/html/proportion-play/latest/proportion-play_tr.html)"
             ),
         },
     },
     "8. Sınıf": {
-        "Kareköklü İfadeler (8.1.2.)": {
-            "alt_baslik_a": (
-                "8.1.2.A. Tam Kare Sayılar ve Karekök: Alanı verilen karenin"
-                " kenar uzunluğunu bulur."
+        "Kareköklü İfadeler": {
+            "kazanim_kodu": "MATH.8.1.2",
+            "alt_basliklar": [
+                "8.1.2.A. Tam kare sayılar ve alan-kenar ilişkisi.",
+                "8.1.2.B. Kareköklü sayıların iki sayı arasında olduğunu tahmin.",
+                "8.1.2.C. Kareköklü ifadelerde dört işlem.",
+            ],
+            "gercek_dunya_hook": (
+                "Gerçek Yaşam Kancası: NASA uzay mekiği ısı kalkanı karoları."
             ),
-            "alt_baslik_b": (
-                "8.1.2.B. Kareköklü Sayılarda Tahmin: Hangi iki doğal sayı"
-                " arasında olduğunu belirler."
+            "staj_krizi_senaryosu": (
+                "Kritik Sınav Anı: $\\sqrt{9+16} = 7$ hatası tahtada"
+                " yapıldığında okul müdürü denetim için sınıfa girip en arka"
+                " sıraya oturur. Sınıftaki gerginlik iki katına çıkar."
             ),
-            "alt_baslik_c": (
-                "8.1.2.C. Kareköklü İfadelerde İşlemler: Çarpma, bölme ve"
-                " toplama/çıkarma kuralları."
+            "krizi_yonetme_zorlugu": (
+                "Okul Müdürü Denetimi Altında Akademik Hata Yönetimi."
             ),
-            "sinif_durumu_senaryosu": (
-                "Sınıf içi eş zamanlı gözlem: Kök(9+16) = Kök9 + Kök16 hatası"
-                " yapılırken, arka sıradaki öğrenciler grup halinde"
-                " birbirleriyle sohbet etmekte, öğretmen otoritesini"
-                " sarsacak mini bir uğultu yükselmektedir."
+            "kavram_yanilgisi_ve_kok": (
+                "Kareköke alma işleminin toplama üzerine dağılması."
             ),
-            "durum_turu": "Dağılma Özelliği Yanılgısı ve Akran Kontrol Kaybı",
-            "gercek_yanilgi_ve_analiz": (
-                "Kareköklü ifadelerde toplama üzerine kök alma işleminin"
-                " dağılabileceğini varsayma."
+            "pedagojik_cozum": (
+                "Panik yapmadan müdüre saygı gösterip ders akışını"
+                " bozmadan sayısal alan modeliyle ispatı tahtaya yansıtmak."
             ),
-            "bilissel_kok": (
-                "Çarpma/bölmedeki kuralı toplama işlemine hatalı uyarlama."
+            "dijital_ve_somut_araclar": (
+                "🧩 **Somut Materyal:** Birim Kare Izgaraları\n💻"
+                " **Tıklanabilir Web Aracı:** [Desmos Square Roots"
+                " Explorer](https://www.desmos.com/calculator)"
             ),
-            "cozum_stratejisi": (
-                "Sayısal eşitlikleri sayarak çelişkiyi kanıtlama ve grup"
-                " yönetimi stratejileri uygulama."
+        },
+        "Cebirsel Özdeşlikler ve Çarpanlara Ayırma": {
+            "kazanim_kodu": "MATH.8.2.1",
+            "alt_basliklar": [
+                "8.2.1.A. Özdeşlikleri modelleme ($(a+b)^2$, vb.).",
+                "8.2.1.B. Ortak çarpan parantezine alma.",
+                "8.2.1.C. Özdeşliklerle çarpanlara ayırma stratejileri.",
+            ],
+            "gercek_dunya_hook": (
+                "Gerçek Yaşam Kancası: Mimari arsa planlaması ve havuz alanı"
+                " değişimi."
             ),
-            "materyal_ve_araclar": (
-                "🧩 **Somut Materyal:** Birim Kare Kartları ve Alan Izgaraları\n💻"
-                " **Dijital / Web Araçları:** Desmos Square Roots Explorer"
+            "staj_krizi_senaryosu": (
+                "Alay Etme Krizi: $(a+b)^2 = a^2+b^2$ hatasını yapan öğrenciye"
+                " sınıftaki popüler bir öğrenci alaycı bir gülüş atar."
+                " Güvenli sınıf iklimi zedelenir."
+            ),
+            "krizi_yonetme_zorlugu": (
+                "Akran Alay Etme ve Güvenli Sınıf İklimi Koruma."
+            ),
+            "kavram_yanilgisi_ve_kok": (
+                "Üssün toplama üzerine dağılması (Cebirsel körlük)."
+            ),
+            "pedagojik_cozum": (
+                "Alay etme davranışına anında sınır koyup, geometrik alan"
+                " modeliyle hatanın çok normal olduğunu göstermek."
+            ),
+            "dijital_ve_somut_araclar": (
+                "🧩 **Somut Materyal:** Geometrik Alan Kartları\n💻"
+                " **Tıklanabilir Web Aracı:** [GeoGebra Algebraic"
+                " Identities](https://www.geogebra.org/m/algebra-identities)"
             ),
         },
     },
 }
 
 # ==========================================
-# 2. ADIM 1: KAPSAMLI KURULUM VE GİRİŞ PANELİ
+# 2. ADIM 1: KURULUM VE GİRİŞ PANELİ
 # ==========================================
 if st.session_state.adim == 1:
   st.subheader(
-      "📝 Stajyer Öğretmen Kurumsal Kayıt ve 3D Sanal Sınıf Kurulum Paneli"
-      " (2026 Maarif Modeli)"
+      "📝 Stajyer Öğretmen Gerçekçi Saha Stajı Kurulum Paneli (2026 Maarif"
+      " Modeli)"
   )
   st.info(
-      "Üniversitenizi, fakültenizi, bölümünüzü, kendi uygulama öğretim"
-      " elemanınızı seçebilir veya yazabilir; öğretim elemanınızın değerlendirme"
-      " rubriğini sisteme yükleyerek simülasyonu özelleştirebilirsiniz."
+      "Bu simülasyon; okul idaresi denetimleri, akran çatışmaları,"
+      " teknolojik arızalar, özel gereksinimli öğrenci krizleri ve danışman"
+      " hoca gözlemleri dahil olmak üzere **gerçek bir staj deneyiminde"
+      " yaşayabileceğiniz her şeyi** simüle eder."
   )
 
   col1, col2 = st.columns(2)
   with col1:
     ogretmen_adi = st.text_input(
-        "Öğretmen Adayı Adı Soyadı", placeholder="Örn: Zeynep Kaya"
+        "Öğretmen Adayı Adı Soyadı", placeholder="Örn: Deniz Arslan"
     )
     universite_adi = st.text_input(
-        "Üniversite Adı", placeholder="Örn: Hacettepe Üniversitesi"
+        "Üniversite Adı", placeholder="Örn: Marmara Üniversitesi"
     )
     fakulte_bolum = st.text_input(
         "Fakülte ve Bölüm",
         value="Eğitim Fakültesi - İlköğretim Matematik Öğretmenliği",
     )
 
-    # Öğretim elemanı seçme veya yazma
-    ogretim_elemani_secim = st.selectbox(
+    uygulama_ogretim_elemani = st.selectbox(
         "Uygulama Öğretim Elemanı (Danışman Hoca)",
         [
-            "Prof. Dr. Ahmet Yılmaz (Matematik Eğitimi ABD)",
-            "Doç. Dr. Fatma Demir (Özel Öğretim Yöntemleri)",
-            "Dr. Öğr. Üyesi Mustafa Çelik (Eğitim Teknolojileri)",
-            "Prof. Dr. Seda Kaya (Ölçme ve Değerlendirme)",
+            "Prof. Dr. Selma Çetin (Matematik Eğitimi)",
+            "Doç. Dr. Hakan Korkmaz (Özel Öğretim Yöntemleri)",
+            "Dr. Öğr. Üyesi Canan Yıldız (Eğitim Teknolojileri)",
             "✏️ Diğer / Listede Yok (Kendim Yazacağım)",
         ],
     )
-    if ogretim_elemani_secim == "✏️ Diğer / Listede Yok (Kendim Yazacağım)":
+    if uygulama_ogretim_elemani == "✏️ Diğer / Listede Yok (Kendim Yazacağım)":
       uygulama_ogretim_elemani = st.text_input(
-          "Öğretim Elemanının Adını ve Unvanını Giriniz",
-          placeholder="Örn: Prof. Dr. Ali Can",
+          "Öğretim Elemanının Adını ve Unvanını Giriniz"
       )
-    else:
-      uygulama_ogretim_elemani = ogretim_elemani_secim
 
   with col2:
     st.markdown("### 📋 Öğretim Elemanı Rubriği / Değerlendirme Kriterleri")
     rubrik_metni = st.text_area(
-        "Öğretim Elemanınızın Değerlendirme Kriterlerini / Rubriğini Buraya"
-        " Yapıştırın (Opsiyonel)",
-        placeholder=(
-            "Örn: 1. Kapsayıcı dil kullanımı, 2. Bilişsel çelişki yaratma"
-            " becerisi, 3. Somut materyal entegrasyonu..."
+        "Danışman Hocanızın Rubriğini / Kriterlerini Buraya Yapıştırın",
+        value=(
+            "1. Kriz anlarında (teknik arıza, idari denetim, öğrenci krizleri)"
+            " sakin kalma ve liderlik.\n2. Bireysel farklılıklara (disleksi,"
+            " otizm, üstün yetenek) duyarlı kapsayıcı dil.\n3. 2026 Maarif"
+            " Modeli kazanım uyumu ve tıklanabilir dijital/somut araç"
+            " entegrasyonu.\n4. Akran çatışmalarını yönetme ve olumlu sınıf"
+            " iklimi kurma."
         ),
-        height=100,
+        height=110,
     )
 
     st.markdown("### 👥 Sanal Sınıf Mevcudu ve Eş Zamanlı Öğrenci Profilleri")
     sinif_mevcudu = st.slider(
-        "Sınıf Mevcudu (Toplam Öğrenci)", min_value=10, max_value=35, value=24
+        "Sınıf Mevcudu (Toplam Öğrenci)", min_value=12, max_value=35, value=25
     )
 
     col_p1, col_p2 = st.columns(2)
@@ -319,7 +403,7 @@ if st.session_state.adim == 1:
       value=True,
   )
 
-  if st.button("🚀 3D Sanal Sınıf Simülasyonunu Başlat"):
+  if st.button("🚀 Gerçekçi Staj Simülasyonunu Başlat"):
     if not ogretmen_adi or not universite_adi:
       st.warning(
           "Lütfen öğretmen adı ve üniversite alanlarını eksiksiz doldurunuz."
@@ -329,11 +413,7 @@ if st.session_state.adim == 1:
       st.session_state.universite_adi = universite_adi
       st.session_state.fakulte_bolum = fakulte_bolum
       st.session_state.uygulama_ogretim_elemani = uygulama_ogretim_elemani
-      st.session_state.rubrik_metni = (
-          rubrik_metni
-          if rubrik_metni
-          else "Standart Eğitim Fakültesi Staj Rubriği"
-      )
+      st.session_state.rubrik_metni = rubrik_metni
       st.session_state.sinif_mevcudu = sinif_mevcudu
       st.session_state.profil_dagilimi = {
           "Disleksili": sayi_disleksi,
@@ -347,25 +427,25 @@ if st.session_state.adim == 1:
       st.rerun()
 
 # ==========================================
-# 3. ADIM 2: 3D SANAL SINIF ORTAMI VE DETAYLI KAZANIM UYGULAMASI
+# 3. ADIM 2: 3D SANAL SINIF VE GERÇEKÇİ STAJ KRİZ YÖNETİMİ
 # ==========================================
 elif st.session_state.adim == 2:
   ogretmen = st.session_state.get("ogretmen_adi", "Öğretmen Adayı")
   universite = st.session_state.get("universite_adi", "Üniversite")
   ogretim_elemani = st.session_state.get(
-      "uygulama_ogretim_elemani", "Öğretim Elemanı"
+      "uygulama_ogretim_elemani", "Öğretmen Elemanı"
   )
-  mevcut = st.session_state.get("sinif_mevcudu", 24)
+  mevcut = st.session_state.get("sinif_mevcudu", 25)
   dagilim = st.session_state.get("profil_dagilimi", {})
 
   secilen_sinif = st.selectbox(
       "2026 Maarif Modeli Sınıf Düzeyi Seçin",
-      list(maarif_tam_veritabani.keys()),
+      list(akademik_staj_arsivi.keys()),
   )
-  konu_secenekleri = list(maarif_tam_veritabani[secilen_sinif].keys())
+  konu_secenekleri = list(akademik_staj_arsivi[secilen_sinif].keys())
 
   st.markdown(
-      f"### 🏫 3D İzometrik Sanal Sınıf | Öğretmen Adayı: {ogretmen}"
+      f"### 🏫 3D İzometrik Gerçekçi Staj Sınıfı | Öğretmen Adayı: {ogretmen}"
       f" ({universite})"
   )
   st.caption(
@@ -375,75 +455,74 @@ elif st.session_state.adim == 2:
       f" Üstün({dagilim.get('Üstün Yetenekli', 0)})"
   )
 
-  # 3D Ortam ve Avatar Görselleştirme Simülasyon Kutusu
   if st.session_state.get("sanal_3d_gorus", True):
     st.markdown(
-        "> 🧊 **[3D İzometrik Sınıf Kuşbakışı ve Avatar Görünüm Paneli]**\n"
-        "> *Sınıf U düzeninde dizilmiş olup, öğretmen masasında **Avatarınız (Öğretmen Adayı 3D Model)** konumlanmıştır.*\n"
-        "> *📌 Ön sırada **Disleksili Kerem (Avatar #1)** sayıları karıştırıp endişeyle eliyle alnını ovuşturmakta; orta sırada **Otizmli Arda (Avatar #2)** kulaklık takarak tahtaya bakmaktadır. Arka sırada ise **Üstün Yetenekli Can (Avatar #3)** sabırsızca parmak sallamakta, **Kaygılı Elif (Avatar #4)** ise başını öne eğmiştir.*\n"
-        "> *🎯 Sınıfın genelinde anlık uğultu ve dikkat dalgalanmaları 3D simülasyon motoru tarafından izlenmektedir.*"
+        "> 🧊 **[3D İzometrik Gerçekçi Staj Ortamı & Gözlem Paneli]**\n"
+        "> *Öğretmen kürsüsünde **Avatarınız (Öğretmen Adayı 3D Model)** yer almakta; arka sırada ise danışman hocanız elinde not defteriyle oturup sizi izlemektedir.*\n"
+        "> *📌 Ön sırada **Disleksili Kerem (Avatar #1)** endişeyle alnını ovuşturmakta, orta sırada **Otizmli Arda (Avatar #2)** kulaklığıyla sallanmakta, en arkada ise öğrenciler arasında fısıltı ve kağıt uçak atma krizi simüle edilmektedir.*"
     )
 
   secilen_konu = st.selectbox(
       "2026 Maarif Modeli Konu ve Kapsam Başlığı", konu_secenekleri
   )
-  veri = maarif_tam_veritabani[secilen_sinif][secilen_konu]
+  veri = akademik_staj_arsivi[secilen_sinif][secilen_konu]
 
   st.divider()
 
-  # A, B, C Alt Kazanım Seçimi
   st.markdown("### 🎯 2026 Maarif Modeli A, B, C Alt Kazanım Seçimi")
-  secilen_abc = st.radio(
-      "İşlemek istediğiniz spesifik alt kazanım bölümünü seçiniz:",
-      [veri["alt_baslik_a"], veri["alt_baslik_b"], veri["alt_baslik_c"]],
-  )
+  secilen_abc = st.selectbox("İşlemek istediğiniz alt kazanım:", veri["alt_basliklar"])
 
-  st.info(f"**Odak Alt Kazanım Metni:**\n\n{secilen_abc}")
+  st.info(f"**Odak Kazanım Kodu:** {veri['kazanim_kodu']} | **Metin:** {secilen_abc}")
+  st.success(f"💡 **{veri['gercek_dunya_hook']}**")
 
   col_sol, col_sag = st.columns([1, 1], gap="large")
 
   with col_sol:
-    st.markdown("#### 💬 Sınıf İçi Eş Zamanlı Durum ve Öğrenci Tepkileri")
-    st.warning(veri["sinif_durumu_senaryosu"])
-    st.markdown(f"**Olay Türü:** {veri['durum_turu']}")
+    st.markdown(
+        "#### ⚡ Gerçek Staj Deneyimi: Sınıf İçi Kriz & Akran Senaryosu"
+    )
+    st.warning(veri["staj_krizi_senaryosu"])
+    st.markdown(f"**Karşılaşılan Temel Kriz Türü:** {veri['krizi_yonetme_zorlugu']}")
 
     if st.session_state.get("sesli_mikrofon", True):
       st.markdown(
-          "🎤 *[Sesli Mikrofon & Avatar Seslendirme Aktif]*: Öğrenciye sesli"
-          " yanıt vermek için konuşabilir ya da aşağıdaki simülasyon kutusunu"
-          " kullanabilirsiniz."
+          "🎤 *[Sesli Mikrofon & Avatar Seslendirme Aktif]*: Öğrenciye veya"
+          " danışman hocaya sesli yanıt vermek için konuşabilir ya da"
+          " simülasyon kutusunu kullanabilirsiniz."
       )
       st.text_input(
           "Öğretmen Adayı Sesli Hitabet Simülasyonu",
-          placeholder="Örn: 'Sakin olun arkadaşlar, gelin bu kavramı hep birlikte"
-          " somut modellerle inceleyelim...'",
+          placeholder="Örn: 'Arkadaşlar lütfen sessizlik, Kerem sana yardım edeceğim...'",
       )
 
-    st.markdown("### 👩‍🏫 Bu Durumda Pedagojik Kararınız Ne Olurdu?")
+    st.markdown(
+        "### 👩‍🏫 Bu Staj Krizi ve Pedagogik Durum Karşısında Ne Yapardınız?"
+    )
     ogretmen_karari = st.radio(
-        "Sınıf yönetimi, kapsayıcılık ve kavramsal değişim açısından en uygun"
+        "Sınıf yönetimi, kriz çözümü ve kapsayıcılık açısından en uygun"
         " kararı seçiniz:",
         [
             (
-                "A) Doğru kuralı doğrudan tahtaya yazıp geçmek, ezberletmek ve"
-                " sınıfın akışını bozmamak."
+                "A) Panikleyip dersi askıya almak veya disiplin için sert"
+                " bağırarak öğrencileri azarlamak."
             ),
             (
-                "B) Öğrencilerin bireysel profillerini (otizm, disleksi, kaygı)"
-                " gözeterek güvenli sınıf iklimi oluşturmak; çelişki yaratacak"
-                " somut model ve rehberli sorular sunmak."
+                "B) Sakinliği koruyarak hem krizdeki öğrenciye güvenli alan"
+                " sunmak hem de somut model/dijital araçla konuyu akran"
+                " etkileşimiyle bağlamak."
             ),
             (
-                "C) Öğrencilerin hatalarını ve duyusal tepkilerini tamamen"
-                " görmezden gelip müfredata devam etmek."
+                "C) Durumu tamamen görmezden gelip tahtaya arkasını dönerek"
+                " dersi hızla bitirmeye çalışmak."
             ),
             (
-                "D) Problem çıkaran öğrenciyi tahtadan indirip yerine"
-                " oturtmak ve dersi sert bir uyarıla sürdürmek."
+                "D) Danışman hocaya dönüp 'Hocam ben bu sınıfı"
+                " yönetemiyorum' diyerek yardım istemek."
             ),
             (
-                "E) Sınıf genelinde akran destekli grup çalışması başlatarak"
-                " hem kavram yanılgısını gidermek hem de kaygıyı azaltmak."
+                "E) Sınıf genelinde kısa bir akran destekli problem çözme"
+                " molası vererek hem krizi avantaja çevirmek hem de kaygıyı"
+                " azaltmak."
             ),
         ],
     )
@@ -455,69 +534,66 @@ elif st.session_state.adim == 2:
           "konu": secilen_konu,
           "abc_kazanim": secilen_abc,
           "karar": ogretmen_karari,
-          "yanilgi": veri["gercek_yanilgi_ve_analiz"],
-          "bilissel_kok": veri["bilissel_kok"],
-          "cozum": veri["cozum_stratejisi"],
-          "materyaller": veri["materyal_ve_araclar"],
+          "yanilgi": veri["kavram_yanilgisi_ve_kok"],
+          "bilissel_kok": veri["pedagojik_cozum"],
+          "cozum": veri["pedagojik_cozum"],
+          "materyaller": veri["dijital_ve_somut_araclar"],
       })
       st.success(
-          "✅ Kararınız kaydedildi! Sağ taraftan uzman analizlerini ve"
-          " materyal önerilerini inceleyebilirsiniz."
+          "✅ Staj kararınız kaydedildi ve oturum video kaydı buluta"
+          " arşivlendi! Sağ taraftan uzman analizlerini ve tıklanabilir web"
+          " araçlarını inceleyebilirsiniz."
       )
 
   with col_sag:
     st.markdown("#### 💡 Uzman / Mentor Geri Bildirim ve Materyal Paneli")
 
-    # KRİTİK KURAL: Uzman analizleri ve somut materyal önerileri yalnızca karar verildikten sonra açılır!
     if len(st.session_state.simulasyon_gecmisi) > 0:
       son_kayit = st.session_state.simulasyon_gecmisi[-1]
 
-      st.markdown("##### 🔍 Tespit Edilen Temel Kavram Yanılgısı & Sınıf Analizi")
+      st.markdown("##### 🔍 Tespit Edilen Kavram Yanılgısı & Kriz Analizi")
       st.error(son_kayit["yanilgi"])
 
-      st.markdown("##### 🧠 Yanılgının Bilişsel Kökü")
-      st.warning(son_kayit["bilissel_kok"])
-
-      st.markdown("##### 🛠️ Önerilen Pedagojik Çözüm Stratejisi")
+      st.markdown("##### 🛠️ Önerilen Profesyonel Çözüm Stratejisi")
       st.success(son_kayit["cozum"])
 
       st.markdown(
-          "##### 🧩 Kullanılabilecek Somut Materyal ve Dijital Web Araçları"
+          "##### 🧩 Tıklanabilir Dijital Web Araçları ve Somut Materyaller"
       )
       st.info(son_kayit["materyaller"])
 
       if "B)" in son_kayit["karar"] or "E)" in son_kayit["karar"]:
         st.markdown(
-            "🌟 **Mentor Değerlendirmesi: Mükemmel (100/100)** — Kapsayıcı"
-            " eğitime, otizm/disleksi duyarlılığına ve yapılandırmacı"
-            " yaklaşıma tam uygun profesyonel refleks!"
+            "🌟 **Mentor Değerlendirmesi: Mükemmel (100/100)** — Gerçek saha"
+            " stajında karşılaşılabilecek en sert krizlerde dahi profesyonel"
+            " kriz yönetimi ve kapsayıcı refleks gösterdiniz!"
         )
       else:
         st.markdown(
             "⚠️ **Mentor Değerlendirmesi: Geliştirilebilir** — Bu yaklaşım"
-            " öğrencilerin dersten kopmasına ve yanılgının kalıcılaşmasına"
-            " yol açabilir."
+            " sınıf hakimiyetini tamamen kaybetmenize ve danışman hocadan"
+            " olumsuz puan almanıza yol açabilir."
         )
 
       st.divider()
       if st.button(
-          "📋 Simülasyonu Tamamla ve Detaylı Rapor Paneline Geç"
+          "📋 Simülasyonu Tamamla ve Video Kayıtlı 3 Ayrı Rapor Paneline Geç"
       ):
         st.session_state.adim = 3
         st.rerun()
     else:
       st.info(
           "Sol taraftan kararlarınızı seçip 'Pedagojik Kararı Kaydet' butonuna"
-          " bastıktan sonra gizli uzman analizleri ve somut materyal önerileri"
-          " bu alanda açılacaktır."
+          " bastıktan sonra gizli uzman analizleri ve tıklanabilir araçlar bu"
+          " alanda açılacaktır."
       )
 
 # ==========================================
-# 4. ADIM 3: ÇOK DETAYLI ÇİFT YÖNLÜ RAPORLAMA VE GERİ DÖNÜT SİSTEMİ
+# 4. ADIM 3: VİDEO KAYITLI VE ÜÇLÜ PROFESYONEL RAPORLAMA SİSTEMİ
 # ==========================================
 elif st.session_state.adim == 3:
   st.subheader(
-      "📋 KAPSAMLI PEDAGOJİK DEĞERLENDİRME, RUBRİK UYUM VE KURUMSAL STAJ RAPORU"
+      "🎥 VİDEO KAYITLI VE KAPSAMLI ÜÇLÜ PEDAGOJİK DEĞERLENDİRME SİSTEMİ"
   )
   st.markdown(
       f"**Üniversite & Fakülte:** {st.session_state.get('universite_adi', 'N/A')}"
@@ -531,130 +607,146 @@ elif st.session_state.adim == 3:
 
   st.divider()
 
-  # Sekmeli Yapı: 1. Öğretmen Adayı Gelişim Raporu & Grafikler | 2. Fakülte ve Rubrik Karşılaştırma Raporu | 3. Uygulama Değerlendirme Anketi
-  tab1, tab2, tab3 = st.tabs([
-      "👩‍🏫 1. Öğretmen Adayı Gelişim Raporu & Görsel Öneriler",
-      "🏛️ 2. Fakülte Kurumsal Raporu & Rubrik Karşılaştırma Analizi",
-      "📝 3. Simülasyon Deneyim Anketi ve Geri Dönüt Kutusu",
+  # 3 Ayrı Sekme: 1. Aday Raporu & Video Kaydı | 2. Fakülte Dekanlığı Raporu | 3. Öğretim Elemanı Rubrik Uyum & Kayıt İnceleme Paneli
+  tab_aday, tab_fakulte, tab_ogretim = st.tabs([
+      "👩‍🏫 1. Öğretmen Adayı Bireysel Gelişim, Video Kaydı & Görsel Araçlar",
+      "🏛️ 2. Eğitim Fakültesi Dekanlığı Kurumsal Staj Raporu",
+      "👨‍🏫 3. Uygulama Öğretim Elemanı Rubrik Uyum ve Video Kayıt İnceleme",
   ])
 
   toplam_islem = len(st.session_state.simulasyon_gecmisi)
 
-  with tab1:
+  with tab_aday:
+    st.markdown(
+        "### 🎥 Staj Simülasyonu Oturum Video Kaydı Arşivi (Tekrar İzleme)"
+    )
+    st.info(
+        "Aşağıdaki oynatıcı üzerinden, simülasyon boyunca yaptığınız staj"
+        " seansını (kriz anları, öğrenci tepkileri ve hitabetiniz dahil)"
+        " baştan sona tekrar izleyebilir, eksiklerinizi gözlemleyebilirsiniz."
+    )
+    # Simüle edilmiş video oynatıcı arayüzü
+    st.video("https://www.w3schools.com/html/mov_bbb.mp4")
+
     st.markdown(
         "### 📈 Öğretmen Adayı Bireysel Gelişim ve Performans Grafikleri"
     )
 
     if toplam_islem > 0:
-      # Görsel Grafik Simülasyonu (Streamlit Native Chart)
       import pandas as pd
 
       chart_data = pd.DataFrame(
           {
-              "Kriter": [
+              "Staj Krizi ve Kriter": [
+                  "Kriz & Otorite Yönetimi",
                   "Kapsayıcı Eğitim",
                   "Kavramsal Değişim",
-                  "Sınıf Yönetimi",
-                  "Materyal Kullanımı",
+                  "Dijital Araç Entegrasyonu",
               ],
-              "Puan": [92, 88, 95, 90],
+              "Yeterlilik Puanı": [95, 92, 90, 96],
           }
       )
-      st.bar_chart(chart_data, x="Kriter", y="Puan")
+      st.bar_chart(chart_data, x="Staj Krizi ve Kriter", y="Yeterlilik Puanı")
 
       for idx, veri in enumerate(st.session_state.simulasyon_gecmisi, 1):
-        st.markdown(f"#### Oturum #{idx}: {veri['konu']}")
-        st.markdown(f"- **Odak A-B-C Kazanım Bölümü:** {veri['abc_kazanim']}")
-        st.markdown(f"- **Seçilen Pedagojik Karar:** {veri['karar']}")
-        st.markdown(f"- **Tespit Edilen Yanılgı & Durum:** {veri['yanilgi']}")
-        st.markdown(f"- **Bilişsel Kök Analizi:** {veri['bilissel_kok']}")
+        st.markdown(f"#### Staj Oturumu #{idx}: {veri['konu']}")
+        st.markdown(f"- **Odak Alt Kazanım:** {veri['abc_kazanim']}")
+        st.markdown(f"- **Tercih Edilen Staj Kararı:** {veri['karar']}")
+        st.markdown(f"- **Tespit Edilen Kavram Yanılgısı:** {veri['yanilgi']}")
         st.markdown(f"- **Önerilen Profesyonel Strateji:** {veri['cozum']}")
         st.markdown(
-            f"- **Görsel Olarak Önerilen Somut/Dijital Araçlar:**\n"
-            f"  {veri['materyaller']}"
+            f"- **Doğrudan Kullanabileceğiniz Dijital Web Araçları & Somut"
+            f" Materyaller:**\n  {veri['materyaller']}"
         )
         st.markdown("---")
 
       st.success(
-          "💡 **Gelişim Analizi ve Öneri:** Sınıf içindeki disleksili ve"
-          " otizmli öğrencilerin duyusal ihtiyaçlarını karşılarken"
-          " hazırladığınız somut materyal entegrasyonu oldukça başarılıdır."
-          " Ancak zaman yönetimi ve akran etkileşimi konularında"
-          " zayıf olduğunuz alanlar için dijital oyunlaştırılmış araçlara"
-          " ağırlık vermeniz önerilir."
+          "💡 **Gerçekçi Staj Gelişim Dönütü:** Sınıf içindeki beklenmeyen"
+          " teknik arızalar, öğrenci krizleri ve idari denetimler karşısında"
+          " sergilediğiniz esnek liderlik ve tıklanabilir dijital araçları"
+          " devreye sokma beceriniz gerçek bir stajyer için üst düzey"
+          " yeterliliktedir."
       )
     else:
-      st.warning("Henüz kaydedilmiş bir simülasyon oturumu bulunmuyor.")
+      st.warning("Henüz kaydedilmiş bir staj oturumu bulunuyor.")
 
-  with tab2:
+  with tab_fakulte:
     st.markdown(
-        "### 🏛️ Eğitim Fakültesi Kurumsal Rapor ve Rubrik Uyum Analizi"
+        "### 🏛️ Eğitim Fakültesi Dekanlığı ve Bölüm Başkanlığı Kurumsal Staj"
+        " Raporu"
     )
     st.markdown(
-        f"*{st.session_state.get('universite_adi')} Eğitim Fakültesi Staj"
-        " Komisyonu* tarafından onaylanmıştır."
+        f"*{st.session_state.get('universite_adi')} Eğitim Fakültesi İlköğretim"
+        " Matematik Öğretmenliği Bölüm Komisyonu* tarafından resmi olarak"
+        " düzenlenmiştir."
     )
 
-    st.markdown("#### 🔍 Öğretim Elemanı Rubriği ile Aday Performans Uyum Testi:")
     st.markdown(
-        f"> **Yüklenen/Seçilen Rubrik Kriterleri:**\n> *"
+        "#### 📊 Kurumsal Staj İzleme ve Yeterlilik Özeti:\n"
+        "1. **Saha Krizi Yönetim Başarısı:** Aday, gerçek staj okullarında"
+        " yaşanabilecek akran çatışmaları, teknolojik aksaklıklar ve özel"
+        " gereksinimli öğrenci krizlerinde fakültemiz kriz yönetimi"
+        " standartlarını başarıyla sağlamıştır.\n2. **2026 Maarif Modeli"
+        " Entegrasyonu:** Kazanım alt kırılımları ve gerçek dünya kancaları"
+        " profesyonelce harmanlanmıştır.\n3. **Kurumsal Karar:** Adayın gerçek"
+        " okul sahasına stajyer öğretmen olarak çıkması fakültemiz komisyonunca"
+        " **OY BİRLİĞİYLE ONAYLANMIŞTIR**."
+    )
+
+    st.success(
+        "🎉 **Resmi Mühür:** Bu kurumsal rapor üniversite staj bilgi"
+        " sistemine (OBS) işlenmiştir."
+    )
+
+  with tab_ogretim:
+    st.markdown(
+        "### 👨‍🏫 Uygulama Öğretim Elemanı Rubrik Uyum ve Video İnceleme Paneli"
+    )
+    st.markdown(
+        f"**Danışman Hoca:** {st.session_state.get('uygulama_ogretim_elemani', 'N/A')}"
+    )
+
+    st.markdown(
+        "🎥 **Aday Staj Video Kaydı İnceleme Alanı:** Danışman hoca olarak"
+        " adayın staj seansını yukarıdaki oynatıcıdan izleyebilir, kriz"
+        " anlarındaki tepkilerini rubrik kriterlerine göre puanlayabilirsiniz."
+    )
+
+    st.markdown("#### 🔍 Yüklenen Rubrik Kriterleri ile Karşılaştırmalı Analiz:")
+    st.markdown(
+        f"> **Aktif Rubrik Kriterleri:**\n> *"
         f" {st.session_state.get('rubrik_metni', 'N/A')} *"
     )
 
     st.markdown(
-        "#### Karşılaştırmalı Uyum Matrisi:\n"
-        "- ✅ **Kapsayıcı Dil ve Bireysel Farkındalık:** Adayın tercih ettiği"
-        " B seçeneği, rubriğin kapsayıcılık maddesiyle **%95 oranında"
-        " uyuşmaktadır**.\n- ⚠️ **Zaman Yönetimi ve Otorite Dengesi:** Rubrik"
-        " kriterlerinde yer alan sınıf içi akış yönetimi konusunda adayın"
-        " alternatif C kararlarından kaçınması gerektiği tespit"
-        " edilmiştir.\n- ✅ **2026 Maarif Modeli Uyumu:** Kazanımların A, B, C"
-        " kırılımlarına tam uyum sağlanmıştır."
+        "#### Rubrik Eşleşme Matrisi:\n"
+        "- ✅ **Kriz Anında Sakinlik ve Liderlik:** Adayın seçtiği"
+        " stratejiler, rubriğin 1. maddesiyle **%96 uyumludur**.\n- ✅ **Kapsayıcı"
+        " Dil ve Bireysel Farkındalık:** Özel gereksinimli bireylere yaklaşım"
+        " rubriğin 2. maddesini tam olarak karşılamaktadır.\n- ✅ **Dijital Araç"
+        " Entegrasyonu:** Tıklanabilir web araçlarının kullanımı rubrik"
+        " standartlarının üzerindedir."
     )
 
     st.markdown("---")
-    st.markdown("#### 📋 Fakülte Bölüm Başkanlığı Değerlendirme Kararı")
-    st.markdown(
-        "Adayın simülasyon seanslarındaki kararları, öğretim elemanının"
-        " rubrik kriterleriyle eşleştirilmiş olup saha stajına çıkması"
-        " **UYGUNDUR**."
+    st.markdown("#### ✍️ Öğretim Elemanı Resmi Geri Dönüt ve Not Kutusu")
+    hoca_notu = st.text_area(
+        "Danışman Hoca Olarak Öğretmen Adayına Geri Dönütünüzü Yazın",
+        placeholder=(
+            "Örn: Sevgili öğretmen adayımız, staj video kaydını ve"
+            " simülasyon kararlarını büyük bir dikkatle inceledim. Kriz"
+            " anındaki liderliğiniz harikaydı. Saha stajınızda başarılar"
+            " dilerim."
+        ),
     )
 
-    st.success(
-        "🎉 **Kurumsal Mühür:** Bu rapor fakülte staj portfolyosuna"
-        " kaydedilmiştir."
-    )
-
-  with tab3:
-    st.markdown(
-        "### 📝 Öğretmen Adayının Simülasyonu Değerlendirme Anketi ve Geri Dönüt"
-        " Kutusu"
-    )
-    st.info(
-        "Bu simülasyon uygulamasını geliştirmemiz için lütfen aşağıdaki"
-        " alanları doldurunuz."
-    )
-
-    deneyim_puan = st.slider(
-        "Simülasyonun Gerçekçilik Puanı (1-10)", 1, 10, 9
-    )
-    kullanisli_alanlar = st.text_area(
-        "Uygulamanın en çok hangi yönlerini faydalı buldunuz?",
-        placeholder="Örn: 3D sınıf ortamı ve anlık öğrenci tepkileri...",
-    )
-    gelistirme_onerisi = st.text_area(
-        "Uygulamada geliştirilmesini veya eklenmesini istediğiniz özellikler"
-        " nelerdir?",
-    )
-
-    if st.button("📤 Geri Dönütleri Sisteme Gönder"):
+    if st.button("📤 Geri Dönütü Adaya ve Sisteme Gönder"):
       st.success(
-          "🙏 Değerli geri bildirimleriniz için teşekkür ederiz! Geri"
-          " bildiriminiz geliştirici ekibe ve uygulama öğretim elemanınıza"
-          " iletilmiştir."
+          "✅ Öğretmen elemanı resmi geri dönütünüz başarıyla kaydedildi,"
+          " video arşivine işlendi ve aday portfolyosuna iletildi!"
       )
 
-  if st.button("🔄 Yeni Bir Simülasyon Oturumu Başlat"):
+  if st.button("🔄 Yeni Bir Staj Simülasyonu Başlat"):
     st.session_state.simulasyon_gecmisi = []
     st.session_state.adim = 1
     st.rerun()
