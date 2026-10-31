@@ -6,7 +6,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 st.set_page_config(
-    page_title="TYMM 2026 Tam Müfredat & Dinamik 10 Öğrenci Tipli Staj Simülatörü",
+    page_title="TYMM 2026 Tam Müfredat & Kümülatif İlerleme Staj Simülatörü",
     page_icon="🎓",
     layout="wide",
 )
@@ -19,68 +19,88 @@ if "adim" not in st.session_state:
     st.session_state.adim = 1
 
 # ==========================================
-# 1. 10 FARKLI GENEL ÖĞRENCİ TİPİNİN DETAYLI PROFİLLERİ
+# 1. 10 FARKLI GENEL ÖĞRENCİ TİPİNİN ÇOK DETAYLI KARAKTERİSTİK PROFİLLERİ
 # ==========================================
 genel_ogrenci_tipleri_detayli = [
     {
-        "id": "disleksi", "ad": "Kerem", "tip": "Disleksili Öğrenci", "yuz": "😣", "postur": "🤦‍♂️", "renk": "#ef4444", "bg": "rgba(239, 68, 68, 0.25)",
-        "karakteristik": "Harf ve basamak terslikleri yaşar, sembolleri okurken çabuk yorulur. Somut renk kodları ve görsel şemalarla desteklenmeye ihtiyaç duyar.",
-        "yanlis_tepki": "Öğretmenim harfler ve sayılar gözümde birbirine giriyor, yine okuyamadım...",
-        "dogru_tepki": "Renk kodları ve somut modelle görünce basamakları karıştırmadan okuyabildim öğretmenim!"
+        "id": "disleksi", "ad": "Kerem", "tip": "Disleksili Öğrenci", "renk": "#ef4444", "bg": "rgba(239, 68, 68, 0.25)",
+        "karakteristik": "Harf ve basamak terslikleri yaşar, sayıların dizilimini algılarken çabuk yorulur. Somut renk kodları, basamak tabloları ve görsel şemalarla desteklenmeye mutlak surette ihtiyaç duyar.",
+        "yanlis_yuz": "😣", "yanlis_postur": "🤦‍♂️", "yanlis_mimik": "Alnını ovuşturuyor, semboller gözünde birbirine giriyor", "yanlis_tepki": "Bilişsel yük aşırı arttı, sözel kural dayatması nedeniyle kapandı",
+        "yanlis_konusma": "Öğretmenim sayılar ve semboller tahtada dans ediyor gibi, yine okuyamadım...",
+        "dogru_yuz": "😊", "dogru_postur": "🙌", "dogru_mimik": "Yüzü aydınlandı, materyali parmağıyla takip ediyor", "dogru_tepki": "Renk kodları ve somut modelle basamakları hatasız okudu",
+        "dogru_konusma": "Renk kodlu abaküs ve basamak tablosuyla görünce hiç karışmadı öğretmenim!"
     },
     {
-        "id": "otizm", "ad": "Arda", "tip": "Otizm Spektrumlu Öğrenci", "yuz": "😖", "postur": "🎧", "renk": "#10b981", "bg": "rgba(16, 185, 129, 0.25)",
-        "karakteristik": "Ani seslerden, kalabalıktan ve rutinin bozulmasından duyusal rahatsızlık duyar. Sakin, net ve yapılandırılmış yönergelere ihtiyaç gösterir.",
-        "yanlis_tepki": "Çok gürültü var ve kurallar ani değişti, kulaklıklarımı takmak zorundayım!",
-        "dogru_tepki": "Sakin ses tonunuz ve net adım yönergeleriniz sayesinde rahatladım, çalışmaya devam edebilirim."
+        "id": "otizm", "ad": "Arda", "tip": "Otizm Spektrumlu Öğrenci", "renk": "#10b981", "bg": "rgba(16, 185, 129, 0.25)",
+        "karakteristik": "Ani seslerden, kalabalıktan ve rutinin bozulmasından duyusal rahatsızlık duyar. Sakin, net, öngörülebilir ve yapılandırılmış aşamalı yönergelere ihtiyaç gösterir.",
+        "yanlis_yuz": "😖", "yanlis_postur": "🎧", "yanlis_mimik": "Ellerini kulaklarına götürüyor, öne doğru sallanıyor", "yanlis_tepki": "Duyusal aşırı yüklenme ve kural belirsizliği krizi",
+        "yanlis_konusma": "Çok ses var ve kurallar ani değişti, kulaklığımı takmak zorundayım!",
+        "dogru_yuz": "🙂", "dogru_postur": "🧩", "dogru_mimik": "Sakinleşti, omuzları gevşedi, modele odaklandı", "dogru_tepki": "Sakin ses tonu ve net aşamalı yönergeyle güven kazandı",
+        "dogru_konusma": "Şimdi adımlar çok net oldu öğretmenim, örüntüyü modelde görebiliyorum."
     },
     {
-        "id": "ustun", "ad": "Can", "tip": "Üstün Yetenekli Öğrenci", "yuz": "😤", "postur": "🙋‍♂️", "renk": "#f59e0b", "bg": "rgba(245, 158, 11, 0.25)",
-        "karakteristik": "Standart açıklamaları çabuk kavrar, derinleştirici, ispat edici ve zenginleştirilmiş sorularla beslenmezse derste egosal çatışma çıkarabilir.",
-        "yanlis_tepki": "Hocam bu çok basit, neden doğrudan üst düzey formüle geçmiyoruz?",
-        "dogru_tepki": "Harika bir meydan okuma oldu, bu kuralın istisnai durumunu da ben açıklayabilir miyim?"
+        "id": "ustun", "ad": "Can", "tip": "Üstün Yetenekli Öğrenci", "renk": "#f59e0b", "bg": "rgba(245, 158, 11, 0.25)",
+        "karakteristik": "Standart açıklamaları ve rutin işlemleri çabuk kavrar. Derinleştirici, ispat edici ve zenginleştirilmiş akran tartışmalarıyla beslenmezse derste egosal çatışma çıkarır.",
+        "yanlis_yuz": "😤", "yanlis_postur": "🙋‍♂️", "yanlis_mimik": "Sabırsızca el kaldırıyor, kaşları çatık", "yanlis_tepki": "Basit açıklamalar nedeniyle sıkıldı ve huzursuz",
+        "yanlis_konusma": "Hocam bu çok basit, neden doğrudan üst düzey formüle ve ispatına geçmiyoruz?",
+        "dogru_yuz": "🤩", "dogru_postur": "💡", "dogru_mimik": "Gözleri parlıyor, yeni kanıt arıyor", "dogru_tepki": "Derinleştirici soruyla üretime ve mantıksal ispatta liderliğe yönlendirildi",
+        "dogru_konusma": "Gerçek yaşam örneği üzerinden düşününce aradaki matematiksel ispatı buldum!"
     },
     {
-        "id": "kaygili", "ad": "Elif", "tip": "Yüksek Kaygılı / STU-1309", "yuz": "😰", "postur": "🙇‍♀️", "renk": "#38bdf8", "bg": "rgba(56, 189, 248, 0.25)",
-        "karakteristik": "Hata yapmaktan ve tahtaya kalkmaktan aşırı derecede çekinir. Sürekli onay bekler; baskı altında bloklanır.",
-        "yanlis_tepki": "Ya yanlış yaparsam ve arkadaşlarım gülerse? Korkudan yapamıyorum...",
-        "dogru_tepki": "Hata yapmanın öğrenmenin parçası olduğunu hissettirdiğiniz için teşekkür ederim, şimdi denemek istiyorum."
+        "id": "kaygili", "ad": "Elif", "tip": "Yüksek Kaygılı / STU-1309", "renk": "#38bdf8", "bg": "rgba(56, 189, 248, 0.25)",
+        "karakteristik": "Hata yapmaktan, arkadaşlarının yanında mahcup olmaktan ve tahtaya kalkmaktan aşırı derecede çekinir. Sürekli onay bekler; baskı altında zihinsel blokaj yaşar.",
+        "yanlis_yuz": "😰", "yanlis_postur": "🙇‍♀️", "yanlis_mimik": "Başını sıraya eğmiş, kalemini sıkarak tutuyor", "yanlis_tepki": "Hata yapma korkusu nedeniyle zihinsel olarak kilitlendi",
+        "yanlis_konusma": "Ya yanlış yaparsam ve herkes bana gülerse? Korkudan defterime bile yazamıyorum...",
+        "dogru_yuz": "😄", "dogru_postur": "✍️", "dogru_mimik": "Başını kaldırdı, özgüvenle gülümsüyor", "dogru_tepki": "Güvenli alan ve duyuşsal destekle hatasız katılım sağladı",
+        "dogru_konusma": "Hata yapmanın öğrenmenin normal bir parçası olduğunu hissettirdiğiniz için teşekkür ederim."
     },
     {
-        "id": "mukemmeliyetci", "ad": "Zeynep", "tip": "Mükemmeliyetçi Öğrenci", "yuz": "🧐", "postur": "📝", "renk": "#8b5cf6", "bg": "rgba(139, 92, 246, 0.25)",
-        "karakteristik": "En küçük işlem hatasında veya düzen bozukluğunda tüm kağıdı yırtıp yeniden yazmak ister. Süreç odaklı olmaktan ziyade kusursuz sonuca odaklıdır.",
-        "yanlis_tepki": "Çizimim 1 milimetre kaydı, bu ödev mahvoldu yeniden başlamalıyım!",
-        "dogru_tepki": "Kusursuz olmak zorunda değilmişim, önemli olan matematiksel mantığı kavramammış."
+        "id": "mukemmeliyetci", "ad": "Zeynep", "tip": "Mükemmeliyetçi Öğrenci", "renk": "#8b5cf6", "bg": "rgba(139, 92, 246, 0.25)",
+        "karakteristik": "En küçük hesap hatasında veya cetvel çizim kaymasında tüm kağıdı yırtıp yeniden yazmak ister. Süreç odaklı olmaktan ziyade kusursuz sonuca odaklıdır.",
+        "yanlis_yuz": "🧐", "yanlis_postur": "📝", "yanlis_mimik": "Kağıdı titizlikle inceliyor, küçük bir kayma için stresli", "yanlis_tepki": "Ufak bir detay takıntısı nedeniyle zaman yönetimi bozuldu",
+        "yanlis_konusma": "Çizimim 1 milimetre kaydı, bu ödev mahvoldu baştan çizmeliyim!",
+        "dogru_yuz": "😌", "dogru_postur": "👍", "dogru_mimik": "Rahatladı, sürecin kendisine odaklandı", "dogru_tepki": "Süreç odaklı değerlendirmeyi benimsedi",
+        "dogru_konusma": "Kusursuz olmak zorunda değilmişim, önemli olan matematiksel mantığı kavramammış."
     },
     {
-        "id": "direncli", "ad": "Mert", "tip": "Ödev/Kural Direnci Gösteren", "yuz": "😒", "postur": "🚶‍♂️", "renk": "#64748b", "bg": "rgba(100, 116, 139, 0.25)",
-        "karakteristik": "Otoriteye karşı direnç gösterir, 'Bunu neden öğreniyoruz?' diyerek dersin işleyişini sabote etmeye çalışır.",
-        "yanlis_tepki": "Bunu hayatta hiçbir yerde kullanmayacağız, boşuna uğraşmayın yapmıyorum.",
-        "dogru_tepki": "Gerçek yaşamdaki karşılığını bu şekilde görünce mantıklı geldiğini kabul ediyorum."
+        "id": "direncli", "ad": "Mert", "tip": "Ödev/Kural Direnci Gösteren", "renk": "#64748b", "bg": "rgba(100, 116, 139, 0.25)",
+        "karakteristik": "Otoriteye ve kurallara karşı mesafe koyar. 'Bunu neden öğreniyoruz, günlük hayatta nerede kullanacağız?' diyerek dersin işleyişini sorgular ve direnç gösterir.",
+        "yanlis_yuz": "😒", "yanlis_postur": "🚶‍♂️", "yanlis_mimik": "Kollarını kavuşturmuş, arkasına yaslanmış", "yanlis_tepki": "Derse ve kurala karşı açık direnç gösteriyor",
+        "yanlis_konusma": "Bunu hayatta hiçbir yerde kullanmayacağız, boşuna uğraşmayın yapmıyorum.",
+        "dogru_yuz": "🤔", "dogru_postur": "💡", "dogru_mimik": "İlgiyle tahtaya ve gerçek yaşam kancasına bakıyor", "dogru_tepki": "Gerçek yaşam bağlamı (hook) ile ikna oldu",
+        "dogru_konusma": "Gerçek yaşamdaki karşılığını bu şekilde görünce mantıklı geldiğini kabul ediyorum."
     },
     {
-        "id": "icedonuk", "ad": "Merve", "tip": "Sosyal İçe Dönük Öğrenci", "yuz": "😶", "postur": "🪞", "renk": "#ec4899", "bg": "rgba(236, 72, 153, 0.25)",
-        "karakteristik": "Sorulduğunda bile fısıltıyla konuşur, grup çalışmalarında pasif kalır, bireysel güven verilmeden açılmaz.",
-        "yanlis_tepki": "Ben parmak kaldırmamıştım, lütfen soru bana gelmesin...",
-        "dogru_tepki": "Bana doğrudan topluluk önünde baskı yapmadan birebir sormanız rahat hissettirdi."
+        "id": "icedonuk", "ad": "Merve", "tip": "Sosyal İçe Dönük Öğrenci", "renk": "#ec4899", "bg": "rgba(236, 72, 153, 0.25)",
+        "karakteristik": "Doğrudan hedef tahtası olmaktan kaçınır. Sorulduğunda fısıltıyla konuşur; topluluk önünde zorlanmaktansa pasif kalmayı tercih eder.",
+        "yanlis_yuz": "😶", "yanlis_postur": "🪞", "yanlis_mimik": "Başını öne eğmiş, göz temasından kaçınıyor", "yanlis_tepki": "Topluluk baskısı nedeniyle tamamen kabuğuna çekildi",
+        "yanlis_konusma": "Ben parmak kaldırmamıştım, lütfen soru bana gelmesin...",
+        "dogru_yuz": "🙂", "dogru_postur": "📖", "dogru_mimik": "Sakin bir şekilde kendi defterine not alıyor", "dogru_tepki": "Birebir destek ve güvenli hitabetle rahatladı",
+        "dogru_konusma": "Bana topluluk önünde doğrudan baskı yapmadan birebir sormanız rahat hissettirdi."
     },
     {
-        "id": "hareketli", "ad": "Emre", "tip": "Aşırı Hareketli / Dürtüsel", "yuz": "🤪", "postur": "🤸‍♂️", "renk": "#3b82f6", "bg": "rgba(59, 130, 246, 0.25)",
-        "karakteristik": "Yerinde duramaz, sürekli nesnelerle oynar, dürtüsel tepki verir; kinestetik/fiziksel manipülatif görevlerle sakinleştirilmelidir.",
-        "yanlis_tepki": "Hocam kalemi düşürdüm, silgiyi arıyorum, tahtaya ben kalkayım!",
-        "dogru_tepki": "Materyali bizzat benim hareket ettirmeme izin verdiğiniz için odaklanabildim."
+        "id": "hareketli", "ad": "Emre", "tip": "Aşırı Hareketli / Dürtüsel", "renk": "#3b82f6", "bg": "rgba(59, 130, 246, 0.25)",
+        "karakteristik": "Sırada sabit oturan kalamaz, nesnelerle oynamak ister, dürtüsel reaksiyonlar gösterir. Kinestetik ve fiziksel manipülatif görevlerle enerjisi yapılandırılmalıdır.",
+        "yanlis_yuz": "🤪", "yanlis_postur": "🤸‍♂️", "yanlis_mimik": "Sırada kıpırdanıp duruyor, kalemiyle oynuyor", "yanlis_tepki": "Motor beceri enerjisi akışı bozdu",
+        "yanlis_konusma": "Hocam kalemi düşürdüm, silgiyi arıyorum, tahtaya kalkabilir miyim?",
+        "dogru_yuz": "🤩", "dogru_postur": "🛠️", "dogru_mimik": "Materyali bizzat elleriyle aktif olarak kullanıyor", "dogru_tepki": "Kinestetik materyalle enerjisi doğru yöne kanalize oldu",
+        "dogru_konusma": "Materyali bizzat benim hareket ettirmeme izin verdiğiniz için odaklanabildim."
     },
     {
-        "id": "sozelgucluk", "ad": "Burak", "tip": "Sözel İfade Güçlüğü Yaşayan", "yuz": "🤔", "postur": "🤷‍♂️", "renk": "#14b8a6", "bg": "rgba(20, 184, 166, 0.25)",
-        "karakteristik": "Zihnindeki matematiksel fikri bilir ancak kavramları sözel olarak ifade ederken kelimeleri bulamaz.",
-        "yanlis_tepki": "Şey... hani böyle yukarı gidiyor ya, işte o şey...",
-        "dogru_tepki": "Sözel olarak söyleyemediğimi şekil üzerinde gösterdiğimde beni anladınız."
+        "id": "sozelgucluk", "ad": "Burak", "tip": "Sözel İfade Güçlüğü Yaşayan", "renk": "#14b8a6", "bg": "rgba(20, 184, 166, 0.25)",
+        "karakteristik": "Matematiksel mantığı zihninde kurabilir ancak bunu sözel terimlerle açıklarken doğru kelimeleri bulamaz. Görsel ve yazılı modellerle kendini rahat ifade eder.",
+        "yanlis_yuz": "🤔", "yanlis_postur": "🤷‍♂️", "yanlis_mimik": "Kelimeleri arıyor, elleriyle havada şekiller çiziyor", "yanlis_tepki": "Sözel ifade baskısı nedeniyle tıkanıp kaldı",
+        "yanlis_konusma": "Şey... hani böyle yukarı doğru gidiyor ya, işte o şey...",
+        "dogru_yuz": "😃", "dogru_postur": "👉", "dogru_mimik": "Modeli işaret ederek parmağıyla gösteriyor", "dogru_tepki": "Görsel ve somut temsil ile kendini rahatça ifade etti",
+        "dogru_konusma": "Sözel olarak söyleyemediğimi şekil üzerinde gösterdiğimde beni anladınız."
     },
     {
-        "id": "gorseluzamsal", "ad": "Selin", "tip": "Görsel/Uzamsal Ağırlıklı", "yuz": "🎨", "postur": "👁️", "renk": "#84cc16", "bg": "rgba(132, 204, 22, 0.25)",
-        "karakteristik": "Formülleri ezberleyemez ama geometrik şekilleri, simetrileri ve uzamsal ilişkileri anında görsel olarak kavrar.",
-        "yanlis_tepki": "Sözel formülü okuduğumda anlamıyorum ama çizimini yaparsanız anlarım.",
-        "dogru_tepki": "Görsel şema üzerinden anlatınca taşlar yerine oturdu."
+        "id": "gorseluzamsal", "ad": "Selin", "tip": "Görsel/Uzamsal Ağırlıklı", "renk": "#84cc16", "bg": "rgba(132, 204, 22, 0.25)",
+        "karakteristik": "Saf sözel formülleri ezberlemekte zorlanır ancak geometrik simetrileri, örüntüleri ve uzamsal ilişkileri anında görsel olarak kavrar.",
+        "yanlis_yuz": "🎨", "yanlis_postur": "👁️", "yanlis_mimik": "Tahtaya bakıp kafasını kaşıyor, yazılanları anlamlandıramıyor", "yanlis_tepki": "Saf sözel anlatım uzamsal zekaya hitap etmedi",
+        "yanlis_konusma": "Sözel formülü okuduğumda anlamıyorum ama çizimini yaparsanız anlarım.",
+        "dogru_yuz": "😎", "dogru_postur": "📐", "dogru_mimik": "Geometrik şemayı ve modeli büyük bir ilgiyle inceliyor", "dogru_tepki": "Görsel şema ve uzamsal modelle konuyu anında kavradı",
+        "dogru_konusma": "Görsel şema üzerinden anlatınca taşlar tam yerine oturdu."
     },
 ]
 
@@ -100,22 +120,18 @@ materyal_havuzu = [
 tyym_master_arsiv = {
     "5. Sınıf": {
         "Temalar": [
-            "MAT.5.1. Sayılar ve Nicelikler",
-            "MAT.5.2. İşlemlerle Cebirsel Düşünme",
-            "MAT.5.3. Geometrik Şekiller",
-            "MAT.5.4. Geometrik Nicelikler",
-            "MAT.5.5. İstatistiksel Araştırma Süreci",
-            "MAT.5.6. Veriden Olasılığa",
+            "MAT.5.1. Sayılar ve Nicelikler", "MAT.5.2. İşlemlerle Cebirsel Düşünme",
+            "MAT.5.3. Geometrik Şekiller", "MAT.5.4. Geometrik Nicelikler",
+            "MAT.5.5. İstatistiksel Araştırma Süreci", "MAT.5.6. Veriden Olasılığa",
         ],
         "Kazanimlar": {
             "MAT.5.1. Sayılar ve Nicelikler": [
                 {
-                    "kod": "MAT.5.1.1",
-                    "cikti": "Altı basamaklı sayıları okuma ve yazmayı çok basamaklı sayılara genelleyebilme",
+                    "kod": "MAT.5.1.1", "cikti": "Altı basamaklı sayıları okuma ve yazmayı çok basamaklı sayılara genelleyebilme",
                     "surec": [
                         "a) Günlük hayattaki bağlamlardan yola çıkarak çok basamaklı sayılar hakkında bilgi toplar.",
                         "b) Sayıların bölümleri ile okunuşları arasındaki ortak özellikleri belirler.",
-                        "c) Sayıların bölümleri ile okunuşları arasındaki farklılıkları belirler.",
+                        "c) Sayıların bölümleri ile okunuşları arasındaki farklılıkları belirler."
                     ],
                     "uygun_materyaller": ["Basamak Tablosu ve Renkli Abaküs", "Onluk Taban Blokları ve Sayı Doğrusu"],
                     "hook": "Millî Kütüphane'deki 405.020 adet tarihi el yazması kitabın arşiv kodlama sistemi.",
@@ -123,11 +139,10 @@ tyym_master_arsiv = {
                     "odak": "disleksi",
                 },
                 {
-                    "kod": "MAT.5.1.2",
-                    "cikti": "Doğal sayılarla toplama ve çıkarma işlemlerini içeren gerçek yaşam problemlerini çözebilme",
+                    "kod": "MAT.5.1.2", "cikti": "Doğal sayılarla toplama ve çıkarma işlemlerini içeren gerçek yaşam problemlerini çözebilme",
                     "surec": [
                         "a) İşlem gerektiren günlük yaşam durumlarında nicelikleri inceler.",
-                        "b) Zihinden işlem ve tahmin stratejileri geliştirir.",
+                        "b) Zihinden işlem ve tahmin stratejileri geliştirir."
                     ],
                     "uygun_materyaller": ["Onluk Taban Blokları ve Sayı Doğrusu", "Basamak Tablosu ve Renkli Abaküs"],
                     "hook": "Okul kermesinde toplanan bağışların hedef bütçe ile karşılaştırılması.",
@@ -137,8 +152,7 @@ tyym_master_arsiv = {
             ],
             "MAT.5.2. İşlemlerle Cebirsel Düşünme": [
                 {
-                    "kod": "MAT.5.2.1",
-                    "cikti": "Eşitliğin korunumu ve işlem özelliklerini muhakeme edebilme",
+                    "kod": "MAT.5.2.1", "cikti": "Eşitliğin korunumu ve işlem özelliklerini muhakeme edebilme",
                     "surec": ["a) Eşit kollu terazi modelleri üzerinde eşitlik durumlarını inceler."],
                     "uygun_materyaller": ["Cebir Karoları ve Denge Terazisi", "Onluk Taban Blokları ve Sayı Doğrusu"],
                     "hook": "Laboratuvardaki eşit kollu terazide farklı kütleleri dengeleme deneyi.",
@@ -148,9 +162,8 @@ tyym_master_arsiv = {
             ],
             "MAT.5.3. Geometrik Şekiller": [
                 {
-                    "kod": "MAT.5.3.1",
-                    "cikti": "Temel geometrik çizimler için matematiksel araç ve teknolojileri kullanabilme",
-                    "surec": ["a) Nokta, doğru ve açıları araçlarla inşa eder."],
+                    "kod": "MAT.5.3.1", "cikti": "Temel geometrik çizimler için matematiksel araç ve teknolojileri kullanabilme",
+                    "surec": ["a) Nokta, doğru, doğru parçası ve ışın kavramlarını inşa araçlarıyla inceler."],
                     "uygun_materyaller": ["Simetri Aynası ve İzometrik Noktalı Kağıt", "GeoGebra Dinamik Geometri Yazılımı"],
                     "hook": "Mimari kroki çizimlerinde açıölçer kullanarak simetrik bahçe tasarımı yapma.",
                     "kriz": "Kerem açıölçeri ters tutarak ölçüm yapar ve hata yapınca sinirlenip kalemi bırakır.",
@@ -159,8 +172,7 @@ tyym_master_arsiv = {
             ],
             "MAT.5.4. Geometrik Nicelikler": [
                 {
-                    "kod": "MAT.5.4.1",
-                    "cikti": "Dikdörtgenin çevre uzunluğu ve alanı arasındaki ilişkiyi yapılandırabilme",
+                    "kod": "MAT.5.4.1", "cikti": "Dikdörtgenin çevre uzunluğu ve alanı arasındaki ilişkiyi yapılandırabilme",
                     "surec": ["a) Birim kareler kullanarak dikdörtgenin alanını ve çevresini modeller."],
                     "uygun_materyaller": ["Birim Küpler ve 3B Prizma Modelleri", "Simetri Aynası ve İzometrik Noktalı Kağıt"],
                     "hook": "Okul bahçesine sabit uzunluktaki çitle en geniş alana sahip hobi bahçesi kurma.",
@@ -170,9 +182,8 @@ tyym_master_arsiv = {
             ],
             "MAT.5.5. İstatistiksel Araştırma Süreci": [
                 {
-                    "kod": "MAT.5.5.1",
-                    "cikti": "Kategorik verilerle istatistiksel araştırma sürecini yürütebilme ve görselleştirebilme",
-                    "surec": ["a) Veri toplar ve sütun grafiği ile görselleştirir."],
+                    "kod": "MAT.5.5.1", "cikti": "Kategorik verilerle istatistiksel araştırma sürecini yürütebilme ve görselleştirebilme",
+                    "surec": ["a) Kategorik veri toplamayı gerektiren araştırma sorusu oluşturur."],
                     "uygun_materyaller": ["KVKK Etkileşimli Veri Toplama Panosu", "Basamak Tablosu ve Renkli Abaküs"],
                     "hook": "Sınıf kütüphanesine alınacak kitap türlerini belirlemek için veri toplama.",
                     "kriz": "Merve gruptakilerle konuşmaktan çekinip anket verilerini vermeyi reddeder.",
@@ -181,9 +192,8 @@ tyym_master_arsiv = {
             ],
             "MAT.5.6. Veriden Olasılığa": [
                 {
-                    "kod": "MAT.5.6.1",
-                    "cikti": "Olayların olasılığını olasılık spektrumu üzerinde yorumlayabilme",
-                    "surec": ["a) Olayları imkânsızdan kesine doğru sınıflandırır."],
+                    "kod": "MAT.5.6.1", "cikti": "Olayların olasılığını olasılık spektrumu üzerinde yorumlayabilme",
+                    "surec": ["a) Günlük yaşam olaylarını gerçekleşme ihtimallerine göre inceler."],
                     "uygun_materyaller": ["Olasılık Spektrumu Şeridi ve Çarkı", "GeoGebra Dinamik Geometri Yazılımı"],
                     "hook": "Hava durumu raporlarına göre yağmur yağma ihtimalini tartışma.",
                     "kriz": "Emre sınıfta ayağa kalkıp spektrum şeridini havaya fırlatır.",
@@ -201,10 +211,10 @@ tyym_master_arsiv = {
         "Kazanimlar": {
             "MAT.6.1. Sayılar ve Nicelikler": [
                 {
-                    "kod": "MAT.6.1.1", "cikti": "Çarpan, kat ve asal sayılara yönelik muhakeme yapabilme",
+                    "kod": "MAT.6.1.1", "cikti": "Çarpan, kat ve asal sayı özelliklerine yönelik muhakeme yapabilme",
                     "surec": ["a) Çarpan ve katlarına yönelik varsayımlarda bulunur."],
                     "uygun_materyaller": ["Basamak Tablosu ve Renkli Abaküs", "Onluk Taban Blokları ve Sayı Doğrusu"],
-                    "hook": "Farklı periyotlarla sefer yapan iki vapurun iskelede buluşma saati.", "kriz": "Mert ödev direnişi gösterir.", "odak": "direncli"
+                    "hook": "Farklı periyotlarla sefer yapan iki vapurun buluşma saati.", "kriz": "Mert ödev direnci gösterir.", "odak": "direncli"
                 }
             ],
             "MAT.6.2. İşlemlerle Cebirsel Düşünme": [
@@ -212,7 +222,7 @@ tyym_master_arsiv = {
                     "kod": "MAT.6.2.1", "cikti": "Bilinmeyen nicelikleri değişkenlerle temsil edebilme",
                     "surec": ["a) Sözel durumları değişken kullanarak cebirsel ifadeye dönüştürür."],
                     "uygun_materyaller": ["Cebir Karoları ve Denge Terazisi", "Basamak Tablosu ve Renkli Abaküs"],
-                    "hook": "Kumbaraya her hafta eklenen paranın n. haftadaki tutarı.", "kriz": "Kerem harflerin araya girmesine tepki gösterir.", "odak": "disleksi"
+                    "hook": "Kumbaraya her hafta eklenen paranın n. haftadaki tutarı.", "kriz": "Kerem harflere tepki gösterir.", "odak": "disleksi"
                 }
             ],
             "MAT.6.3. Geometrik Şekiller": [
@@ -226,7 +236,7 @@ tyym_master_arsiv = {
             "MAT.6.4. Geometrik Nicelikler": [
                 {
                     "kod": "MAT.6.4.1", "cikti": "Üçgen ve paralelkenarın alan bağıntılarını oluşturabilme",
-                    "surec": ["a) Paralelkenarı dikdörtgene dönüştürerek alanı bulur."],
+                    "surec": ["a) Paralelkenarı kes-yapıştır stratejisiyle dönüştürür."],
                     "uygun_materyaller": ["Simetri Aynası ve İzometrik Noktalı Kağıt", "Birim Küpler ve 3B Prizma Modelleri"],
                     "hook": "Tarım parsellerinin sulama alanlarını hesaplama.", "kriz": "Selin şekli zihninde döndüremediği için alanı yanlış konumlandırır.", "odak": "gorseluzamsal"
                 }
@@ -234,9 +244,9 @@ tyym_master_arsiv = {
             "MAT.6.5. İstatistiksel Araştırma": [
                 {
                     "kod": "MAT.6.5.1", "cikti": "Merkezi eğilim ölçülerini hesaplayıp yorumlayabilme",
-                    "surec": ["a) Ortalama, medyan ve modu hesaplar."],
-                    "uygun_materyales": ["KVKK Etkileşimli Veri Toplama Panosu"], "uygun_materyaller": ["KVKK Etkileşimli Veri Toplama Panosu", "Basamak Tablosu ve Renkli Abaküs"],
-                    "hook": "Basketbol takımının maç başına attığı sayılar.", "kriz": "Zeynep hesaplamada hata yapınca kağıdı buruşturur.", "odak": "mukemmeliyetci"
+                    "surec": ["a) Aritmetik ortalama ve medyan hesaplar."],
+                    "uygun_materyaller": ["KVKK Etkileşimli Veri Toplama Panosu", "Basamak Tablosu ve Renkli Abaküs"],
+                    "hook": "Basketbol takımının maç başına attığı sayı analizi.", "kriz": "Zeynep hata yapınca kağıdı buruşturur.", "odak": "mukemmeliyetci"
                 }
             ],
             "MAT.6.6. Veriden Olasılığa": [
@@ -244,7 +254,7 @@ tyym_master_arsiv = {
                     "kod": "MAT.6.6.1", "cikti": "Deneysel olasılığı göreli sıklık üzerinden tahmin edebilme",
                     "surec": ["a) Tekrarlı olasılık deneyleri tasarlar."],
                     "uygun_materyaller": ["Olasılık Spektrumu Şeridi ve Çarkı", "GeoGebra Dinamik Geometri Yazılımı"],
-                    "hook": "100 kez atılan zarın analiz edilmesi.", "kriz": "Emre zarları masaya saçıp bağırmaya başlar.", "odak": "hareketli"
+                    "hook": "100 kez atılan zarın analizi.", "kriz": "Emre zarları masaya saçıp bağırmaya başlar.", "odak": "hareketli"
                 }
             ],
         },
@@ -261,13 +271,13 @@ tyym_master_arsiv = {
                     "kod": "MAT.7.1.1", "cikti": "Tam sayılar ve rasyonel sayılarla işlemler yapabilme",
                     "surec": ["a) Rasyonel sayılarla işlemleri modeller."],
                     "uygun_materyaller": ["Onluk Taban Blokları ve Sayı Doğrusu", "Basamak Tablosu ve Renkli Abaküs"],
-                    "hook": "Hava sıcaklığı ve deniz altı derinlik hesapları.", "kriz": "Kerem işaretleri karıştırır.", "odak": "disleksi"
+                    "hook": "Hava sıcaklığı ve derinlik hesapları.", "kriz": "Kerem işaretleri karıştırır.", "odak": "disleksi"
                 },
                 {
                     "kod": "MAT.7.1.2", "cikti": "Oran ve orantı kavramlarını yapılandırarak doğru ve ters orantı kurabilme",
                     "surec": ["a) Oran Tahtası ve somut materyallerle ilişkileri inceler."],
                     "uygun_materyaller": ["Oran Tahtası ve Renkli Boncuklar", "Cebir Karoları ve Denge Terazisi"],
-                    "hook": "Görsel sanatlar atölyesinde renk karışım oranları.", "kriz": "Elif hata yapmaktan korktuğu için boncuklara dokunamaz.", "odak": "kaygili"
+                    "hook": "Renk karışım oranları.", "kriz": "Elif hata yapmaktan korkar.", "odak": "kaygili"
                 },
             ],
             "MAT.7.2. İşlemlerle Cebirsel Düşünme": [
@@ -275,7 +285,7 @@ tyym_master_arsiv = {
                     "kod": "MAT.7.2.1", "cikti": "Denklem ve eşitsizlikleri çözebilme",
                     "surec": ["a) Denklemleri kurar ve çözer."],
                     "uygun_materyaller": ["Cebir Karoları ve Denge Terazisi", "Onluk Taban Blokları ve Sayı Doğrusu"],
-                    "hook": "Asansör taşıma kapasitesi sınırları.", "kriz": "Burak tahtada ifadeyi sözel olarak dile getirmekte zorlanır.", "odak": "sozelgucluk"
+                    "hook": "Asansör taşıma kapasitesi.", "kriz": "Burak ifadeyi sözel dile getiremez.", "odak": "sozelgucluk"
                 }
             ],
             "MAT.7.3. Dönüşüm": [
@@ -283,12 +293,12 @@ tyym_master_arsiv = {
                     "kod": "MAT.7.3.1", "cikti": "Yansıma dönüşümünü ve simetri inşalarını gerçekleştirebilme",
                     "surec": ["a) Şekillerin yansıma görüntülerini inceler."],
                     "uygun_materyaller": ["Simetri Aynası ve İzometrik Noktalı Kağıt", "GeoGebra Dinamik Geometri Yazılımı"],
-                    "hook": "Mimari cephe tasarımlarında simetri.", "kriz": "Selin simetri eksenini çizerken uzamsal olarak ters çizer.", "odak": "gorseluzamsal"
+                    "hook": "Mimari cephe tasarımlarında simetri.", "kriz": "Selin simetri eksenini ters çizer.", "odak": "gorseluzamsal"
                 }
             ],
             "MAT.7.4. Geometrik Nicelikler": [
                 {
-                    "kod": "MAT.7.4.1", "cikti": "Özel dörtgenlerin alanını ve dik prizmaların hacmini hesaplayabilme",
+                    "kod": "MAT.7.4.1", "cikti": "Prizmaların yüzey alanı ve hacmini hesaplayabilme",
                     "surec": ["a) Prizma hacmini modeller."],
                     "uygun_materyaller": ["Birim Küpler ve 3B Prizma Modelleri", "Simetri Aynası ve İzometrik Noktalı Kağıt"],
                     "hook": "Çikolata kutusu tasarımı.", "kriz": "Arda küplerin sesinden rahatsız olur.", "odak": "otizm"
@@ -304,18 +314,18 @@ tyym_master_arsiv = {
             ],
             "MAT.7.6. İstatistiksel Araştırma": [
                 {
-                    "kod": "MAT.7.6.1", "cikti": "Çizgi ve daire grafiği ile verileri temsil edebilme",
-                    "surec": ["a) Grafikleri oluşturur."],
+                    "kod": "MAT.7.6.1", "cikti": "Çizgi ve daire grafiği yorumlama",
+                    "surec": ["a) Daire grafiğinde merkez açılarla modeller."],
                     "uygun_materyaller": ["KVKK Etkileşimli Veri Toplama Panosu", "Olasılık Spektrumu Şeridi ve Çarkı"],
-                    "hook": "Hava sıcaklığı değişim grafikleri.", "kriz": "Zeynep açı hesaplamasında kusursuz olmaya çalışıp takılır.", "odak": "mukemmeliyetci"
+                    "hook": "Hava sıcaklığı değişim grafikleri.", "kriz": "Zeynep hesaplamada takılır.", "odak": "mukemmeliyetci"
                 }
             ],
             "MAT.7.7. Veriden Olasılığa": [
                 {
-                    "kod": "MAT.7.7.1", "cikti": "Teorik olasılık ve tümleyen olayları muhakeme edebilme",
-                    "surec": ["a) Teorik olasılığı hesaplar."],
+                    "kod": "MAT.7.7.1", "cikti": "Teorik olasılık hesaplama",
+                    "surec": ["a) İstenen durumun tüm durumlara oranını hesaplar."],
                     "uygun_materyaller": ["Olasılık Spektrumu Şeridi ve Çarkı", "GeoGebra Dinamik Geometri Yazılımı"],
-                    "hook": "Şifreli kasa kombinasyonları.", "kriz": "Can gerçek hayattaki belirsizlikleri öne sürerek itiraz eder.", "odak": "ustun"
+                    "hook": "Şifreli kasa kombinasyonları.", "kriz": "Can belirsizliklere itiraz eder.", "odak": "ustun"
                 }
             ],
         },
@@ -330,9 +340,9 @@ tyym_master_arsiv = {
             "MAT.8.1. Sayılar ve Nicelikler": [
                 {
                     "kod": "MAT.8.1.1", "cikti": "Üslü ve kareköklü ifadeleri gerçek sayılar kümesi bağlamında muhakeme edebilme",
-                    "surec": ["a) Kareköklü ifadeleri yapılandırır."],
+                    "surec": ["a) Karenin alanından karekökü yapılandırır."],
                     "uygun_materyaller": ["Onluk Taban Blokları ve Sayı Doğrusu", "Birim Küpler ve 3B Prizma Modelleri"],
-                    "hook": "Mikroskobik hücre boyutları.", "kriz": "Arda irrasyonel sayıların sonsuzluğundan rahatsız olur.", "odak": "otizm"
+                    "hook": "Hücre boyutları.", "kriz": "Arda irrasyonel sayıların sonsuzluğundan rahatsız olur.", "odak": "otizm"
                 }
             ],
             "MAT.8.2. Cebirsel Düşünme": [
@@ -340,7 +350,7 @@ tyym_master_arsiv = {
                     "kod": "MAT.8.2.1", "cikti": "Doğrusal fonksiyonlar ve eğim kavramını yapılandırabilme",
                     "surec": ["a) Eğim oranını yorumlar."],
                     "uygun_materyaller": ["Cebir Karoları ve Denge Terazisi", "GeoGebra Dinamik Geometri Yazılımı"],
-                    "hook": "Engelli rampası standartları.", "kriz": "Elif sınav kaygısıyla grafikleri yapamayacağını söyler.", "odak": "kaygili"
+                    "hook": "Engelli rampası standartları.", "kriz": "Elif sınav kaygısı yaşar.", "odak": "kaygili"
                 }
             ],
             "MAT.8.3. Geometrik Şekiller": [
@@ -356,15 +366,15 @@ tyym_master_arsiv = {
                     "kod": "MAT.8.4.1", "cikti": "Silindir, piramit ve koninin yüzey alanı ve hacmi",
                     "surec": ["a) Hacim bağıntısı kurar."],
                     "uygun_materyaller": ["Birim Küpler ve 3B Prizma Modelleri", "GeoGebra Dinamik Geometri Yazılımı"],
-                    "hook": "Silindirik su depoları kapasitesi.", "kriz": "Emre açınım kağıtlarını katlayıp havaya atar.", "odak": "hareketli"
+                    "hook": "Silindirik depolar.", "kriz": "Emre kağıtları havaya atar.", "odak": "hareketli"
                 }
             ],
             "MAT.8.5. Dönüşüm": [
                 {
                     "kod": "MAT.8.5.1", "cikti": "Koordinat sisteminde öteleme ve yansıma dönüşümleri",
-                    "surec": ["a) Yansıma uygular."],
+                    "surec": ["a) Koordinat değişimini inceler."],
                     "uygun_materyaller": ["Simetri Aynası ve İzometrik Noktalı Kağıt", "GeoGebra Dinamik Geometri Yazılımı"],
-                    "hook": "Bilgisayar oyunlarında koordinat algoritmaları.", "kriz": "Selin eksene göre simetriyi zihninde canlandıramaz.", "odak": "gorseluzamsal"
+                    "hook": "Oyun koordinatları.", "kriz": "Selin simetriyi zihninde canlandıramaz.", "odak": "gorseluzamsal"
                 }
             ],
             "MAT.8.6. İstatistiksel Araştırma": [
@@ -372,7 +382,7 @@ tyym_master_arsiv = {
                     "kod": "MAT.8.6.1", "cikti": "Bilimsel araştırma etiği ve KVKK ilkelerine uygun proje",
                     "surec": ["a) KVKK ve etik kurallara uyar."],
                     "uygun_materyaller": ["KVKK Etkileşimli Veri Toplama Panosu", "Basamak Tablosu ve Renkli Abaküs"],
-                    "hook": "Dijital ekran süresi araştırması.", "kriz": "Can kişisel verileri paylaşmak isteyip itiraz eder.", "odak": "ustun"
+                    "hook": "Ekran süresi araştırması.", "kriz": "Can kişisel verileri paylaşmak ister.", "odak": "ustun"
                 }
             ],
             "MAT.8.7. Veriden Olasılığa": [
@@ -380,7 +390,7 @@ tyym_master_arsiv = {
                     "kod": "MAT.8.7.1", "cikti": "Simülasyonlarla deneysel ve teorik olasılık ilişkisi",
                     "surec": ["a) Büyük sayılar yasasını gözlemler."],
                     "uygun_materyaller": ["Olasılık Spektrumu Şeridi ve Çarkı", "GeoGebra Dinamik Geometri Yazılımı"],
-                    "hook": "Kalite kontrol hata olasılığı testi.", "kriz": "Mert 'Büyük sayılar yasası boş iş' der.", "odak": "direncli"
+                    "hook": "Kalite kontrol testi.", "kriz": "Mert yasaya itiraz eder.", "odak": "direncli"
                 }
             ],
         },
@@ -388,9 +398,9 @@ tyym_master_arsiv = {
 }
 
 # ==========================================
-# 3B SAHNE RENDER FONKSİYONU (10 ÖĞRENCİ VE DİNAMİK TEPKİLER)
+# 3B SAHNE RENDER FONKSİYONU (DİNAMİK EMOJİLER VE TEPKİLER)
 # ==========================================
-def render_3d_classroom_10_students_dynamic(
+def render_3d_classroom_10_students_dynamic_v2(
     ogretmen_adi,
     sinif_duzeyi,
     tema,
@@ -403,7 +413,7 @@ def render_3d_classroom_10_students_dynamic(
     ogretmen_balon = (
         ogretmen_sozu
         if ogretmen_sozu
-        else f"Arkadaşlar, {secilen_materyal} aracını kullanarak durumu birlikte inceleyelim..."
+        else f"Arkadaşlar, seçtiğimiz ({secilen_materyal}) üzerinden durumu birlikte inceleyelim..."
     )
 
     kartlar_html = ""
@@ -415,27 +425,34 @@ def render_3d_classroom_10_students_dynamic(
             else ""
         )
         
-        # 10 Öğrenci tipinin öğretmen dönütüne ve materyal uygunluğuna göre dinamik tepkileri
         if is_odak:
             if sesli_analiz_sonucu and sesli_analiz_sonucu["yapilandirmaci_mi"]:
-                konusma = ogr["dogru_tepki"]
-                mimik = "Gözleri parlıyor, rahatlamış ve katılımcı"
-                tepki = "Doğru kronolojik eylem ve sesli geri bildirimle bilişsel engel aşıldı"
+                yuz = ogr["dogru_yuz"]
+                postur = ogr["dogru_postur"]
+                mimik = ogr["dogru_mimik"]
+                tepki = ogr["dogru_tepki"]
+                konusma = ogr["dogru_konusma"]
                 durum_renk = "#22c55e"
             elif sesli_analiz_sonucu:
-                konusma = "Hala biraz eksik var ama anlamaya çalışıyorum öğretmenim..."
-                mimik = "Kararsız, kısmi rehberlik aldı"
+                yuz = ogr["yanlis_yuz"]
+                postur = ogr["yanlis_postur"]
+                mimik = "Kısmi rehberlik, konuyu anlamaya çalışıyor"
                 tepki = "Eksik sıralama veya yetersiz materyal kullanımı"
+                konusma = "Hala tam oturmadı ama deniyorum..."
                 durum_renk = "#f59e0b"
             else:
-                konusma = ogr["yanlis_tepki"]
-                mimik = "Endişeli, desteğe ihtiyaç duyuyor"
-                tepki = "Sınıf içi kriz / müdahale bekleniyor"
+                yuz = ogr["yanlis_yuz"]
+                postur = ogr["yanlis_postur"]
+                mimik = ogr["yanlis_mimik"]
+                tepki = ogr["yanlis_tepki"]
+                konusma = ogr["yanlis_konusma"]
                 durum_renk = ogr["renk"]
         else:
-            konusma = f"Biz de kendi masamızda {secilen_materyal} ile çalışıyoruz."
-            mimik = "Sakin, kendi akran grubuna odaklı"
+            yuz = "😊"
+            postur = "📖"
+            mimik = "Sakin, akran grubuna odaklı"
             tepki = "Akran öğrenme sürecinde"
+            konusma = f"Biz de masamızda {secilen_materyal} ile çalışıyoruz."
             durum_renk = "#38bdf8"
 
         kartlar_html += f"""
@@ -444,8 +461,8 @@ def render_3d_classroom_10_students_dynamic(
                 💬 "{konusma}"
             </div>
             <div class="avatar-circle" style="background: {ogr['bg']}; border-color: {durum_renk};">
-                <span class="avatar-face">{ogr['yuz']}</span>
-                <span class="posture-badge">{ogr['postur']}</span>
+                <span class="avatar-face">{yuz}</span>
+                <span class="posture-badge">{postur}</span>
             </div>
             <div class="desk-surface">
                 <div class="student-name">{ogr['ad']}</div>
@@ -547,12 +564,10 @@ def render_3d_classroom_10_students_dynamic(
     </div>
     </body>
     </html>
-    """
-    components.html(html_code, height=580, scrolling=True)
-    # ==========================================
+# ==========================================
 # NESNEL ANALİZ, MATERYAL UYUMU VE KRONOLOJİK EYLEM MOTORU
 # ==========================================
-def detayli_pedagojik_analiz_uret_gelismis_v2(
+def detayli_pedagojik_analiz_uret_gelismis_v3(
     sesli_metin,
     secilen_karar_metni,
     secilen_materyal,
@@ -563,7 +578,7 @@ def detayli_pedagojik_analiz_uret_gelismis_v2(
 ):
     kucuk_metin = sesli_metin.lower()
 
-    # 1. Kronolojik Eylem Sıralaması Puanı (Önce güvenli alan/empati, sonra materyal)
+    # 1. Kronolojik Eylem Sıralaması Puanı (Önce güvenli alan/empati, sonra somut materyal ve sorgulama)
     ilk_adim_dogru = "b)" in secilen_karar_metni.lower() or "e)" in secilen_karar_metni.lower()
     siralama_puani = 25 if ilk_adim_dogru else 10
 
@@ -593,7 +608,7 @@ def detayli_pedagojik_analiz_uret_gelismis_v2(
     # Nesnel ve Detaylı İyi Yönler
     iyi_yonler = []
     if ilk_adim_dogru:
-        iyi_yonler.append("**Kronolojik Pedagojik Eylem Sıralaması Başarısı:** Eylem şıkkında önce duyuşsal güvenli alan oluşturulması ve ardından yapılandırmacı materyal adımına geçilmesi kronolojik olarak doğru seçilmiştir.")
+        iyi_yonler.append("**Kronolojik Pedagojik Eylem Sıralaması Başarısı:** Eylem şıkkında önce duyuşsal güvenli alan kurulması ve ardından yapılandırmacı materyal adımına geçilmesi kronolojik olarak doğru seçilmiştir.")
     if materyal_konuya_uygun:
         iyi_yonler.append(f"**Materyal Uygunluğu:** Seçtiğiniz **{secilen_materyal}** aracı, işlenen `{kazanim_obj['kod']}` kazanımının bilişsel yapısına ve somutlaştırma düzeyine tam uygundur.")
     else:
@@ -709,7 +724,6 @@ elif st.session_state.adim == 2:
     secilen_kazanim_obj = next(k for k in kazanim_listesi if f"{k['kod']} - {k['cikti']}" == secilen_kazanim_str)
     
     with col_s4:
-        # Adayın Materyali Kendisinin Seçmesi
         secilen_materyal = st.selectbox(
             "4️⃣ Ders Materyali Seçin",
             materyal_havuzu,
@@ -726,7 +740,7 @@ elif st.session_state.adim == 2:
     analiz_sonucu = son_oturum["analiz"] if son_oturum else None
 
     # 3B Sahne Çağrısı (10 Öğrenci ve Dinamik Tepkiler)
-    render_3d_classroom_10_students_dynamic(
+    render_3d_classroom_10_students_dynamic_v2(
         ogretmen_adi=ogretmen,
         sinif_duzeyi=secilen_sinif,
         tema=secilen_tema,
@@ -750,7 +764,6 @@ elif st.session_state.adim == 2:
             ses_verisi = st.audio_input("🎤 Ses Kaydınızı Yapın:")
             if ses_verisi: st.success("✅ Ses kaydedildi.")
 
-        # Gri yönlendirici ifadeler tamamen kaldırıldı, kutu tamamen boş
         sesli_geri_bildirim_metni = st.text_area(
             "🗣️ Öğrencilere Söylediğiniz Sesli Geri Bildirim İfadesi:",
             value="",
@@ -774,7 +787,6 @@ elif st.session_state.adim == 2:
         with col_b1:
             islem_butonu = st.button("📥 Geri Bildirimi Uygula & Sınıf Tepkisini Gör", use_container_width=True)
         with col_b2:
-            # Hataları kavradıktan sonra derse geri dönüp düzeltme butonu
             duzeltme_butonu = st.button("🔄 Hataları Kavradım, Derse Geri Dönüp Düzeltme Yap", use_container_width=True)
 
         if duzeltme_butonu:
@@ -785,7 +797,7 @@ elif st.session_state.adim == 2:
                 st.error("⚠️ Lütfen ses kaydı yapın veya sesli geri bildirim metninizi girin.")
             else:
                 islenen_metin = sesli_geri_bildirim_metni.strip() if sesli_geri_bildirim_metni.strip() else "Sesli komut verildi."
-                analiz = detayli_pedagojik_analiz_uret_gelismis_v2(
+                analiz = detayli_pedagojik_analiz_uret_gelismis_v3(
                     sesli_metin=islenen_metin,
                     secilen_karar_metni=ogretmen_karari,
                     secilen_materyal=secilen_materyal,
@@ -811,14 +823,13 @@ elif st.session_state.adim == 2:
                 st.rerun()
 
     with col_sag:
-        st.markdown("#### 👥 10 Farklı Öğrenci Tipinin Anlık Tepkileri")
+        st.markdown("#### 👥 10 Farklı Öğrenci Tipinin Detaylı Karakteristikleri")
         for ogr in genel_ogrenci_tipleri_detayli:
             with st.container(border=True):
                 st.markdown(f"**{ogr['yuz']} {ogr['ad']} ({ogr['tip']})**")
+                st.caption(f"Psikolojik/Bilişsel Arka Plan: {ogr['karakteristik']}")
                 if ogr["id"] == odak_ogrenci_id:
-                    st.warning(f"⚡ Odak Kriz Öğrencisi: {ogr['karakteristik']}")
-                else:
-                    st.caption(f"Karakteristik: {ogr['karakteristik']}")
+                    st.warning("⚡ Bu oturumun kriz odaklı profili.")
 
         if len(st.session_state.simulasyon_gecmisi) > 0:
             son = st.session_state.simulasyon_gecmisi[-1]
@@ -828,18 +839,19 @@ elif st.session_state.adim == 2:
                 st.rerun()
 
 # ==========================================
-# ADIM 3: ÇOK DETAYLI, NESNEL RAPORLAR VE BÖLÜM ÖZ-DEĞERLENDİRME
+# ADIM 3: ÇOK DETAYLI, NESNEL RAPORLAR, PROGRAM UYUMU VE KÜMÜLATİF İLERLEME
 # ==========================================
 elif st.session_state.adim == 3:
-    st.subheader("📊 TYMM 2026 & RUBRİK UYUMLU ÇOK DETAYLI NESNEL RAPORLAMA SİSTEMİ")
+    st.subheader("📊 TYMM 2026 & RUBRİK UYUMLU ÇOK DETAYLI NESNEL RAPORLAMA VE YIL SONU İLERLEME SİSTEMİ")
     toplam_islem = len(st.session_state.simulasyon_gecmisi)
     ortalama_puan = int(sum(k["puan"] for k in st.session_state.simulasyon_gecmisi) / toplam_islem) if toplam_islem > 0 else 0
 
-    tab_aday, tab_rubrik, tab_dekanlik, tab_anket = st.tabs([
-        "👩‍🏫 1. Aday Detaylı Pedagojik Analiz (İyi/Eksik, Kök Neden & Çözüm)",
-        "📋 2. Rubrik & Maarif Programı Değerlendirme Matrisi",
-        "🏛️ 3. Bölüm Öz-Değerlendirme ve Program Geliştirme Raporu",
-        "⭐ 4. Adayların Simülasyonu Değerlendirme Formu",
+    tab_aday, tab_rubrik, tab_program, tab_portfolyo, tab_anket = st.tabs([
+        "👩‍🏫 1. Aday Detaylı Pedagojik Analiz",
+        "📋 2. Öğretim Elemanı Rubrik Uygunluk Testi",
+        "📐 3. Öğretim Programı (TYMM 2026) Uygunluk Analizi",
+        "📈 4. Yıl Sonu Kümülatif İlerleme & Portfolyo Geri Dönütü",
+        "⭐ 5. Aday Simülasyonu Değerlendirme Formu",
     ])
 
     with tab_aday:
@@ -849,8 +861,8 @@ elif st.session_state.adim == 3:
             for idx, oturum in enumerate(st.session_state.simulasyon_gecmisi, 1):
                 analiz = oturum["analiz"]
                 with st.container(border=True):
-                    st.markdown(f"#### 📌 Oturum #{idx} (Düzeltme Sonrası Güncel): {oturum['sinif']} | {oturum['tema']} (`{oturum['kod']}`) — **Puan: {oturum['puan']}/100**")
-                    st.markdown(f"- **Kazanım:** {oturum['cikti']}\n- **Süreç:** {oturum['surec']}\n- **Seçilen Materyal:** {oturum['materyal']}\n- **Sesli Geri Bildirim:** *\"{oturum['sesli_komut']}\"*\n- **Eylem Kararı:** {oturum['karar']}")
+                    st.markdown(f"#### 📌 Oturum #{idx} (Güncel): {oturum['sinif']} | {oturum['tema']} (`{oturum['kod']}`) — **Puan: {oturum['puan']}/100**")
+                    st.markdown(f"- **Kazanım:** {oturum['cikti']}\n- **Süreç Bileşeni:** {oturum['surec']}\n- **Seçilen Materyal:** {oturum['materyal']}\n- **Sesli Geri Bildirim:** *\"{oturum['sesli_komut']}\"*\n- **Eylem Kararı:** {oturum['karar']}")
                     st.divider()
                     col_a1, col_a2 = st.columns(2)
                     with col_a1:
@@ -865,23 +877,43 @@ elif st.session_state.adim == 3:
                         for m in analiz["cozum_onerileri"]: st.info(m)
 
     with tab_rubrik:
-        st.markdown("### 👨‍🏫 Rubrik Değerlendirme Matrisi")
+        st.markdown("### 📋 Uygulama Öğretim Elemanı Rubrik Uygunluk Testi")
+        st.info("Bu başlık altında öğretmen adayının sınıf içi davranışları ve hitabeti, danışman hocanın yüklediği rubrik maddelerine göre nesnel olarak test edilmektedir.")
         if toplam_islem > 0:
             son_analiz = st.session_state.simulasyon_gecmisi[-1]["analiz"]
             st.dataframe(pd.DataFrame(son_analiz["rubrik_analiz_listesi"]), use_container_width=True, hide_index=True)
 
-    with tab_dekanlik:
-        st.markdown("### 🏛️ İlköğretim Matematik Öğretmenliği Bölümü Öz-Değerlendirme Raporu")
-        st.info("📌 Bu rapor adayın staj elemesi değil, bölümün kendi öğretmen yetiştirme programındaki güçlü/eksik yönlerini fark etmesi içindir.")
-        with st.container(border=True):
-            st.markdown("#### 1. Bölümün Güçlü Yönleri")
-            st.markdown("- **TYMM Okuryazarlığı:** Adayların 2026 Maarif Modeli temalarını ve süreç bileşenlerini bilmesi.\n- **Materyal Seçim Bilinci:** Adayların ders için somut araç seçebilmesi.")
-            st.markdown("#### 2. Bölüm Eğitiminde Fark Edilen Eksik Yönler")
-            st.markdown("- **Kriz Anı Kronolojik Sıralaması:** 10 farklı öğrenci profilinin bulunduğu sınıfta ani krizlerde önce duyuşsal güvenli alan yaratma adımının atlanabilmesi.")
-            st.markdown("#### 3. Eksikliklerin Kök Nedenleri")
-            st.markdown("- Teorik derslerde vaka analizlerinin yazılı kalması ve anlık sesli simülasyonların azlığı.")
-            st.markdown("#### 4. Çözüm Önerileri (Bölüm Derslerinin Geliştirilmesi)")
-            st.markdown("1. 3B simülasyon laboratuvarlarının staj derslerine entegre edilmesi.\n2. 10 farklı öğrenci profili için kronolojik eylem atölyelerinin artırılması.")
+    with tab_program:
+        st.markdown("### 📐 Öğretim Programı (2026 Türkiye Yüzyılı Maarif Modeli) Uygunluk Analizi")
+        st.info("Bu başlık altında, işlenen dersin o an yürürlükte olan millî öğretim programının (TYMM 2026) temel felsefesine, becerilerine ve süreç bileşenlerine uygunluğu ayrıntılı olarak ele alınmaktadır.")
+        if toplam_islem > 0:
+            son_oturum = st.session_state.simulasyon_gecmisi[-1]
+            with st.container(border=True):
+                st.markdown(f"**İncelenen Sınıf & Kazanım:** {son_oturum['sinif']} - `{son_oturum['kod']}` ({son_oturum['cikti']})")
+                st.markdown(f"**Seçilen Süreç Bileşeni:** {son_oturum['surec']}")
+                st.markdown(f"**Tercih Edilen Materyal:** {son_oturum['materyal']}")
+                st.markdown(
+                    "#### 🔍 Program Uygunluk Sonucu:\n"
+                    "1. **Beceriler ve Yetkinlikler Uyumu:** Adayın seçtiği yapılandırmacı yaklaşım ve materyal, TYMM 2026 matematik dersi öğretim programında öngörülen 'matematiksel muhakeme' ve 'problem çözme' bileşenlerini desteklemektedir.\n"
+                    "2. **Somutlaştırma ve Bağlamsal Tasarım:** Dersin başında kullanılan 'Gerçek Yaşam Kancası' (hook) programın günlük hayatla ilişkilendirme ilkesiyle tam uyumludur.\n"
+                    "3. **Geliştirilmesi Gereken Program Alanı:** Öğrencinin bilişsel zorlanma anında formül vermek yerine süreç bileşenindeki alt basamakları sırasıyla sorularak keşfettirmesi programın yapılandırmacı ruhunu pekiştirecektir."
+                )
+
+    with tab_portfolyo:
+        st.markdown("### 📈 Yıl Sonu Kümülatif İlerleme ve Portfolyo Geri Dönüt Sistemi")
+        st.info("Bu modül, her öğretmen adayının yıl boyunca gerçekleştirdiği tüm oturumları birleştirerek genel gelişim eğrisini gözlemler ve kümülatif geri dönüt sağlar.")
+        if toplam_islem > 0:
+            kumulatif_df = pd.DataFrame([
+                {"Oturum No": i+1, "Sınıf": o["sinif"], "Kazanım": o["kod"], "Puan": o["puan"]}
+                for i, o in enumerate(st.session_state.simulasyon_gecmisi)
+            ])
+            st.dataframe(kumulatif_df, use_container_width=True, hide_index=True)
+            st.line_chart(kumulatif_df, x="Oturum No", y="Puan")
+            st.success(
+                f"🌟 **Kümülatif Geri Dönüt:** Adayımızın yıl içindeki genel ortalama pedagojik yeterlilik puanı **{ortalama_puan}/100** olarak hesaplanmıştır. "
+                "Aday özellikle duyuşsal empati ve materyal seçiminde istikrarlı bir ilerleme kaydetmiş olup, kriz anlarında kronolojik sıralamayı (önce güvenli alan) "
+                "uygulama refleksini pekiştirmelidir."
+            )
 
     with tab_anket:
         st.markdown("### ⭐ Simülasyon Uygulamasını Değerlendirme Formu")
@@ -905,13 +937,16 @@ elif st.session_state.adim == 3:
     with col_b2:
         tum_rapor_json = json.dumps({
             "aday": st.session_state.get("ogretmen_adi"),
+            "okul_no": st.session_state.get("okul_numarasi"),
             "ortalama_puan": ortalama_puan,
             "oturumlar": st.session_state.simulasyon_gecmisi,
             "degerlendirmeler": st.session_state.uygulama_degerlendirmeleri
         }, ensure_ascii=False, indent=2)
-        st.download_button("📥 Tüm Raporları İndir (JSON)", data=tum_rapor_json, file_name="TYMM2026_Nesnel_Rapor.json", mime="application/json", use_container_width=True)
+        st.download_button("📥 Yıl Sonu Kümülatif Portfolyoyu İndir (JSON)", data=tum_rapor_json, file_name=f"TYMM2026_Portfolyo_{st.session_state.get('okul_numarasi', 'Aday')}.json", mime="application/json", use_container_width=True)
     with col_b3:
         if st.button("🔄 Simülasyonu Baştan Başlat", use_container_width=True):
             st.session_state.simulasyon_gecmisi = []
             st.session_state.adim = 1
             st.rerun()
+    """
+    components.html(html_code, height=580, scrolling=True)
