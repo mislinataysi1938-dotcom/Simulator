@@ -1,7 +1,17 @@
 """
-TYMM Ortaokul Matematik (5-8. Sınıflar) Öğrenci Profilleri,
-28 Öğrenme Çıktısı, Matematiksel Kavram Çıkarım Sözlüğü ve Deterministik Kural Motoru.
+TÜBİTAK 2209-A - TYMM Uyumlu 3B Matematik Sınıf Simülatörü Ana Arayüzü
+Tek Dosya Modeli: Profil, Kazanım, Sentez Motoru ve Arayüz Tek Bir Dosyada Birleştirildi.
 """
+
+import json
+import hashlib
+from datetime import datetime
+import streamlit as st
+import streamlit.components.v1 as components
+
+# ==============================================================================
+# 1. VERİ SÖZLÜKLERİ (ÖĞRENCİ PROFİLLERİ, KAZANIMLAR VE KURAL MOTORU)
+# ==============================================================================
 
 STUDENT_PROFILES = {
     "disleksi": {
@@ -145,7 +155,7 @@ TYMM_28_OUTCOMES = {
     ],
 }
 
-# 28 Kazanım için Matematiksel Tema Çıkarım Sözlüğü (Dinamik Senaryo Üretimi İçin)
+# 28 Kazanım için Matematiksel Tema Çıkarım Sözlüğü
 MATH_KEYWORDS = {
     "kesir": "pay, payda ve parça-bütün ilişkisi",
     "doğal sayı": "büyük sayılar, basamak değerleri ve işlemler",
@@ -178,26 +188,18 @@ YARGILAYICI_IFADELER = ["neden hala", "anlamadın", "arkadaşların çözdü", "
 KURULUM_ANAHTARLARI = ["kurulum", "yerleştir", "hazırla", "aç", "temsil", "tanımla", "başla", "koy"]
 MANIPULASYON_ANAHTARLARI = ["öğrenci", "birlikte", "hareket", "taşı", "ayır", "birleştir", "döndür", "uygula", "manipüle", "çek"]
 SEMBOLIK_ANAHTARLARI = ["sembol", "ifade", "denklem", "oran", "kesir", "yaz", "ilişkilendir", "genelle", "kural"]
-"""
-Zenginleştirilmiş Profil-Kazanım Sentez Motoru, Deterministik Kural Motoru,
-Oturum Kaydı ve Lawshe Kapsam Geçerliği (İP-1) Dışa Aktarımı.
-"""
 
-import hashlib
-import json
-from curriculum_and_profiles import (
-    MATH_KEYWORDS, EMPATIK_IFADELER, KURULUM_ANAHTARLARI, MANIPULASYON_ANAHTARLARI,
-    SEMBOLIK_ANAHTARLARI, TYMM_SORGU_IFADELERI, YARGILAYICI_IFADELER, STUDENT_PROFILES, TYMM_28_OUTCOMES
-)
+
+# ==============================================================================
+# 2. MOTOR FONKSİYONLARI VE DIŞA AKTARIM MODÜLLERİ
+# ==============================================================================
 
 def uret_profil_kazanim_tepkisi(prof: dict, sinif_duzeyi: str, kazanim: str) -> dict:
     """
     Seçilen 28 kazanımdan herhangi birini analiz eder, matematiksel temasını bulur
-    ve öğrenci profilinin kriziyle (10 Profil x 28 Kazanım = 280 Varyasyon) dinamik olarak sentezler.
+    ve öğrenci profilinin kriziyle dinamik olarak sentezler.
     """
     kazanim_kisa = kazanim.lower()
-    
-    # Kazanımın içindeki anahtar matematiksel temayı bul
     mat_konusu = "matematiksel işlemler" # varsayılan
     for key, desc in MATH_KEYWORDS.items():
         if key in kazanim_kisa:
@@ -207,7 +209,6 @@ def uret_profil_kazanim_tepkisi(prof: dict, sinif_duzeyi: str, kazanim: str) -> 
     profil_adi = prof["profil"]
     ad = prof["ad"]
 
-    # Profil ile matematik konusunu dinamik harmanla
     if profil_adi == "Disleksi":
         ogrenci_sozu = f"Öğretmenim, '{kazanim}' konusundaki {mat_konusu} ile ilgili yazıları okurken satırlar birbirine giriyor. Sembolleri karıştırıyorum."
         kriz_durumu = f"{ad}, metin ve {mat_konusu} yoğunlaştığı için bilişsel yüklenme yaşayıp defterini kapatıyor."
@@ -287,7 +288,6 @@ def build_blind_expert_export(all_logs: list[dict]) -> str:
     return json.dumps(blind_items, ensure_ascii=False, indent=2)
 
 def build_lawshe_export() -> str:
-    """İP-1 (Uzman Görüşü Kalibrasyonu) için Lawshe Değerlendirme Formunu (JSON) üretir."""
     lawshe_data = {
         "aciklama": "TÜBİTAK 2209-A: Özel Eğitim, PDR ve Matematik Eğitimi Uzmanı Değerlendirme Formu. (1=Uygun, 2=Düzeltilmeli, 3=Çıkarılmalı)",
         "ögrenci_profilleri": [],
@@ -301,21 +301,11 @@ def build_lawshe_export() -> str:
             "uzman_notu_klişe_riski": ""
         })
     return json.dumps(lawshe_data, ensure_ascii=False, indent=2)
-    """
-TÜBİTAK 2209-A - TYMM Uyumlu 3B Matematik Sınıf Simülatörü Ana Arayüzü
-Gelişmiş İzometrik 3B Sınıf, Lawshe İP-1 Dışa Aktarımı ve Dinamik Sentez.
-"""
 
-import json
-from datetime import datetime
-import streamlit as st
-import streamlit.components.v1 as components
 
-from curriculum_and_profiles import STUDENT_PROFILES, TYMM_28_OUTCOMES
-from scoring_and_storage import (
-    build_blind_expert_export, build_lawshe_export,
-    puanla_boyut2_materyal, puanla_boyut3_hitabet, uret_profil_kazanim_tepkisi
-)
+# ==============================================================================
+# 3. STREAMLIT ARAYÜZÜ
+# ==============================================================================
 
 st.set_page_config(page_title="TYMM 3B Matematik Sınıf Simülatörü", layout="wide")
 
@@ -323,14 +313,12 @@ if "session_logs" not in st.session_state: st.session_state.session_logs = []
 if "journal_logs" not in st.session_state: st.session_state.journal_logs = []
 
 def render_3d_classroom(profile_key: str, kazanim: str, step_status: str):
-    """Gelişmiş HTML5/CSS3 İzometrik 3B Sınıf Sahnesi (Zemin, Tahta, Masalar ve Hedef Öğrenci)."""
     prof = STUDENT_PROFILES[profile_key]
     kazanim_kisa = (kazanim[:35] + '...') if len(kazanim) > 35 else kazanim
     
     html = f"""
     <div style="display:flex;justify-content:center;align-items:center;padding:12px;background:#0f172a;border-radius:12px;overflow:hidden;">
       <div style="position:relative;width:500px;height:320px;perspective:1000px;">
-        <!-- İzometrik Zemin Container -->
         <div style="
           width:380px;height:260px;margin:40px auto 0;
           background:linear-gradient(135deg,#cbd5e1 0%,#94a3b8 100%);
@@ -339,27 +327,20 @@ def render_3d_classroom(profile_key: str, kazanim: str, step_status: str):
           box-shadow:0 30px 50px rgba(0,0,0,0.5);
           position:relative;transform-style:preserve-3d;">
           
-          <!-- Zemin Izgarası -->
           <div style="position:absolute;inset:0;background-image:linear-gradient(#cbd5e1 1px,transparent 1px),linear-gradient(90deg,#cbd5e1 1px,transparent 1px);background-size:40px 40px;opacity:0.3;"></div>
-
-          <!-- Yazı Tahtası -->
+          
           <div style="position:absolute;top:-60px;left:50px;width:280px;height:24px;background:#1e3a2f;border:3px solid #78350f;border-radius:4px;transform:translateZ(40px) rotateX(-90deg);transform-origin:bottom;display:flex;align-items:center;justify-content:center;color:white;font-size:8px;font-family:sans-serif;box-shadow:0 -5px 15px rgba(0,0,0,0.5);">
              {kazanim_kisa}
           </div>
 
-          <!-- Öğretmen Masası -->
           <div style="position:absolute;top:10px;left:140px;width:100px;height:40px;background:#92400e;border-radius:4px;box-shadow:inset 0 0 10px rgba(0,0,0,0.3), 10px 10px 15px rgba(0,0,0,0.4);"></div>
           
-          <!-- Öğrenci Sıraları (Grid) -->
           <div style="position:absolute;top:90px;left:40px;width:60px;height:35px;background:#b45309;border-radius:4px;box-shadow:5px 5px 10px rgba(0,0,0,0.4);"></div>
           <div style="position:absolute;top:90px;left:140px;width:60px;height:35px;background:#b45309;border-radius:4px;box-shadow:5px 5px 10px rgba(0,0,0,0.4);"></div>
           <div style="position:absolute;top:90px;left:240px;width:60px;height:35px;background:#b45309;border-radius:4px;box-shadow:5px 5px 10px rgba(0,0,0,0.4);"></div>
           
-          <!-- Aktif Öğrencinin Sırası ve Avatarı (Orta Arka Sıra) -->
           <div style="position:absolute;top:160px;left:140px;width:60px;height:35px;background:#b45309;border-radius:4px;box-shadow:5px 5px 10px rgba(0,0,0,0.4);">
-             <!-- Avatar Dairesi -->
              <div style="position:absolute;top:-10px;left:15px;width:30px;height:30px;border-radius:50%;background:{prof['avatar_renk']};border:2px solid white;transform:translateZ(20px) rotateX(-90deg) rotateY(-40deg);transform-origin:bottom;box-shadow:0 0 15px {prof['avatar_renk']};">
-                 <!-- Animasyonlu Dikkat İşaretçisi -->
                  <div style="position:absolute;top:-15px;left:10px;width:10px;height:10px;border-radius:50%;background:#ef4444;animation: bounce 1s infinite alternate;"></div>
              </div>
           </div>
@@ -378,7 +359,7 @@ def render_3d_classroom(profile_key: str, kazanim: str, step_status: str):
     components.html(html, height=330)
 
 st.title("TYMM Uyumlu 3B Matematik Sınıf Simülatörü")
-st.caption("28 Kazanım x 10 Profil Zengin Sentezi • Gelişmiş 3B Sahne • Lawshe Uzman Dışa Aktarımı")
+st.caption("Tek Dosya Dağıtımı • Gelişmiş 3B Sahne • Lawshe Uzman Dışa Aktarımı")
 
 with st.sidebar:
     st.header("1. Öğretmen Adayı Ekranı")
@@ -394,8 +375,8 @@ with st.sidebar:
 
     st.divider()
     st.header("2. Araştırmacı / Uzman Menüsü (İP-1 & İP-2)")
-    st.download_button("İP-1 Lawshe Uzman Doğrulama Formu (JSON)", data=build_lawshe_export(), file_name="ip1_lawshe_uzman_formu.json", mime="application/json")
-    st.download_button("İP-2 Körleme Rubrik Puanlama Paketi (JSON)", data=build_blind_expert_export(st.session_state.session_logs), file_name="ip2_korleme_puanlama.json", mime="application/json")
+    st.download_button("İP-1 Lawshe Uzman Formu (JSON)", data=build_lawshe_export(), file_name="ip1_lawshe_uzman_formu.json", mime="application/json")
+    st.download_button("İP-2 Körleme Puanlama Paketi (JSON)", data=build_blind_expert_export(st.session_state.session_logs), file_name="ip2_korleme_puanlama.json", mime="application/json")
 
 ai_tepki = uret_profil_kazanim_tepkisi(prof, sinif_secimi, kazanim_secimi)
 
