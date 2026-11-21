@@ -471,3 +471,141 @@ elif st.session_state.adim == 3:
         st.session_state.simulasyon_gecmisi = []
         st.session_state.adim = 1
         st.rerun()
+# ==========================================
+# 6. ADIM 2: 3D SINIF, ÖĞRENCİ SEÇİMİ VE PEDAGOJİK MÜDAHALE
+# ==========================================
+elif st.session_state.adim == 2:
+    st.info("2️⃣ 3D Canlı Sınıf ve Kriz Müdahalesi: Kazanım seçin, öğrenci belirleyin ve pedagojik eylem sıranızı oluşturun.")
+    
+    with st.expander("📚 Müfredat ve Kazanım Belirleme (Tıklayıp Açınız)", expanded=True):
+        col_s1, col_s2, col_s3 = st.columns(3)
+        with col_s1:
+            secilen_sinif = st.selectbox("Sınıf Düzeyi", list(tyym_master_arsiv.keys()))
+        with col_s2:
+            secilen_tema = st.selectbox("Tema", tyym_master_arsiv[secilen_sinif]["Temalar"])
+        
+        kazanim_listesi = tyym_master_arsiv[secilen_sinif]["Kazanimlar"].get(secilen_tema, [])
+        if kazanim_listesi:
+            with col_s3:
+                kazanim_secenekleri = [f"{k['kod']}: {k['cikti']}" for k in kazanim_listesi]
+                secilen_kazanim_str = st.selectbox("Kazanım Çıktısı", kazanim_secenekleri)
+            
+            secilen_kazanim_obj = next(k for k in kazanim_listesi if f"{k['kod']}: {k['cikti']}" == secilen_kazanim_str)
+            secilen_surec = st.selectbox("Odaklanılacak Süreç Bileşeni:", secilen_kazanim_obj["surec"])
+        else:
+            st.error("Bu tema için kazanım bulunamadı.")
+            st.stop()
+
+    st.markdown("---")
+    st.markdown("#### 👥 Sınıftaki Öğrenciler (Müdahale Edeceğiniz Öğrenciyi Seçin)")
+    ogrenci_isimleri = list(ogrenciler.keys())
+    sekmeler = st.tabs(ogrenci_isimleri)
+    secilen_ogrenci_adi = ogrenci_isimleri[0] 
+    
+    for i, sekme in enumerate(sekmeler):
+        with sekme:
+            ogr = ogrenciler[ogrenci_isimleri[i]]
+            st.markdown(f"**{ogr['ikon']} {ogrenci_isimleri[i]}** - *{ogr['durum']}*")
+            st.write(ogr['ozellik'])
+            if st.button(f"Sınıfta {ogrenci_isimleri[i]}'i Seç", key=f"btn_{i}"):
+                secilen_ogrenci_adi = ogrenci_isimleri[i]
+                
+    aktif_ogrenci = ogrenciler[secilen_ogrenci_adi]
+    dinamik_kriz_metni = f"**{secilen_ogrenci_adi} ({aktif_ogrenci['durum']}):** Öğrenci {aktif_ogrenci['ozellik'].lower()} kaynaklı olarak zorlanmaktadır. Yaşanan Kriz: {secilen_kazanim_obj['kriz']}"
+
+    col_kriz, col_mudahale = st.columns([1, 1.5])
+    
+    with col_kriz:
+        st.warning(f"⚠️ **KRİZ ANI GERÇEKLEŞTİ!**\n\n{dinamik_kriz_metni}")
+        st.markdown(f"<div style='text-align:center; font-size:4rem;'>{aktif_ogrenci['ikon']}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='text-align:center;'><b>{secilen_ogrenci_adi}</b><br><i>Mimik: {aktif_ogrenci['mimik']}</i></div>", unsafe_allow_html=True)
+
+    with col_mudahale:
+        st.markdown("##### 🛠️ Pedagojik Eylem Sırası")
+        eylem_1 = st.selectbox("1. Adım (İlk Müdahaleniz Ne Olacak?)*", ["Seçiniz...", "Öğrencinin duygusunu kabul edip güvenli alan sunmak (Empati kurmak)", "Sınıf kurallarını hatırlatıp sessiz olmasını istemek", "Durumu görmezden gelip derse devam etmek"])
+        eylem_2 = st.selectbox("2. Adım (Akademik Yönlendirmeniz Ne Olacak?)*", ["Seçiniz...", "Doğrudan kuralı/formülü tahtaya yazıp ezberletmek", "Somut materyal üzerinden yönlendirici sorularla keşfettirmek", "Soruyu geçip başka bir konuya odaklanmak"])
+        
+        st.markdown("##### 🎙️ İletişim (Sadece Kendi Cümleleriniz)")
+        sesli_veri = None
+        try:
+             sesli_veri = st.audio_input("🎤 Sesli Yanıtınızı Kaydedin")
+        except AttributeError:
+             pass
+        yazili_mudahale = st.text_area("✍️ Veya Öğrenciye Ne Söyleyeceğinizi Birebir Yazın *", placeholder="Örn: Derin bir nefes al bakalım...")
+        
+        st.markdown("##### 🧩 Materyal Kullanımı")
+        materyal_kullanimi = st.text_area("Hangi materyali, nasıl bir yönergeyle kullanacaksınız? *", placeholder="Örn: Onluk taban bloklarını masaya koyacağım...")
+
+        if st.button("📥 Müdahaleyi Kaydet & Değerlendirmeye Geç", type="primary", use_container_width=True):
+            if not (sesli_veri or yazili_mudahale) or not materyal_kullanimi or eylem_1 == "Seçiniz..." or eylem_2 == "Seçiniz...":
+                st.error("❌ Lütfen sesli/yazılı hitabetinizi, eylem sıranızı ve materyal planınızı eksiksiz doldurunuz.")
+            else:
+                mudahale_ozeti = yazili_mudahale if yazili_mudahale else "Sesli kayıt sisteme işlendi."
+                ai_tepki = ai_ogrenci_tepkisi(secilen_tema, secilen_kazanim_obj['cikti'], secilen_surec, secilen_ogrenci_adi, aktif_ogrenci["durum"], eylem_1, eylem_2, mudahale_ozeti)
+                hata_donutu = pedagojik_geri_donut_uret(eylem_1, eylem_2)
+
+                st.session_state.simulasyon_gecmisi.append({
+                    "sinif": secilen_sinif, "tema": secilen_tema, "kazanim": secilen_kazanim_obj['kod'], "surec": secilen_surec,
+                    "ogrenci": secilen_ogrenci_adi, "ogrenci_durum": aktif_ogrenci['durum'], "kriz": dinamik_kriz_metni,
+                    "eylem_1": eylem_1, "eylem_2": eylem_2, "mudahale_metni": mudahale_ozeti, "materyal_plan": materyal_kullanimi,
+                    "ogrenci_tepkisi": ai_tepki, "geri_donut": hata_donutu
+                })
+                st.session_state.adim = 3
+                st.rerun()
+
+# ==========================================
+# 7. ADIM 3: DİJİTAL REPLAY VE AKADEMİK GERİ DÖNÜT
+# ==========================================
+elif st.session_state.adim == 3:
+    st.info("3️⃣ Raporlama Paneli: Oturum tamamlandı. Aşağıdan hatalarınızı inceleyebilir ve hoca değerlendirmesine geçebilirsiniz.")
+    st.markdown(f"**Aday:** {st.session_state.ogretmen_adi} | **No:** {st.session_state.okul_numarasi}")
+    st.divider()
+
+    tab_rapor, tab_degerlendirme = st.tabs(["📄 Oturum Özeti ve Hata Dönütleri", "👨‍🏫 Öğretim Elemanı Paneli"])
+    son_oturum = st.session_state.simulasyon_gecmisi[-1]
+    
+    with tab_rapor:
+        with st.container(border=True):
+            st.markdown("#### ⚙️ Eğitim Sistemi Geri Dönütü (Hata Analizi)")
+            if "Tebrikler" in son_oturum["geri_donut"]:
+                st.success(son_oturum["geri_donut"])
+            else:
+                st.error(son_oturum["geri_donut"])
+                
+            st.divider()
+            st.markdown("#### 🤖 Öğrencinin (Yapay Zeka) Tepkisi")
+            if "Tebrikler" in son_oturum["geri_donut"]:
+                st.success(f"**{son_oturum['ogrenci']}:** {son_oturum['ogrenci_tepkisi']}")
+            else:
+                st.error(f"**{son_oturum['ogrenci']}:** {son_oturum['ogrenci_tepkisi']}")
+
+            st.divider()
+            col_r1, col_r2 = st.columns(2)
+            with col_r1:
+                st.write(f"- **Kazanım:** {son_oturum['kazanim']}")
+                st.write(f"- **1. Adım:** {son_oturum['eylem_1']}")
+                st.write(f"- **2. Adım:** {son_oturum['eylem_2']}")
+            with col_r2:
+                st.info(f"**İletişim:** {son_oturum['mudahale_metni']}")
+                st.info(f"**Materyal:** {son_oturum['materyal_plan']}")
+
+    with tab_degerlendirme:
+        with st.container(border=True):
+            st.markdown(f"### 👨‍🏫 Sayın {st.session_state.hoca_adi},")
+            st.write("Adayın pedagojik eylem sırasını, materyal planını ve sistemin hata analizini inceleyerek geri dönütünüzü yazınız.")
+            st.warning(f"**Rubrik Kriterleriniz:**\n\n{st.session_state.rubrik}")
+            
+            hoca_donutu = st.text_area("Değerlendirme Notunuz:", height=150)
+            
+            if st.button("📤 Geri Dönütü Adaya İlet ve Oturumu Kapat", type="primary"):
+                if hoca_donutu:
+                    st.success("✅ Öğretim elemanı değerlendirmesi aday portfolyosuna başarıyla eklendi.")
+                    st.balloons()
+                else:
+                    st.error("❌ Lütfen değerlendirme notunuzu yazınız.")
+
+    st.markdown("---")
+    if st.button("🔄 Yeni Bir Simülasyon Başlat"):
+        st.session_state.simulasyon_gecmisi = []
+        st.session_state.adim = 1
+        st.rerun()
