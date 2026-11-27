@@ -31,9 +31,8 @@ st.markdown("""
         background-color: #F0FDF4; border-left: 4px solid #16A34A; padding: 15px; 
         margin-top: 10px; margin-bottom: 15px; border-radius: 4px;
     }
-    .uyari-bildirim {
-        background-color: #FEF2F2; border-left: 4px solid #DC2626; padding: 15px; margin-bottom: 15px; border-radius: 4px;
-    }
+    .hata-metni { color: #B91C1C; font-weight: 600; }
+    .oneri-metni { color: #1D4ED8; font-style: italic; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -42,12 +41,6 @@ if "adim" not in st.session_state: st.session_state.adim = 1
 if "secili_ogrenciler" not in st.session_state: st.session_state.secili_ogrenciler = []
 if "otur_seed" not in st.session_state: st.session_state.otur_seed = random.randint(1, 1000)
 if "telafi_senaryosu" not in st.session_state: st.session_state.telafi_senaryosu = None
-
-UNIVERSITELER = [
-    "Seçiniz...", "Kahramanmaraş Sütçü İmam Üniversitesi", "Ankara Üniversitesi", "Gazi Üniversitesi", 
-    "Hacettepe Üniversitesi", "Marmara Üniversitesi", "Boğaziçi Üniversitesi", "Orta Doğu Teknik Üniversitesi (ODTÜ)", 
-    "Yıldız Teknik Üniversitesi", "Ege Üniversitesi", "Dokuz Eylül Üniversitesi", "Çukurova Üniversitesi", "Diğer"
-]
 
 # ==========================================
 # 1. 10 ÖĞRENCİ PROFİLİ VE BİLİŞSEL DETAYLARI
@@ -110,8 +103,8 @@ def dinamik_eylem_secenekleri_uret(tema, kazanim_kod, surec, kriz):
 # ==========================================
 # 3. KAPSAMLI AKADEMİK DEĞERLENDİRME MOTORU
 # ==========================================
-def kapsamli_ai_degerlendirmesi(eylem1, eylem2, materyal, mat_aciklama, sesli_girdi, ogr_durumlar, kazanim_obj, hoca_rubrik):
-    e1_tur = "duyussal" if any(kw in eylem1 for kw in ["kabul ederek", "neyi kaçırdığını", "esneklik sağlamak"]) else "bilissel"
+def kapsamli_ai_degerlendirmesi(eylem1, eylem2, materyal, mat_aciklama, sesli_girdi, ogr_durumlar, onceki_rapor, kazanim_obj, hoca_rubrik):
+    e1_tur = "duyussal" if any(kw in eylem1 for kw in ["kabul ederek", "neyi kaçırdığını", "esneklik sağlamak", "zaman tanımak"]) else "bilissel"
     if any(kw in eylem1 for kw in ["kurallarını hatırlatıp", "devam etmek", "tekrar etmek"]): e1_tur = "disiplin"
 
     e2_tur = "kesif" if any(kw in eylem2 for kw in ["keşfetmesini", "örnekle açıklamasını", "temsile dönüştürmek", "genellemesini"]) else "ezber"
@@ -135,20 +128,20 @@ def kapsamli_ai_degerlendirmesi(eylem1, eylem2, materyal, mat_aciklama, sesli_gi
     elif e1_tur == "disiplin":
         puan -= 20
         kriz_yonetimi_puan -= 15
-        hatalar_ve_sebepleri.append(f"❌ **Hata (Kriz Yönetimi):** Kriz anında doğrudan disipline ve ilerlemeye odaklandınız. \n*Akademik Sebep/Olası Etki:* {profil_durumu} profiline sahip bir öğrencide bu yaklaşım, güvenliği zedeler, öğrencinin içe kapanmasına veya dersten tamamen kopmasına yol açar.")
-        pedagojik_oneriler.append("💡 **Öneri:** İlk müdahale olarak öğrencinin duygusunu kabul eden, saygılı ve güvenli bir pedagojik alan tanıyın.")
+        hatalar_ve_sebepleri.append(f"<span class='hata-metni'>Hata (Kriz Yönetimi):</span> Kriz anında doğrudan disipline ve ilerlemeye odaklandınız. <br><b>Akademik Sebep/Olası Etki:</b> {profil_durumu} profiline sahip bir öğrencide bu yaklaşım, güvenliği zedeler, öğrencinin içe kapanmasına veya dersten tamamen kopmasına yol açar.")
+        pedagojik_oneriler.append("<span class='oneri-metni'>Öneri:</span> İlk müdahale olarak öğrencinin duygusunu kabul eden, saygılı ve güvenli bir pedagojik alan (bekleme süresi veya sakin bir soru) tanıyın.")
     elif e1_tur == "bilissel" and (e2_tur == "ezber" or e2_tur == "kesif"):
         puan -= 15
         eylem_sirasi_puan -= 10
-        hatalar_ve_sebepleri.append(f"❌ **Hata (Pedagojik Sıralama):** Öğrencinin kriz anındaki psikolojik (duyuşsal) ihtiyacını atlayıp doğrudan akademik hedefe yöneldiniz. \n*Akademik Sebep/Olası Etki:* Duygusal olarak regüle olmamış (sakinleşmemiş) bir beyin yeni bilgiyi işlemleyemez.")
-        pedagojik_oneriler.append("💡 **Öneri:** Bilişsel adımlara geçmeden önce kısa da olsa öğrenciyle empatik bir bağ kurun.")
+        hatalar_ve_sebepleri.append(f"<span class='hata-metni'>Hata (Pedagojik Sıralama):</span> Öğrencinin kriz anındaki psikolojik (duyuşsal) ihtiyacını atlayıp doğrudan akademik hedefe yöneldiniz. <br><b>Akademik Sebep/Olası Etki:</b> Duygusal olarak regüle olmamış (sakinleşmemiş) bir beyin yeni bilgiyi işlemleyemez.")
+        pedagojik_oneriler.append("<span class='oneri-metni'>Öneri:</span> Bilişsel adımlara geçmeden önce kısa da olsa öğrenciyle empatik bir bağ kurun.")
     
     if e2_tur == "ezber":
         puan -= 20
         matematik_surec_puan -= 15
         ogrenci_merkezlilik_puan -= 10
-        hatalar_ve_sebepleri.append("❌ **Hata (TYMM Süreç Uyumu):** Öğrenci zorlandığında kavramı doğrudan verip ezberletme veya işlemi onun yerine çözme yolunu seçtiniz. \n*Akademik Sebep/Olası Etki:* 2024 TYMM beceri ve süreç odaklıdır. Sonuç odaklı ezber, kalıcı öğrenmeyi ve öğrencinin strateji üretmesini engeller.")
-        pedagojik_oneriler.append("💡 **Öneri:** Öğrenciye formülü dikte etmek yerine; yönlendirici sorularla, alt problemlere bölerek veya kavramı farklı bir temsile dönüştürerek kendi keşfini yapmasına alan bırakın.")
+        hatalar_ve_sebepleri.append("<span class='hata-metni'>Hata (TYMM Süreç Uyumu):</span> Öğrenci zorlandığında kavramı doğrudan verip ezberletme veya işlemi onun yerine çözme yolunu seçtiniz. <br><b>Akademik Sebep/Olası Etki:</b> 2024 TYMM beceri ve süreç odaklıdır. Sonuç odaklı ezber veya öğretmenin cevabı doğrudan vermesi, kalıcı öğrenmeyi ve öğrencinin strateji üretmesini engeller.")
+        pedagojik_oneriler.append("<span class='oneri-metni'>Öneri:</span> Öğrenciye formülü dikte etmek yerine; yönlendirici sorularla, alt problemlere bölerek veya kavramı farklı bir temsile dönüştürerek kendi keşfini yapmasına alan bırakın.")
 
     mat_raporu = ""
     oneri_mat = kazanim_obj.get("somut_materyal_onerisi", "Uygun somut manipülatifler.")
@@ -157,26 +150,26 @@ def kapsamli_ai_degerlendirmesi(eylem1, eylem2, materyal, mat_aciklama, sesli_gi
         if profil_durumu in ["Diskalkuli", "Az Gören", "Disleksi"]:
             puan -= 30
             materyal_temsil_puan -= 25
-            hatalar_ve_sebepleri.append(f"❌ **KRİTİK HATA (Kapsayıcılık ve Temsil):** {profil_durumu} profili için tamamen SÖZEL ve SOYUT bir anlatım seçerek materyal kullanmayı reddettiniz. \n*Akademik Sebep/Olası Etki:* Bu profiller zihinsel sembolleştirmeyi materyal olmadan tek başına yapamaz. Bu durum kesin bir erişim engeli (bilişsel çöküş) yaratır.")
+            hatalar_ve_sebepleri.append(f"<span class='hata-metni'>KRİTİK HATA (Kapsayıcılık ve Temsil):</span> {profil_durumu} profili için tamamen SÖZEL ve SOYUT bir anlatım seçerek materyal kullanmayı reddettiniz. <br><b>Akademik Sebep/Olası Etki:</b> Bu profiller zihinsel sembolleştirmeyi materyal olmadan tek başına yapamaz. Bu durum kesin bir erişim engeli (bilişsel çöküş) yaratır.")
         else:
             puan -= 20
             materyal_temsil_puan -= 15
-            hatalar_ve_sebepleri.append("❌ **Hata (Somutlaştırma Eksikliği):** Soyut matematiksel krizleri sadece konuşarak aşmayı denediniz. \n*Akademik Sebep/Olası Etki:* Ortaokul dönemi somuttan soyuta geçiş evresidir. Öğrencinin kavramı zihninde canlandırması (modellemesi) için tutunacağı fiziksel bir model sunulmamıştır.")
+            hatalar_ve_sebepleri.append("<span class='hata-metni'>Hata (Somutlaştırma Eksikliği):</span> Soyut matematiksel krizleri sadece konuşarak aşmayı denediniz. <br><b>Akademik Sebep/Olası Etki:</b> Ortaokul dönemi somuttan soyuta geçiş evresidir. Öğrencinin kavramı zihninde canlandırması (modellemesi) için tutunacağı fiziksel bir model sunulmamıştır.")
         
-        mat_raporu = f"Materyal kullanılmadığı için hedef dışı/erişilemez bir durum oluştu.\n\n**Hangi Materyal Nasıl Kullanılmalıydı?** \nBu kazanım ve {profil_durumu} profili için **{oneri_mat}** kullanılmalıydı. Materyal, kavramı görünür kılacak şekilde öğrencinin doğrudan manipüle edeceği (dokunacağı/etkileşime gireceği) biçimde derse entegre edilmelidir."
+        mat_raporu = f"Materyal kullanılmadığı için hedef dışı/erişilemez bir durum oluştu.<br><br>**Hangi Materyal Nasıl Kullanılmalıydı?** <br>Bu kazanım ve {profil_durumu} profili için **{oneri_mat}** kullanılmalıydı. Materyal, kavramı görünür kılacak şekilde öğrencinin doğrudan manipüle edeceği biçimde derse entegre edilmelidir."
     
     elif materyal == "Klasik Çalışma Kâğıdı / Yaprak Test / Formül Özeti":
         puan -= 20
         materyal_temsil_puan -= 15
-        hatalar_ve_sebepleri.append(f"❌ **Hata (Yanlış Temsil/Materyal Seçimi):** Seçtiğiniz '{materyal}', {profil_durumu} profili için kriz çözücü değildir. \n*Akademik Sebep/Olası Etki:* Klasik kağıtlar yalnızca sembolik ve soyut tekrardır; kavramın nasıl inşa edildiğini göstermez, bu nedenle anlamlı bir öğrenme kanıtı oluşturmaz.")
-        mat_raporu = f"Seçilen materyal, yapılandırmacı sürece (keşfe) katkı sağlamayan pasif bir araçtır.\n\n**Hangi Materyal Nasıl Kullanılmalıydı?** \nİki boyutlu testler yerine **{oneri_mat}** tercih edilmelidir. Bu araçlar, öğrencinin parçadan bütüne giderek kuralı kendi kendine keşfetmesini sağlayacak şekilde (örneğin örüntü arayarak) kullanılmalıdır."
+        hatalar_ve_sebepleri.append(f"<span class='hata-metni'>Hata (Yanlış Temsil/Materyal Seçimi):</span> Seçtiğiniz '{materyal}', {profil_durumu} profili için kriz çözücü değildir. <br><b>Akademik Sebep/Olası Etki:</b> Klasik kağıtlar yalnızca sembolik ve soyut tekrardır; kavramın nasıl inşa edildiğini göstermez, bu nedenle anlamlı bir öğrenme kanıtı oluşturmaz.")
+        mat_raporu = f"Seçilen materyal, yapılandırmacı sürece (keşfe) katkı sağlamayan pasif bir araçtır.<br><br>**Hangi Materyal Nasıl Kullanılmalıydı?** <br>İki boyutlu testler yerine **{oneri_mat}** tercih edilmelidir. Bu araçlar, öğrencinin parçadan bütüne giderek kuralı kendi kendine keşfetmesini sağlayacak şekilde kullanılmalıdır."
         
     else:
         if len(mat_aciklama.strip()) < 40:
             puan -= 10
             materyal_temsil_puan -= 5
-            hatalar_ve_sebepleri.append("❌ **Hata (Yüzeysel Temsil Planlaması):** Seçilen materyalin teorik uygunluğuna rağmen, sahada (derste) adım adım nasıl kullanılacağını yeterince detaylandırmadınız. \n*Akademik Sebep:* Öğretmen adayının materyali ne zaman ve hangi soruyla devreye sokacağı (öğrenme kanıtı alma süreci) belirsizdir.")
-            pedagojik_oneriler.append("💡 **Öneri:** Öğrencinin materyale nasıl dokunacağını, materyal üzerinden ona hangi açık uçlu soruyu soracağınızı adım adım açıklayın.")
+            hatalar_ve_sebepleri.append("<span class='hata-metni'>Hata (Yüzeysel Temsil Planlaması):</span> Seçilen materyalin teorik uygunluğuna rağmen, sahada (derste) adım adım nasıl kullanılacağını yeterince detaylandırmadınız. <br><b>Akademik Sebep:</b> Öğretmen adayının materyali ne zaman ve hangi soruyla devreye sokacağı belirsizdir.")
+            pedagojik_oneriler.append("<span class='oneri-metni'>Öneri:</span> Öğrencinin materyale nasıl dokunacağını, materyal üzerinden ona hangi açık uçlu soruyu soracağınızı adım adım açıklayın.")
             mat_raporu = f"Seçilen '{materyal}' kavramsal bağlantı için doğru bir araçtır ancak eylem planı yüzeysel geçilmiştir."
         else:
             mat_raporu = f"Seçilen '{materyal}', hem öğrencinin gereksinimine hem de TYMM yapısına uygundur. Uygulama planınız, öğrencinin kavramı görünür kılması açısından etkilidir."
@@ -185,7 +178,16 @@ def kapsamli_ai_degerlendirmesi(eylem1, eylem2, materyal, mat_aciklama, sesli_gi
         puan -= 5
         kriz_yonetimi_puan -= 5
         ogrenme_kaniti_puan -= 5
-        hatalar_ve_sebepleri.append("❌ **Hata (İletişim Eksikliği):** Öğrenciye doğrudan kurduğunuz sözlü iletişim metni çok yetersiz/yok. Öğrencinin duygusunu geçerli kılacak (validasyon) bir dil kullanılmamış.")
+        hatalar_ve_sebepleri.append("<span class='hata-metni'>Hata (İletişim Eksikliği):</span> Öğrenciye doğrudan kurduğunuz sözlü iletişim metni çok yetersiz/yok. Öğrencinin duygusunu geçerli kılacak (validasyon) bir dil kullanılmamış.")
+
+    gelisim_metni = ""
+    if onceki_rapor and onceki_rapor.strip():
+        if puan >= 85:
+            gelisim_metni = "🌟 **Gelişim İlerlemesi (Yansıtıcı Düşünme):** Önceki ders hedefleri incelendiğinde; bu derste eski hatalarınızdan arındığınız, 2024 TYMM felsefesine ve kapsayıcı eğitime uygun, bilinçli bir pedagojik refleks gösterdiğiniz tespit edilmiştir."
+        else:
+            gelisim_metni = "⚠️ **Gelişim Uyarısı (Yansıtıcı Düşünme):** Önceki ders raporunuzdaki hedef ve tespitlere rağmen; bu kriz simülasyonunda da süreç yönetiminde ve kriz-materyal eşleştirmesinde benzer stratejik zayıflıkların devam ettiği saptanmıştır."
+    else:
+        gelisim_metni = "ℹ️ **Gelişim Takibi:** Önceki staj/ders raporunuz yüklenmediği için geçmiş performansınıza kıyasla bir ilerleme (yansıtıcı düşünme) analizi yapılamamıştır."
 
     kriz_yonetimi_puan = max(0, kriz_yonetimi_puan)
     eylem_sirasi_puan = max(0, eylem_sirasi_puan)
@@ -194,7 +196,7 @@ def kapsamli_ai_degerlendirmesi(eylem1, eylem2, materyal, mat_aciklama, sesli_gi
     materyal_temsil_puan = max(0, materyal_temsil_puan)
     ogrenme_kaniti_puan = max(0, ogrenme_kaniti_puan)
     puan = max(0, puan)
-
+    
     alt_puanlar_dict = {
         "Kriz Yönetimi (20)": kriz_yonetimi_puan,
         "Eylem Sırası (15)": eylem_sirasi_puan,
@@ -208,6 +210,7 @@ def kapsamli_ai_degerlendirmesi(eylem1, eylem2, materyal, mat_aciklama, sesli_gi
     rapor_metni = f"**📊 Değerlendirme Sonucu: {puan} / 100**\n\n"
     if hoca_rubrik:
         rapor_metni += "### 📋 Öğretim Elemanı Rubrik Uyumu\n*(Sisteme yüklenen öğretim elemanı rubriği kriterleri dikkate alınarak analiz edilmiştir.)*\n\n"
+    rapor_metni += f"### 📈 Gelişim ve İlerleme Takibi\n- {gelisim_metni}\n\n"
     rapor_metni += "### ⚠️ Tespit Edilen Eksiklikler, Hatalar ve Akademik Sebepleri\n"
     if hatalar_ve_sebepleri:
         for h in hatalar_ve_sebepleri: rapor_metni += f"- {h}\n\n"
@@ -219,9 +222,13 @@ def kapsamli_ai_degerlendirmesi(eylem1, eylem2, materyal, mat_aciklama, sesli_gi
         for o in pedagojik_oneriler: rapor_metni += f"- {o}\n\n"
     else:
         rapor_metni += "- 2024 TYMM'nin beceri temelli yapısına, öğrenci merkezliliğe ve kapsayıcılık ilkelerine eksiksiz biçimde uydunuz.\n\n"
+    rapor_metni += f"*(Puan Dağılımı: Kriz Yön.: {kriz_yonetimi_puan}/20 | Eylem Sırası: {eylem_sirasi_puan}/15 | Süreç Uyumu: {matematik_surec_puan}/20 | Öğr. Merkezlilik: {ogrenci_merkezlilik_puan}/15 | Materyal/Temsil: {materyal_temsil_puan}/25 | Öğr. Kanıtı: {ogrenme_kaniti_puan}/5)*"
 
     return puan, rapor_metni, alt_puanlar_dict
 
+# ==========================================
+# 4. HER KAZANIMA, SÜRECE VE PROFİLE ÖZEL "DİNAMİK" KRİZ VE TEPKİ MOTORU
+# ==========================================
 def profil_ve_kazanima_ozel_kriz_uret(durum, kazanim_cikti, surec_kisa):
     if durum == "Disleksi": return f"'{surec_kisa}' sürecinde ekrandaki/tahtadaki sembollerin ve rakamların sırasını karıştırıp okuyamadığı için işleme başlayamaz."
     elif durum == "Otizm Spektrumu": return f"'{surec_kisa}' adımında soyut bir açıklama yapıldığı ve adımlar belirli olmadığı için ne yapacağını bilemez, elleriyle kulaklarını kapatır."
@@ -237,7 +244,7 @@ def profil_ve_kazanima_ozel_kriz_uret(durum, kazanim_cikti, surec_kisa):
 
 def ai_profil_tepkisi_uret(ogrenci_adi, durum, kazanim_kod, surec, eylem_1, eylem_2, materyal_etiketi):
     surec_kisa = surec.split(")", 1)[1].strip() if ")" in surec else surec
-    e1_tur = "duyussal" if any(kw in eylem_1 for kw in ["kabul ederek", "neyi kaçırdığını", "esneklik sağlamak"]) else "diger"
+    e1_tur = "duyussal" if any(kw in eylem_1 for kw in ["kabul ederek", "neyi kaçırdığını", "esneklik sağlamak", "zaman tanımak"]) else "diger"
     e2_tur = "kesif" if any(kw in eylem_2 for kw in ["keşfetmesini", "örnekle açıklamasını", "temsile dönüştürmek", "genellemesini"]) else "ezber"
     d1 = (e1_tur == "duyussal")
     d2 = (e2_tur == "kesif")
@@ -282,7 +289,7 @@ def ai_profil_tepkisi_uret(ogrenci_adi, durum, kazanim_kod, surec, eylem_1, eyle
         if not (d1 and d2): return f"😕 **{ogrenci_adi} ({durum}):** Bana yine sadece kuralı ezberletip sınav için çözmemi istiyor, hiç umurumda değil."
         return f"💡 **{ogrenci_adi} ({durum}):** Kavramın günlük yaşam bağlamıyla sunulması ve {mat_isim} ilgimi çekti. Ne işe yaradığını gördüğüm için işlemi deneyeceğim."
     return f"💡 **{ogrenci_adi} ({durum}):** Öğretmenin yaklaşımıyla sakinleşir ve {mat_isim} desteği sayesinde işlemi kavramaya başlar."
-     # ==========================================
+    # ==========================================
 # 5. 2024 TYMM ORTAOKUL MATEMATİK TAM MÜFREDATI
 # ==========================================
 tyym_master_arsiv = {
@@ -290,7 +297,7 @@ tyym_master_arsiv = {
         "Temalar": ["1. Tema: Sayılar ve Nicelikler (1)", "1. Tema: Sayılar ve Nicelikler (2)", "2. Tema: İşlemlerle Cebirsel Düşünme", "3. Tema: Geometrik Şekiller", "4. Tema: Geometrik Nicelikler", "5. Tema: İstatistiksel Araştırma Süreci", "6. Tema: Veriden Olasılığa"],
         "Kazanimlar": {
             "1. Tema: Sayılar ve Nicelikler (1)": [
-                {"kod": "MAT.5.1.1", "cikti": "Altı basamaklı sayıları okuma ve yazmayı çok basamaklı sayılara genelleyebilme", "surec": ["a) Çok basamaklı sayılar hakkında bilgi toplar.", "b) Ortak özellikleri belirler.", "c) Farklılıkları belirler.", "ç) Örüntüler üzerinden önermelerde bulunur."], "hook": "Kütüphane arşiv kodlama sistemi veya astronomik uzaklıklar.", "somut_materyal_onerisi": "Çok tabanlı bloklar (MAB), basamak değer kartları, renkli pullar ve bölük tabloları."},
+                {"kod": "MAT.5.1.1", "cikti": "Altı basamaklı sayıları okuma ve yazmayı çok basamaklı sayılara genelleyebilme", "surec": ["a) Çok basamaklı sayılar hakkında bilgi toplar.", "b) Ortak özellikleri belirler.", "c) Farklılıkları belirler.", "ç) Örüntüler üzerinden önermelerde bulunur."], "hook": "Kütüphane arşiv kodlama sistemi.", "somut_materyal_onerisi": "Çok tabanlı bloklar (MAB), basamak değer kartları, renkli pullar ve bölük tabloları."},
                 {"kod": "MAT.5.1.2", "cikti": "Doğal sayılar ve işlemler içeren gerçek yaşam problemlerini çözebilme", "surec": ["a) Sayı ve işlem bileşenlerini belirler.", "b) İşlemler arasındaki ilişkiyi belirler.", "c) Uygun temsillere dönüştürür.", "ç) Kendi ifadeleri ile açıklar.", "d) Stratejiler geliştirir.", "e) Çözüm için uygular.", "f) Stratejiyi değiştirir.", "g) Kısa yolları değerlendirir.", "ğ) Farklı problemlere geneller.", "h) Örneklerle değerlendir."], "hook": "Okul gezisi bütçesi hesaplamaları.", "somut_materyal_onerisi": "Gerçek paralar, şemalar, kavram haritaları."}
             ],
             "1. Tema: Sayılar ve Nicelikler (2)": [
@@ -360,7 +367,7 @@ tyym_master_arsiv = {
                 {"kod": "MAT.6.4.3", "cikti": "Geometrik şekillerin alanları ile modellenen gerçek yaşam durumlarına yönelik problem çözebilme", "surec": ["a) Bileşenleri belirler.", "b) İlişkiyi belirler.", "c) Dönüştürür.", "ç) Açıklar.", "d) Stratejiler geliştirir.", "e) Uygular.", "f) Kontrol eder.", "g) Değerlendirir.", "ğ) Geneller.", "h) Değerlendirir."], "hook": "Farklı şekillerden oluşan bir tarlanın toplam alanını bulma.", "somut_materyal_onerisi": "Tangram veya farklı geometrik şekillerden oluşan yapbozlar."},
                 {"kod": "MAT.6.4.4", "cikti": "Çemberin uzunluğu ile çap uzunluğu arasındaki ilişkiye yönelik çıkarım yapabilme", "surec": ["a) Varsayımlarda bulunur.", "b) Listeler.", "c) Karşılaştırır.", "ç) Önermeler sunar.", "d) Değerlendirmeler yapar."], "hook": "Bisiklet tekerleğinin çevresi ile çapı arasındaki oran (Pi).", "somut_materyal_onerisi": "Farklı boylarda dairesel cisimler, ip, esnek mezura."},
                 {"kod": "MAT.6.4.5", "cikti": "Çap veya yarıçap uzunluğu verilen bir çemberin uzunluğu ile ilgili problemleri çözebilme", "surec": ["a) Bileşenleri belirler.", "b) İlişkiyi belirler.", "c) Dönüştürür.", "ç) Açıklar.", "d) Stratejiler geliştirir.", "e) Uygular.", "f) Kontrol eder.", "g) Değerlendirir.", "ğ) Geneller.", "h) Değerlendirir."], "hook": "Dönme dolap veya saat yelkovanının çizdiği yol.", "somut_materyal_onerisi": "Telden çember modelleri."},
-                {"kod": "MAT.6.4.6", "cikti": "Çemberde merkez açının ölçüsü ile gördüğü yayın uzunluğu arasındaki ilişkiye dair tümevarımsal akıl yürütebilme", "surec": ["a) Gözlem yapar.", "b) Örüntü bulur.", "c) Genelleme yapar."], "hook": "Pizza veya yaş pasta dilimlerinin yay uzunluğu.", "somut_materyal_onerisi": "GeoGebra dinamik yay aracı, dairesel kesir takımları."}
+                {"kod": "MAT.6.4.6", "cikti": "Çemberde merkez açının ölçüsü ile gördüğü yayın uzunluğu arasındaki ilişkiye dair tümevarımsal akıl yürütebilme", "surec": ["a) Gözlem yapar.", "b) Örünt bulur.", "c) Genelleme yapar."], "hook": "Pizza veya yaş pasta dilimlerinin yay uzunluğu.", "somut_materyal_onerisi": "GeoGebra dinamik yay aracı, dairesel kesir takımları."}
             ],
             "5. Tema: İstatistiksel Araştırma Süreci": [
                 {"kod": "MAT.6.5.1", "cikti": "Kategorik veya nicel (kesikli) veri ile çalışabilme ve veriye dayalı karar verebilme", "surec": ["a) Fark eder.", "b) Araştırma soruları oluşturur.", "c) Plan yapar.", "ç) Veri toplar.", "d) Gerekçelerini belirtir.", "e) Analiz eder.", "f) Gerekçeler sunar.", "g) Yeniden planlar."], "hook": "Okul başkanlığı seçimi anket sonuçları.", "somut_materyal_onerisi": "Fiziksel anket formları, grafik çizim kağıtları."},
@@ -482,6 +489,7 @@ tyym_master_arsiv = {
         }
     }
 }
+
 # ==========================================
 # 6. UI AKIŞI (KURULUM, TELAFI MODU, 3D SINIF, DASHBOARD VE ÇIKIŞ BİLETİ)
 # ==========================================
@@ -540,13 +548,11 @@ elif st.session_state.adim == 2:
 
     if telafi_modu:
         if st.session_state.telafi_senaryosu is None:
-            # AI Rastgele Zorlu Senaryo Üretir
             r_sinif = random.choice(list(tyym_master_arsiv.keys()))
             r_tema = random.choice(tyym_master_arsiv[r_sinif]["Temalar"])
             r_kazanim_list = tyym_master_arsiv[r_sinif]["Kazanimlar"][r_tema]
             r_kazanim_obj = random.choice(r_kazanim_list)
             r_surec = random.choice(r_kazanim_obj["surec"])
-            # Özel gereksinimli zorlu profillerden rastgele 2 tanesini seçer
             zorlu_profiller = ["Kerem", "Arda", "Elif", "Zeynep", "Ayşe", "Ali", "Mehmet"]
             r_ogrenciler = random.sample(zorlu_profiller, 2)
             
@@ -562,7 +568,7 @@ elif st.session_state.adim == 2:
         secili_liste = st.session_state.telafi_senaryosu["secili_ogrenciler"]
 
         st.info("🤖 **Yapay Zeka Telafi Modu devrede.** Bu modda kazanımı ve kriz yaşayacak öğrencileri sistem sizin için seçti. Lütfen doğrudan müdahale konsoluna geçiniz.")
-        st.success(f"**Atanan Kazanım:** {secilen_kazanim_obj['kod']} - {secilen_kazanim_obj['cikti']}\n\n**Süreç Bileşeni:** {secilen_surec}\n\n**Bağlam:** {secilen_kazanim_obj['hook']}")
+        st.success(f"**Atanan Kazanım:** {secilen_kazanim_obj['kod']} - {secilen_kazanim_obj['cikti']}\n\n**Süreç Bileşeni:** {secilen_surec}\n\n**Bağlam:** {secilen_kazanim_obj.get('hook', '')}")
 
     else:
         st.session_state.telafi_senaryosu = None
@@ -579,7 +585,7 @@ elif st.session_state.adim == 2:
             secilen_kazanim_obj = next(k for k in kazanim_listesi if f"{k['kod']}: {k['cikti']}" == secilen_kazanim_str)
             secilen_surec = st.selectbox("Süreç Bileşeni (Aşama) *", ["Seçiniz..."] + secilen_kazanim_obj["surec"])
             if secilen_surec == "Seçiniz...": st.stop()
-            st.success(f"💡 **Bağlam:** {secilen_kazanim_obj['hook']}")
+            st.success(f"💡 **Bağlam:** {secilen_kazanim_obj.get('hook', '')}")
 
         st.markdown('<div class="sade-kart"><div class="baslik-mavi">👥 Öğrenci Seçimi (Manuel) *</div>', unsafe_allow_html=True)
         ogrenci_adlari = list(ogrenci_profilleri.keys())
@@ -603,12 +609,12 @@ elif st.session_state.adim == 2:
     for idx, ogr_ad in enumerate(secili_liste):
         bilgi = ogrenci_profilleri[ogr_ad]
         dinamik_kriz = profil_ve_kazanima_ozel_kriz_uret(bilgi['durum'], secilen_kazanim_obj["cikti"], secilen_surec)
-        davranis = ai_profil_davranisi_uret(ogr_ad, secilen_sinif, secilen_tema, secilen_kazanim_obj["kod"], secilen_kazanim_obj["cikti"], secilen_surec, dinamik_kriz)
+        baslangic_durumu = f"😟 **{ogr_ad} ({bilgi['durum']}):** `{secilen_kazanim_obj['kod']}` {dinamik_kriz}"
         with kart_cols[idx % len(kart_cols)]:
             with st.container(border=True):
                 st.markdown(f"**{ogr_ad} ({bilgi['durum']})**")
                 st.caption(f"Mimik: {bilgi['mimik']}")
-                st.write(davranis)
+                st.write(baslangic_durumu)
 
     dinamik_eylem_1_list, dinamik_eylem_2_list = dinamik_eylem_secenekleri_uret(secilen_tema, secilen_kazanim_obj["kod"], secilen_surec, dinamik_kriz)
 
@@ -666,8 +672,7 @@ elif st.session_state.adim == 3:
     
     son_kayit = st.session_state.simulasyon_gecmisi[-1]
     
-    # 1. SEKME: ÖĞRENCİ TEPKİLERİ VE ADAYIN SEÇİMLERİ (TRANSKRİPT)
-    st.markdown("### 1. Seçimlerinize Göre Öğrenci Tepkileri ve Krizin Son Durumu")
+    st.markdown("### 1. Şıklarınıza Göre Öğrenci Tepkileri ve Krizin Son Durumu")
     kart_cols = st.columns(min(len(son_kayit["secili_ogrenciler"]), 3))
     idx = 0
     for ogr, tepki in son_kayit["ai_tepkileri"].items():
@@ -678,7 +683,6 @@ elif st.session_state.adim == 3:
 
     st.divider()
 
-    # 2. SEKME: YAPAY ZEKA DEĞERLENDİRME RAPORU VE GELİŞİM GRAFİĞİ
     tab_rapor, tab_gelisim, tab_hoca = st.tabs(["🤖 Yapay Zeka Analiz Raporu", "📈 Beceri Bazlı Gelişim Grafiği (Dashboard)", "👨‍🏫 Öğretim Elemanı Kararı"])
     
     with tab_rapor:
@@ -722,16 +726,14 @@ elif st.session_state.adim == 3:
                 
     st.divider()
 
-    # ÇIKIŞ BİLETİ (ZORUNLU YANSITMA)
     st.markdown('<div class="sade-kart"><div class="baslik-mavi">🎫 Bilişsel Çıkış Bileti (Zorunlu Yansıtma)</div>', unsafe_allow_html=True)
-    st.warning("⚠️ Ezber/deneme-yanılma (Trial-and-Error) yöntemini önlemek amacıyla doğrudan yeni simülasyona geçemezsiniz. Lütfen yukarıdaki raporda tespit edilen hatalarınızdan ne öğrendiğinizi kısaca ifade ediniz.")
+    st.warning("⚠️ Ezber/deneme-yanılma yöntemini önlemek amacıyla doğrudan yeni simülasyona geçemezsiniz. Lütfen yukarıdaki raporda tespit edilen hatalarınızdan ne öğrendiğinizi kısaca ifade ediniz.")
     
     cikis_bileti = st.text_area("Bu kriz senaryosundaki hatalarımdan şunu öğrendim ve bir sonraki derste şunu farklı yapacağım:", height=80)
     if st.button("🔄 Yansıtmayı Kaydet ve Yeni Simülasyon Başlat"):
         if not cikis_bileti.strip() or len(cikis_bileti.strip()) < 15:
             st.error("❌ Lütfen hatalarınızdan ne öğrendiğinizi anlamlı bir şekilde (en az 15 karakter) ifade ediniz.")
         else:
-            # Sadece eski raporu bu çıkış bileti ile güncelleyip 1. Adıma dönüyoruz.
             st.session_state.onceki_rapor = cikis_bileti.strip()
             st.session_state.secili_ogrenciler = []
             st.session_state.otur_seed = random.randint(1, 1000)
