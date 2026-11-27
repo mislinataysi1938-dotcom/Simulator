@@ -34,14 +34,13 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Oturum Durumu Yönetimi (Anti-Ezber ve Kademeli Kilitleme)
 if "simulasyon_gecmisi" not in st.session_state: st.session_state.simulasyon_gecmisi = []
 if "adim" not in st.session_state: st.session_state.adim = 1
 if "secili_ogrenciler" not in st.session_state: st.session_state.secili_ogrenciler = []
 if "otur_seed" not in st.session_state: st.session_state.otur_seed = random.randint(1, 1000)
 
 # ==========================================
-# 1. 10 ÖĞRENCİ PROFİLİ (KAPSAYICI EĞİTİM)
+# 1. 10 ÖĞRENCİ PROFİLİ
 # ==========================================
 ogrenci_profilleri = {
     "Kerem": {"durum": "Disleksi", "ikon": "👦", "mimik": "Basamaklara odaklanıyor", "ozellik": "Rakamları, basamakları ve sembolleri ters algılayabilir; görsel-dokunsal gruplamaya ihtiyaç duyar."},
@@ -70,10 +69,9 @@ MATERYAL_SECENEKLER = [
 ]
 
 # ==========================================
-# 2. DİNAMİK YAPAY ZEKA ŞIK ÜRETİCİSİ (BAĞLAMA ÖZEL)
+# 2. DİNAMİK YAPAY ZEKA ŞIK ÜRETİCİSİ
 # ==========================================
 def dinamik_eylem_secenekleri_uret(tema, kazanim_kod, surec, kriz):
-    """Kazanım, süreç bileşeni ve kriz bağlamına göre her oturumda benzersiz şıklar üretir."""
     tema_kisa = tema.split(":", 1)[1].strip() if ":" in tema else tema
     surec_kisa = surec.split(")", 1)[1].strip() if ")" in surec else surec
     kriz_kisa = (kriz[:60] + '...') if len(kriz) > 60 else kriz
@@ -100,14 +98,12 @@ def dinamik_eylem_secenekleri_uret(tema, kazanim_kod, surec, kriz):
     return e1_secenekler, e2_secenekler
 
 # ==========================================
-# 3. RUBRİK TABANLI ANLIK YAZILIMSAL DEĞERLENDİRME & AI DAVRANIŞ MOTORU
+# 3. RUBRİK TABANLI ANLIK YAZILIMSAL DEĞERLENDİRME
 # ==========================================
 def eylem_uygunlugu_degerlendir(eylem_1, eylem_2, ogr_durum):
-    # Dinamik şıklar içindeki anahtar kelimeleri arayarak pedagojik işlevi tespit eder
     d1 = any(kw in eylem_1 for kw in ["zorlanmayı kabul ederek", "neyi kaçırdığını", "bireysel toparlanma", "kendi hızında"])
     d2 = any(kw in eylem_2 for kw in ["keşfetmesini sağlamak", "kendi ifadesiyle", "yeniden denetmek", "genelleme aramak"])
     
-    # Profile özel istisnai esneklikler
     if ogr_durum == "Otizm Spektrumu" and "kendi hızında" in eylem_1: d1 = True
     if ogr_durum == "Üstün Yetenekli" and ("keşfetmesini sağlamak" in eylem_2 or "genelleme aramak" in eylem_2): d2 = True
     if ogr_durum == "Düşük Motivasyon" and "kendi ifadesiyle" in eylem_2: d2 = True
@@ -153,7 +149,8 @@ def ai_profil_davranisi_uret(ogrenci_adi, sinif, tema, kazanim_kod, kazanim_cikt
         return f"*{ogrenci_adi} ({durum}):* Öğretmenin \"{soz_ozet}...\" sözüne rağmen, '{surec_kisa}' basamağında seçilen yaklaşım profiline tam uymadığı için '{materyal_etiketi}' ile ilerlemekte güçlük çeker."
 
     return f"*{ogrenci_adi} ({durum}):* Öğretmenin \"{soz_ozet}...\" yaklaşımıyla sakinleşir ve '{materyal_etiketi}' desteği sayesinde `{kazanim_kod}` ilişkisini kendi kendine keşfetmeye başlar."
-    # ==========================================
+
+# ==========================================
 # 4. 2024 TYMM ORTAOKUL MATEMATİK TAM MÜFREDAT ARŞİVİ
 # ==========================================
 tyym_master_arsiv = {
@@ -226,7 +223,7 @@ tyym_master_arsiv = {
                 {"kod": "MAT.6.5.1", "cikti": "Veriyle araştırma yapıp merkezî eğilim ve yayılımı yorumlayabilme", "surec": ["a) Araştırma sorusu/planı oluşturur.", "b) Ortalama, ortanca, tepe değer ve açıklığı yorumlar."], "hook": "Sınıfın boy veya sınav puan dağılımlarının incelenmesi.", "kriz": "Açıklığı (ranj) bulurken en küçük değer yerine sıfırı temel alır."}
             ],
             "6. Tema: Veriden Olasılığa": [
-                {"kod": "MAT.6.6.1", "cikti": "Bir olayın olasılığını deneysel gözleme dayalı tahmin edebilme", "surec": ["a) Deney çıktılarını kaydeder.", "b) Deneme sayısı arttıkça göreli sıklığın kararlılığını yorumlar."], "hook": "Madeni paranın 10 kez ve 100 kez atılması sonuçları.", "kriz": "Kısa denemede (ör. 3 kez tura) olasılığın değiştiğini (daha çok tura geleceğini) sanır."}
+                {"kod": "MAT.6.6.1", "cikti": "Bir olayın olasılığını deneysel gözleme dayalı tahmin edebilme", "surec": ["a) Deney çıktılarını kaydeder.", "b) Deneme sayısı arttıkça göreli sıklığın kararlılığını yorumlar."], "hook": "Madeni paranın 10 kez ve 100 kez atılması sonuçları.", "kriz": "Kısa denemede (ör. 3 kez tura) olasılığın değiştiğini sanır."}
             ]
         }
     },
@@ -307,29 +304,26 @@ tyym_master_arsiv = {
     }
 }
 # ==========================================
-# 5. ADIM 1: KURULUM VE RUBRİK YÜKLEME
+# 5. ADIM 1: KURULUM VE RUBRİK PANELİ
 # ==========================================
 if st.session_state.adim == 1:
     st.markdown('<span class="rozet">ADIM 1 / 3</span>', unsafe_allow_html=True)
     st.subheader("📝 2024 TYMM Kurulum ve Rubrik Yükleme Paneli")
-    st.info("Aday bilgileri ve danışman öğretim elemanının rubriği doldurulmadan 2. adıma geçilemez.")
-
+    
     col1, col2 = st.columns(2, gap="large")
     with col1:
-        st.markdown('<div class="sade-kart">', unsafe_allow_html=True)
-        st.markdown('<div class="baslik-mavi">Aday ve Danışman Bilgileri</div>', unsafe_allow_html=True)
+        st.markdown('<div class="sade-kart"><div class="baslik-mavi">Aday ve Danışman Bilgileri</div>', unsafe_allow_html=True)
         ogretmen_adi = st.text_input("Öğretmen Adayı *", placeholder="Örn: Mislina Taysi")
         okul_numarasi = st.text_input("Okul Numarası *", placeholder="Örn: 20220000000")
-        universite_adi = st.text_input("Üniversite Adı *", value="Eğitim Fakültesi")
-        uygulama_ogretim_elemani = st.text_input("Danışman Öğretim Elemanı *")
+        universite_adi = st.text_input("Üniversite Adı *", value="KSÜ Eğitim Fakültesi")
+        uygulama_ogretim_elemani = st.text_input("Uygulama Öğretim Elemanı *")
         st.markdown('</div>', unsafe_allow_html=True)
 
     with col2:
-        st.markdown('<div class="sade-kart">', unsafe_allow_html=True)
-        st.markdown('<div class="baslik-mavi">Değerlendirme Rubriği</div>', unsafe_allow_html=True)
+        st.markdown('<div class="sade-kart"><div class="baslik-mavi">Değerlendirme Rubriği</div>', unsafe_allow_html=True)
         rubrik_metni = st.text_area(
             "Rubrik Kriterleri (AI Değerlendirmesine Esas Olacaktır) *",
-            value="1. Öğrenci profillerine duyarlı kapsayıcı iletişim (30 Puan).\n2. 2024 TYMM keşif odaklı süreç uyumu (30 Puan).\n3. Profile ve kazanıma uygun materyal seçimi/kullanımı (40 Puan).",
+            value="1. Öğrenci profillerine duyarlı kapsayıcı iletişim.\n2. 2024 TYMM keşif odaklı süreç uyumu.\n3. Profile ve kazanıma uygun materyal seçimi/kullanımı.",
             height=130,
         )
         st.markdown('</div>', unsafe_allow_html=True)
@@ -347,11 +341,11 @@ if st.session_state.adim == 1:
             st.rerun()
 
 # ==========================================
-# 6. ADIM 2: 3D SINIF, ONAY KUTULU ÖĞRENCİ SEÇİMİ VE DİNAMİK MÜDAHALE
+# 6. ADIM 2: 3D SINIF, ÖĞRENCİ SEÇİMİ VE DİNAMİK MÜDAHALE
 # ==========================================
 elif st.session_state.adim == 2:
     st.markdown('<span class="rozet">ADIM 2 / 3</span>', unsafe_allow_html=True)
-    st.markdown(f"### 🏫 3D Canlı Sınıf | Aday: {st.session_state.ogretmen_adi}")
+    st.markdown(f"### 🏫 3D Canlı Sınıf | Aday: {st.session_state.ogretmen_adi} - {st.session_state.universite_adi}")
 
     with st.expander("📚 2024 TYMM Müfredat Seçimi", expanded=True):
         col_s1, col_s2, col_s3 = st.columns(3)
@@ -368,8 +362,7 @@ elif st.session_state.adim == 2:
         if secilen_surec == "Seçiniz...": st.stop()
         st.success(f"💡 **Bağlam:** {secilen_kazanim_obj['hook']}")
 
-    st.markdown('<div class="sade-kart">', unsafe_allow_html=True)
-    st.markdown('<div class="baslik-mavi">👥 Öğrenci Seçimi (1-10 Arası Onay Kutuları) *</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sade-kart"><div class="baslik-mavi">👥 Öğrenci Seçimi (1-10 Arası Onay Kutuları) *</div>', unsafe_allow_html=True)
     ogrenci_adlari = list(ogrenci_profilleri.keys())
     secili_liste = []
     cb_cols = st.columns(5)
@@ -401,16 +394,14 @@ elif st.session_state.adim == 2:
 
     col_sol, col_sag = st.columns([1.2, 0.8], gap="large")
     with col_sol:
-        st.markdown('<div class="sade-kart">', unsafe_allow_html=True)
-        st.markdown('<div class="baslik-mavi">🎙️ Pedagojik Müdahale Konsolu</div>', unsafe_allow_html=True)
+        st.markdown('<div class="sade-kart"><div class="baslik-mavi">🎙️ Pedagojik Müdahale Konsolu</div>', unsafe_allow_html=True)
         sesli_girdi = st.text_area("✍️ Öğrencilere Söyleyecekleriniz *", placeholder="Hitabınızı yazın...", height=85)
         
-        # Dinamik şıkları kullanıyoruz
         eylem_1 = st.selectbox("1. Pedagojik Eylem (AI Dinamik Seçenekleri) *", dinamik_eylem_1_list)
         eylem_2 = st.selectbox("2. Pedagojik Eylem (AI Dinamik Seçenekleri) *", dinamik_eylem_2_list)
         materyal = st.selectbox("Materyal Seçimi *", MATERYAL_SECENEKLER)
         
-        ozgun_tanitim = ""
+        ozgun_tanitim, ozgun_ad = "", ""
         if materyal == "Kendi Geliştirdiğim / Tasarladığım Materyal":
             ozgun_ad = st.text_input("Özgün Materyal Adı *")
             ozgun_tanitim = st.text_area("Materyali Tanıtın *")
@@ -420,7 +411,8 @@ elif st.session_state.adim == 2:
             
         mat_aciklama = st.text_area("Nasıl Kullanacaksınız? *", height=85)
 
-        if st.button("📥 Müdahaleyi Kaydet ve AI Değerlendirmesini Gör", type="primary", use_container_width=True):
+        # "Kaydet" butonu sadece transkripte işleyip 3. Adıma geçmek için kullanılır.
+        if st.button("📥 Ders Transkriptine İşle ve 3. Adıma Geç", type="primary", use_container_width=True):
             eksik_ozgun = materyal == "Kendi Geliştirdiğim / Tasarladığım Materyal" and (not ozgun_ad.strip() or not ozgun_tanitim.strip())
             if not sesli_girdi.strip() or eylem_1 == "Seçiniz..." or eylem_2 == "Seçiniz..." or materyal == "Seçiniz..." or not mat_aciklama.strip() or eksik_ozgun:
                 st.error("❌ Tüm zorunlu alanları doldurunuz.")
@@ -429,10 +421,10 @@ elif st.session_state.adim == 2:
                 for ogr_ad in secili_liste:
                     ai_tepkileri[ogr_ad] = ai_profil_davranisi_uret(ogr_ad, secilen_sinif, secilen_tema, secilen_kazanim_obj["kod"], secilen_kazanim_obj["cikti"], secilen_surec, secilen_kazanim_obj["kriz"], sesli_girdi, eylem_1, eylem_2, materyal_etiketi, mat_aciklama)
                 
-                # Rubrik AI Değerlendirmesi
                 durumlar = [ogrenci_profilleri[o]["durum"] for o in secili_liste]
                 d1, d2 = eylem_uygunlugu_degerlendir(eylem_1, eylem_2, durumlar[0])
                 ai_puan, ai_mesaj = ai_rubrik_degerlendirmesi(eylem_1, eylem_2, materyal_etiketi, d1, d2, durumlar)
+
                 st.session_state.simulasyon_gecmisi.append({
                     "tarih": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     "sinif": secilen_sinif, "tema": secilen_tema, "kod": secilen_kazanim_obj["kod"], "cikti": secilen_kazanim_obj["cikti"],
@@ -443,36 +435,51 @@ elif st.session_state.adim == 2:
                 st.session_state.adim = 3
                 st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
+        
     with col_sag:
-        st.info("Müdahaleyi kaydettikten sonra; sistem rubriği analiz edip anlık değerlendirme ve öğrenci tepkileriyle birlikte sizi 3. Adıma aktaracaktır.")
+        st.markdown('<div class="sade-kart"><div class="baslik-mavi">💡 Canlı Rubrik Analizi ve Anlık Dönütler</div>', unsafe_allow_html=True)
+        
+        # CANLI/ANLIK DEĞERLENDİRME MANTIĞI: Kullanıcı şıkları seçtikçe burası otomatik güncellenir.
+        if eylem_1 != "Seçiniz..." and eylem_2 != "Seçiniz..." and materyal != "Seçiniz...":
+            durumlar = [ogrenci_profilleri[o]["durum"] for o in secili_liste]
+            d1, d2 = eylem_uygunlugu_degerlendir(eylem_1, eylem_2, durumlar[0])
+            
+            gecici_etiket = f"{ozgun_ad.strip()} (Özgün Materyal)" if materyal == "Kendi Geliştirdiğim / Tasarladığım Materyal" else materyal
+            ai_puan, ai_mesaj = ai_rubrik_degerlendirmesi(eylem_1, eylem_2, gecici_etiket, d1, d2, durumlar)
+            
+            st.markdown(f"<div class='anlik-bildirim'>{ai_mesaj}<br><b>📊 Anlık Sistem Puanınız:</b> {ai_puan} / 100</div>", unsafe_allow_html=True)
+            st.markdown("#### 🤖 Şıklara Göre Anlık Öğrenci Tepkileri:")
+            for ogr_ad in secili_liste:
+                gecici_soz = sesli_girdi.strip() if sesli_girdi.strip() else "İletişim kuruluyor..."
+                tepki = ai_profil_davranisi_uret(ogr_ad, secilen_sinif, secilen_tema, secilen_kazanim_obj["kod"], secilen_kazanim_obj["cikti"], secilen_surec, secilen_kazanim_obj["kriz"], gecici_soz, eylem_1, eylem_2, gecici_etiket, mat_aciklama)
+                st.write(tepki)
+        else:
+            st.info("👈 Sol taraftan 1. Eylemi, 2. Eylemi ve Materyali seçtiğiniz anda yapay zeka, müdahalenizi canlı olarak puanlayacak ve öğrenci tepkilerini burada gösterecektir.")
+        st.markdown('</div>', unsafe_allow_html=True)
 
 # ==========================================
-# 7. ADIM 3: ANLIK AI DEĞERLENDİRMESİ VE DERS TRANSKRİPTİ
+# 7. ADIM 3: DERS TRANSKRİPTİ VE HOCA DÖNÜTÜ
 # ==========================================
 elif st.session_state.adim == 3:
     st.markdown('<span class="rozet">ADIM 3 / 3</span>', unsafe_allow_html=True)
-    st.subheader("📊 Anlık Rubrik Geri Dönütü ve Transkript")
+    st.subheader("📊 2024 TYMM Detaylı Ders Transkripti ve Öğretim Elemanı Kararı")
     
     son_kayit = st.session_state.simulasyon_gecmisi[-1]
-    
-    # ANLIK AI GERİ BİLDİRİMİ EKRANDA
-    st.markdown(f"<div class='anlik-bildirim'>{son_kayit['ai_mesaj']}<br><b>Sistem Puanı:</b> {son_kayit['ai_puan']} / 100</div>", unsafe_allow_html=True)
-    
     tab_trans, tab_hoca = st.tabs(["📝 Detaylı Ders Transkripti & Öğrenci Tepkileri", "👨‍🏫 Öğretim Elemanı Kararı"])
     
     with tab_trans:
-        st.markdown("#### Öğretmen Adayının Dersteki Eylemleri ve Öğrenci Yanıtları")
-        for ogr, tepki in son_kayit["ai_tepkileri"].items():
-            st.write(f"- {tepki}")
-            
-        st.divider()
+        st.success(f"Simülasyon Tamamlandı. Sistem Puanınız: {son_kayit['ai_puan']} / 100")
         ozg_metin = f"\n- **Özgün Materyal:** {son_kayit['ozgun_tanitim']}" if son_kayit["ozgun_tanitim"] else ""
+        
+        # Transkript metni
+        ogrenci_satirlari = "\n".join([f"  - {t}" for ogr, t in son_kayit["ai_tepkileri"].items()])
         transkript = (
             f"**Tarih:** {son_kayit['tarih']} | **Aday:** {st.session_state.ogretmen_adi}\n"
             f"**Kazanım:** {son_kayit['kod']} ({son_kayit['surec']})\n\n"
             f"**1. Eylem (AI Dinamik Seçimi):** {son_kayit['eylem_1']}\n**2. Eylem (AI Dinamik Seçimi):** {son_kayit['eylem_2']}\n"
             f"**Materyal:** {son_kayit['materyal_etiketi']}{ozg_metin}\n"
-            f"**Kullanım:** {son_kayit['mat_aciklama']}\n**Adayın İletişimi:** {son_kayit['sesli_girdi']}\n"
+            f"**Kullanım:** {son_kayit['mat_aciklama']}\n**Adayın İletişimi:** {son_kayit['sesli_girdi']}\n\n"
+            f"**Öğrenci Tepkileri:**\n{ogrenci_satirlari}"
         )
         st.markdown(f"<div class='transkript-kutu'>{transkript}</div>", unsafe_allow_html=True)
         
@@ -485,18 +492,16 @@ elif st.session_state.adim == 3:
 
     with tab_hoca:
         st.markdown("### Danışman Öğretim Elemanı Geri Dönütü")
-        hoca_notu = st.text_area("AI ön değerlendirmesini ve transkripti göz önünde bulundurarak adaya resmî geri dönütünüzü yazın *")
+        hoca_notu = st.text_area("AI değerlendirmesini ve transkripti göz önünde bulundurarak adaya resmî geri dönütünüzü yazın *")
         if st.button("📤 Geri Dönütü Kaydet", type="primary"):
-            if hoca_notu.strip():
-                st.success("✅ Öğretim elemanı geri dönütü kaydedildi.")
-            else:
-                st.error("❌ Geri dönüt alanı boş bırakılamaz.")
+            if hoca_notu.strip(): st.success("✅ Öğretim elemanı geri dönütü kaydedildi.")
+            else: st.error("❌ Geri dönüt alanı boş bırakılamaz.")
                 
     st.divider()
     st.warning("⚠️ Ezber oluşmasını önlemek amacıyla aynı senaryoya dönülemez. Lütfen yeni bir simülasyon başlatınız.")
     if st.button("🔄 Yeni Bir Simülasyon Başlat (Sıfırla)"):
         st.session_state.simulasyon_gecmisi = []
         st.session_state.secili_ogrenciler = []
-        st.session_state.otur_seed = random.randint(1, 1000) # Yeni varyasyon tohumu
+        st.session_state.otur_seed = random.randint(1, 1000) # Ezberi kırmak için seed güncellemesi
         st.session_state.adim = 1
         st.rerun()
