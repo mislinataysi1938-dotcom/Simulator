@@ -432,8 +432,7 @@ elif st.session_state.adim == 2:
                 # Rubrik AI Değerlendirmesi
                 durumlar = [ogrenci_profilleri[o]["durum"] for o in secili_liste]
                 d1, d2 = eylem_uygunlugu_degerlendir(eylem_1, eylem_2, durumlar[0])
-                ai_puan, ai_mesaj = ai_rubrik_degerlendirmesi(eylem_1, eylem_2, materyal_etiketi, st.session_state.rubrik_metni, d1, d2, durumlar)
-
+                ai_puan, ai_mesaj = ai_rubrik_degerlendirmesi(eylem_1, eylem_2, materyal_etiketi, d1, d2, durumlar)
                 st.session_state.simulasyon_gecmisi.append({
                     "tarih": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     "sinif": secilen_sinif, "tema": secilen_tema, "kod": secilen_kazanim_obj["kod"], "cikti": secilen_kazanim_obj["cikti"],
