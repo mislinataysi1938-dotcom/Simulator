@@ -28,7 +28,7 @@ st.markdown("""
         padding: 20px; line-height: 1.7; font-size: 0.95rem;
     }
     .anlik-bildirim {
-        background-color: #FFFBEB; border-left: 4px solid #F59E0B; padding: 15px; 
+        background-color: #F0FDF4; border-left: 4px solid #16A34A; padding: 15px; 
         margin-top: 10px; margin-bottom: 15px; border-radius: 4px;
     }
     </style>
@@ -39,32 +39,34 @@ if "adim" not in st.session_state: st.session_state.adim = 1
 if "secili_ogrenciler" not in st.session_state: st.session_state.secili_ogrenciler = []
 if "otur_seed" not in st.session_state: st.session_state.otur_seed = random.randint(1, 1000)
 
+UNIVERSITELER = [
+    "Seçiniz...", "Kahramanmaraş Sütçü İmam Üniversitesi", "Ankara Üniversitesi", "Gazi Üniversitesi", 
+    "Hacettepe Üniversitesi", "Marmara Üniversitesi", "Boğaziçi Üniversitesi", "Orta Doğu Teknik Üniversitesi (ODTÜ)", 
+    "Yıldız Teknik Üniversitesi", "Ege Üniversitesi", "Dokuz Eylül Üniversitesi", "Çukurova Üniversitesi", "Diğer"
+]
+
 # ==========================================
 # 1. 10 ÖĞRENCİ PROFİLİ
 # ==========================================
 ogrenci_profilleri = {
-    "Kerem": {"durum": "Disleksi", "ikon": "👦", "mimik": "Basamaklara odaklanıyor", "ozellik": "Rakamları, basamakları ve sembolleri ters algılayabilir; görsel-dokunsal gruplamaya ihtiyaç duyar."},
-    "Arda": {"durum": "Otizm Spektrumu", "ikon": "👦", "mimik": "Kulaklık takılı, sallanıyor", "ozellik": "Ani seslere ve belirsiz yönergelere hassastır; net, öngörülebilir adımlar ister."},
-    "Can": {"durum": "Üstün Yetenekli", "ikon": "👦", "mimik": "Sabırsızca parmak kaldırıyor", "ozellik": "Ezberden sıkılır; kavramın nedenini, genellemesini ve farklı durumlarını sorgular."},
-    "Elif": {"durum": "Yüksek Kaygılı", "ikon": "👧", "mimik": "Başını öne eğmiş, gergin", "ozellik": "Hata yapmaktan çekinir; baskı hissederse donup kalabilir, destekleyici dil ister."},
+    "Kerem": {"durum": "Disleksi", "ikon": "👦", "mimik": "Basamaklara odaklanıyor", "ozellik": "Rakamları ve sembolleri ters algılayabilir; görsel-dokunsal ayrıştırmaya ihtiyaç duyar."},
+    "Arda": {"durum": "Otizm Spektrumu", "ikon": "👦", "mimik": "Kulaklık takılı, sallanıyor", "ozellik": "Ani seslere hassastır; net, öngörülebilir adımlar ister."},
+    "Can": {"durum": "Üstün Yetenekli", "ikon": "👦", "mimik": "Sabırsızca parmak kaldırıyor", "ozellik": "Ezberden sıkılır; genellemeyi ve farklı durumları sorgular."},
+    "Elif": {"durum": "Yüksek Kaygılı", "ikon": "👧", "mimik": "Başını öne eğmiş, gergin", "ozellik": "Hata yapmaktan çekinir; baskı hissederse donup kalır, destekleyici dil ister."},
     "Zeynep": {"durum": "DEHB", "ikon": "👧", "mimik": "Sürekli etrafa bakınıyor", "ozellik": "Dikkati çabuk dağılır; kısa, odaklanmış ve aktif katılımlı adımlarda kalır."},
-    "Mehmet": {"durum": "İşitme Yetersizliği", "ikon": "👦", "mimik": "Konuşanın yüzüne odaklanmış", "ozellik": "Görsel ipuçlarına, açık yüz ifadesine ve yazılı/görsel pekiştireçlere ihtiyaç duyar."},
-    "Ayşe": {"durum": "Az Gören", "ikon": "👧", "mimik": "Gözlerini kısarak inceliyor", "ozellik": "Küçük görsellerde zorlanır; net kontrastlı, dokunsal ve açık sözel betimleme bekler."},
-    "Ali": {"durum": "Diskalkuli", "ikon": "👦", "mimik": "Parmaklarıyla saymaya çalışıyor", "ozellik": "Sayıların büyüklük ilişkisini zihinde kurmakta zorlanır; somut model ister."},
-    "Merve": {"durum": "Bedensel Yetersizlik", "ikon": "👧", "mimik": "Elleri sırasında, izliyor", "ozellik": "Bilişsel sorunu yoktur ancak yoğun yazma/çizim gerektiren adımlarda erişilebilir destek ister."},
-    "Burak": {"durum": "Düşük Motivasyon", "ikon": "👦", "mimik": "Kolları bağlı, ilgisiz", "ozellik": "Soyut kurallara mesafelidir; gerçek yaşamla anlamlı bağ kurulduğunda katılım gösterir."}
+    "Mehmet": {"durum": "İşitme Yetersizliği", "ikon": "👦", "mimik": "Konuşanın yüzüne odaklanmış", "ozellik": "Görsel ipuçlarına, yazılı/görsel pekiştireçlere ihtiyaç duyar."},
+    "Ayşe": {"durum": "Az Gören", "ikon": "👧", "mimik": "Gözlerini kısarak inceliyor", "ozellik": "Küçük görsellerde zorlanır; net kontrastlı, dokunsal betimleme bekler."},
+    "Ali": {"durum": "Diskalkuli", "ikon": "👦", "mimik": "Parmaklarıyla saymaya çalışıyor", "ozellik": "Sayıların büyüklük ilişkisini kurmakta zorlanır; somut model ister."},
+    "Merve": {"durum": "Bedensel Yetersizlik", "ikon": "👧", "mimik": "Elleri sırasında, izliyor", "ozellik": "Fiziksel işlem yükü olan adımlarda erişilebilir destek ister."},
+    "Burak": {"durum": "Düşük Motivasyon", "ikon": "👦", "mimik": "Kolları bağlı, ilgisiz", "ozellik": "Gerçek yaşamla anlamlı bağ kurulmadığında katılım göstermez."}
 }
 
 MATERYAL_SECENEKLER = [
-    "Seçiniz...", 
-    "Kendi Geliştirdiğim / Tasarladığım Materyal",
+    "Seçiniz...", "Kendi Geliştirdiğim / Tasarladığım Materyal",
     "Somut Materyal (Onluk Taban Blokları, Kesir Takımı, Birim Küpler vb.)",
-    "Dinamik Matematik Yazılımı (GeoGebra / Desmos)", 
-    "Yüksek Kontrastlı Görsel & Dokunsal Kartlar",
-    "Günlük Yaşam Nesneleri ve Ölçüm Araçları", 
-    "Geometrik Şekil / Açınım ve Simetri Modelleri",
-    "Koordinat / Grafik / Tablo Çalışma Panosu", 
-    "Olasılık ve Veri Deneyi Araçları (Zar, Çark, Anket)",
+    "Dinamik Matematik Yazılımı (GeoGebra / Desmos)", "Yüksek Kontrastlı Görsel & Dokunsal Kartlar",
+    "Günlük Yaşam Nesneleri ve Ölçüm Araçları", "Geometrik Şekil / Açınım ve Simetri Modelleri",
+    "Koordinat / Grafik / Tablo Çalışma Panosu", "Olasılık ve Veri Deneyi Araçları (Zar, Çark)",
     "Klasik Çalışma Kâğıdı / Formül ve Kural Özeti"
 ]
 
@@ -98,48 +100,100 @@ def dinamik_eylem_secenekleri_uret(tema, kazanim_kod, surec, kriz):
     return e1_secenekler, e2_secenekler
 
 # ==========================================
-# 3. RUBRİK TABANLI ANLIK YAZILIMSAL DEĞERLENDİRME
+# 3. KAPSAMLI YAPAY ZEKA DEĞERLENDİRME VE GELİŞİM MOTORU
 # ==========================================
-def eylem_uygunlugu_degerlendir(eylem_1, eylem_2, ogr_durum):
-    d1 = any(kw in eylem_1 for kw in ["zorlanmayı kabul ederek", "neyi kaçırdığını", "bireysel toparlanma", "kendi hızında"])
-    d2 = any(kw in eylem_2 for kw in ["keşfetmesini sağlamak", "kendi ifadesiyle", "yeniden denetmek", "genelleme aramak"])
-    
-    if ogr_durum == "Otizm Spektrumu" and "kendi hızında" in eylem_1: d1 = True
-    if ogr_durum == "Üstün Yetenekli" and ("keşfetmesini sağlamak" in eylem_2 or "genelleme aramak" in eylem_2): d2 = True
-    if ogr_durum == "Düşük Motivasyon" and "kendi ifadesiyle" in eylem_2: d2 = True
-    
-    return d1, d2
+def kapsamli_ai_degerlendirmesi(eylem1, eylem2, materyal, mat_aciklama, sesli_girdi, ogr_durumlar, onceki_rapor):
+    e1_tur = "duyussal" if any(kw in eylem1 for kw in ["zorlanmayı kabul", "neyi kaçırdığını", "bireysel toparlanma", "kendi hızında"]) else "bilissel"
+    if any(kw in eylem1 for kw in ["disiplinli", "doğrudan ilerlemek"]): e1_tur = "disiplin"
 
-def ai_rubrik_degerlendirmesi(eylem1, eylem2, materyal, d1, d2, ogr_durumlar):
-    puan = 100
-    mesaj = f"**🤖 ANLIK SİSTEM DEĞERLENDİRMESİ (2024 TYMM Rubrik Analizi):**\n\n"
+    e2_tur = "kesif" if any(kw in eylem2 for kw in ["keşfetmesini", "kendi ifadesiyle", "yeniden denetmek", "genelleme aramak"]) else "ezber"
     
-    if not d1:
-        puan -= random.choice([25, 30, 20])
-        mesaj += f"❌ **İletişim ve Empati (30 Puan):** Seçtiğiniz 1. eylem, {ogr_durumlar[0]} profiline duyarlı iletişim beklentisini karşılamıyor. Otoriter/pasif kalmak yerine önce duyuşsal regülasyon (güven) sağlanmalıdır.\n\n"
-    else:
-        mesaj += f"✅ **İletişim ve Empati (30 Puan):** 1. adımda seçtiğiniz duyuşsal yaklaşım, kapsayıcı iletişim beklentisiyle uyumlu.\n\n"
-        
-    if not d2:
-        puan -= random.choice([25, 30, 20])
-        mesaj += f"❌ **2024 TYMM Süreç Uyumu (30 Puan):** Seçtiğiniz 2. adım, yapılandırmacı keşif ilkesiyle çelişiyor. Öğrenciye formülü doğrudan veren veya adımı atlayan yollar yerine materyal destekli keşif aranmalıdır.\n\n"
-    else:
-        mesaj += f"✅ **2024 TYMM Süreç Uyumu (30 Puan):** 2. adımdaki keşif odaklı eyleminiz Maarif Modeli'ne ve rubrik hedeflerine tam uygun.\n\n"
-        
+    puan = 100
+    hatalar = []
+    oneriler = []
+    mat_raporu = ""
+
+    # Eylem Sırası Değerlendirmesi
+    if e1_tur == "duyussal" and e2_tur == "kesif":
+        oneriler.append("Eylem sıranız isabetli: Önce öğrencinin kaygısını/zorluğunu duyuşsal olarak yönettiniz, ardından yapılandırmacı keşif sürecini başlattınız.")
+    elif e1_tur == "disiplin":
+        puan -= 20
+        hatalar.append("Kriz anında doğrudan sınıf kurallarına veya disipline odaklandınız. Bu durum özel gereksinimli öğrencilerde kaygı veya öfke patlamasını tetikler.")
+        oneriler.append("İlk müdahale olarak öğrencinin duygusunu kabul etmeli ve ona güvenli bir pedagojik alan sunmalısınız.")
+    elif e1_tur == "bilissel" and (e2_tur == "ezber" or e2_tur == "kesif"):
+        puan -= 15
+        hatalar.append("Öğrencinin kriz anındaki psikolojik ihtiyacını atlayarak doğrudan akademik hedefe yöneldiniz. Öğrenci sakinleşmeden sürece katılamaz.")
+        oneriler.append("Önce öğrenci ile duygusal bağı kurup (empati), sonra bilişsel adıma geçmelisiniz.")
+    
+    if e2_tur == "ezber":
+        puan -= 15
+        hatalar.append("İkinci eylemde doğrudan bilgi vermeye ve ezbere yöneldiniz. Bu, 2024 TYMM'nin beceri temelli yapısına aykırıdır.")
+        oneriler.append("Öğrenciye kuralı dikte etmek yerine, materyal destekli yönlendirici sorularla kendi çıkarımını yapmasına fırsat tanıyın.")
+
+    # Materyal Kullanımı
     if materyal == "Klasik Çalışma Kâğıdı / Formül ve Kural Özeti":
         puan -= 20
-        mesaj += f"⚠️ **Materyal Kriteri (40 Puan):** Klasik kural özeti, {ogr_durumlar[0]} gibi özel gereksinimli öğrencilerin krizlerini çözmekte yetersiz kalır."
+        hatalar.append(f"Seçtiğiniz '{materyal}', {ogr_durumlar[0]} profiline uygun değildir. Soyut ve tekdüze kalmaktadır.")
+        mat_raporu = "Klasik çalışma kâğıtları öğrencinin yapılandırmacı süreçte aktif rol almasını engeller."
+        oneriler.append("Görsel, dokunsal veya dinamik/somut materyalleri sürece dahil ederek konuyu somutlaştırmalısınız.")
     else:
-        mesaj += f"✅ **Materyal Kriteri (40 Puan):** Seçilen/Geliştirilen materyal, yapılandırmacı süreci desteklemek açısından isabetlidir."
-        
-    return puan, mesaj
+        if len(mat_aciklama.strip()) < 35:
+            puan -= 15
+            hatalar.append("Materyali nasıl kullanacağınızı yeterince detaylandırmadınız, uygulama planınız belirsiz.")
+            mat_raporu = f"Seçtiğiniz '{materyal}' teorik olarak doğru bir araç ancak uygulama basamakları yüzeysel kalmış."
+            oneriler.append("Materyali derse entegre ederken öğrencinin materyalle tam olarak ne yapacağını daha spesifik açıklamalısınız.")
+        else:
+            mat_raporu = f"Seçtiğiniz '{materyal}', öğrencinin somutlaştırma ihtiyacını başarıyla karşılıyor. Planınız uygulanabilir düzeyde."
 
-def ai_profil_davranisi_uret(ogrenci_adi, sinif, tema, kazanim_kod, kazanim_cikti, surec, temel_kriz, aday_sozu="", eylem_1="", eylem_2="", materyal_etiketi="", materyal_aciklama=""):
+    if len(sesli_girdi.strip()) < 20:
+        puan -= 5
+        hatalar.append("Öğrenciyle kurduğunuz sözlü iletişim çok kısa, empati veya yönlendirme içermiyor.")
+
+    # Gelişim Takibi
+    gelisim_metni = ""
+    if onceki_rapor and onceki_rapor.strip():
+        if puan >= 85:
+            gelisim_metni = "🌟 **Gelişim İlerlemesi:** Önceki ders raporunuzdaki yansıtma notları ve hedefler dikkate alınmış; bu derste tespit edilen eksikliklerin başarıyla aşıldığı ve 2024 TYMM'ye uyumlu kapsayıcı bir dil geliştirildiği görülmüştür."
+        else:
+            gelisim_metni = "⚠️ **Gelişim Uyarısı:** Önceki ders raporunuzda tespit edilen veya hedeflediğiniz gelişim alanlarına rağmen, kriz anı yönetiminde benzer pedagojik eksikliklerin tekrar ettiği görülmektedir. Öğretim elemanı dönütlerini yeniden incelemeniz önerilir."
+    else:
+        gelisim_metni = "ℹ️ **Gelişim Takibi:** Sisteme bir önceki dersin raporu yüklenmediği için geçmiş performansınızla karşılaştırmalı gelişim analizi yapılamamıştır."
+
+    # Rapor Metninin İnşası
+    rapor_metni = f"**📊 Sistem ve Rubrik Temelli Puanınız: {max(0, puan)} / 100**\n\n"
+    rapor_metni += "### 📈 Gelişim ve İlerleme Takibi\n"
+    rapor_metni += f"- {gelisim_metni}\n\n"
+    rapor_metni += "### ⚠️ Yapılan Hatalar ve Sebepleri\n"
+    if hatalar:
+        for h in hatalar: rapor_metni += f"- {h}\n"
+    else:
+        rapor_metni += "- Tebrikler, sürecin yönetiminde ve eylem sıranızda pedagojik bir hata bulunmamaktadır.\n"
+
+    rapor_metni += "\n### 🛠️ Materyal Kullanım Değerlendirmesi\n"
+    rapor_metni += f"- {mat_raporu}\n"
+
+    rapor_metni += "\n### 💡 Gelişim İçin Pedagojik Öneriler\n"
+    if oneriler:
+        for o in oneriler: rapor_metni += f"- {o}\n"
+    else:
+        rapor_metni += "- 2024 TYMM felsefesine ve kapsayıcı eğitim ilkelerine tam uyumlu ilerliyorsunuz.\n"
+
+    return puan, rapor_metni
+
+def ai_profil_davranisi_uret(ogrenci_adi, sinif, tema, kazanim_kod, kazanim_cikti, surec, temel_kriz, aday_sozu="", eylem_1="", eylem_2="", materyal_etiketi=""):
     profil = ogrenci_profilleri[ogrenci_adi]
     durum = profil["durum"]
     surec_kisa = surec.split(")", 1)[1].strip() if ")" in surec else surec
     mudahale_var = bool(aday_sozu.strip() or eylem_1 or materyal_etiketi)
-    d1, d2 = eylem_uygunlugu_degerlendir(eylem_1, eylem_2, durum)
+    
+    e1_tur = "duyussal" if any(kw in eylem_1 for kw in ["zorlanmayı kabul", "neyi kaçırdığını", "bireysel toparlanma", "kendi hızında"]) else "diger"
+    e2_tur = "kesif" if any(kw in eylem_2 for kw in ["keşfetmesini", "kendi ifadesiyle", "yeniden denetmek", "genelleme aramak"]) else "ezber"
+    d1 = (e1_tur == "duyussal")
+    d2 = (e2_tur == "kesif")
+
+    if durum == "Otizm Spektrumu" and "kendi hızında" in eylem_1: d1 = True
+    if durum == "Üstün Yetenekli" and ("keşfetmesini" in eylem_2 or "genelleme aramak" in eylem_2): d2 = True
+    if durum == "Düşük Motivasyon" and "kendi ifadesiyle" in eylem_2: d2 = True
 
     if not mudahale_var:
         return f"*{ogrenci_adi} ({durum}):* `{kazanim_kod}` ({surec_kisa}) adımında '{temel_kriz}' zorluğunu yaşar ve profiline ({profil['ozellik']}) uygun bir destek arar."
@@ -304,39 +358,48 @@ tyym_master_arsiv = {
     }
 }
 # ==========================================
-# 5. ADIM 1: KURULUM VE RUBRİK PANELİ
+# 5. ADIM 1: KURULUM, RUBRİK VE GELİŞİM TAKİBİ
 # ==========================================
 if st.session_state.adim == 1:
     st.markdown('<span class="rozet">ADIM 1 / 3</span>', unsafe_allow_html=True)
-    st.subheader("📝 2024 TYMM Kurulum ve Rubrik Yükleme Paneli")
+    st.subheader("📝 2024 TYMM Kurulum ve Gelişim Takibi Paneli")
     
     col1, col2 = st.columns(2, gap="large")
     with col1:
         st.markdown('<div class="sade-kart"><div class="baslik-mavi">Aday ve Danışman Bilgileri</div>', unsafe_allow_html=True)
         ogretmen_adi = st.text_input("Öğretmen Adayı *", placeholder="Örn: Mislina Taysi")
         okul_numarasi = st.text_input("Okul Numarası *", placeholder="Örn: 20220000000")
-        universite_adi = st.text_input("Üniversite Adı *", value="KSÜ Eğitim Fakültesi")
+        
+        # KSÜ önceden seçili olarak (index=1) gelir
+        universite_adi = st.selectbox("Üniversite Seçimi *", UNIVERSITELER, index=1)
         uygulama_ogretim_elemani = st.text_input("Uygulama Öğretim Elemanı *")
         st.markdown('</div>', unsafe_allow_html=True)
 
     with col2:
-        st.markdown('<div class="sade-kart"><div class="baslik-mavi">Değerlendirme Rubriği</div>', unsafe_allow_html=True)
+        st.markdown('<div class="sade-kart"><div class="baslik-mavi">Rubrik ve Gelişim Takibi</div>', unsafe_allow_html=True)
         rubrik_metni = st.text_area(
-            "Rubrik Kriterleri (AI Değerlendirmesine Esas Olacaktır) *",
-            value="1. Öğrenci profillerine duyarlı kapsayıcı iletişim.\n2. 2024 TYMM keşif odaklı süreç uyumu.\n3. Profile ve kazanıma uygun materyal seçimi/kullanımı.",
-            height=130,
+            "Değerlendirme Rubriği *",
+            value="1. Öğrenci profillerine duyarlı kapsayıcı iletişim (30 Puan).\n2. 2024 TYMM keşif odaklı süreç uyumu (30 Puan).\n3. Profile ve kazanıma uygun materyal seçimi ve kullanımı (40 Puan).",
+            height=90,
+        )
+        st.markdown('**Önceki Dersin Raporu (Gelişim Takibi İçin)**')
+        onceki_rapor = st.text_area(
+            "Önceki Dersteki Hata/Hedeflerinizi Buraya Yapıştırın",
+            placeholder="Örn: Bir önceki derste kriz anında öğrenciyi dinlemeden doğrudan kuralı vermiştim...",
+            height=70,
         )
         st.markdown('</div>', unsafe_allow_html=True)
 
     if st.button("🚀 3D Staj Simülasyonunu Başlat", type="primary", use_container_width=True):
-        if not all([ogretmen_adi.strip(), okul_numarasi.strip(), universite_adi.strip(), uygulama_ogretim_elemani.strip(), rubrik_metni.strip()]):
+        if not all([ogretmen_adi.strip(), okul_numarasi.strip(), uygulama_ogretim_elemani.strip(), rubrik_metni.strip()]) or universite_adi == "Seçiniz...":
             st.error("❌ Zorunlu (*) alanlar doldurulmadan ilerlenemez.")
         else:
             st.session_state.ogretmen_adi = ogretmen_adi.strip()
             st.session_state.okul_numarasi = okul_numarasi.strip()
-            st.session_state.universite_adi = universite_adi.strip()
+            st.session_state.universite_adi = universite_adi
             st.session_state.uygulama_ogretim_elemani = uygulama_ogretim_elemani.strip()
             st.session_state.rubrik_metni = rubrik_metni.strip()
+            st.session_state.onceki_rapor = onceki_rapor.strip() if onceki_rapor else ""
             st.session_state.adim = 2
             st.rerun()
 
@@ -389,7 +452,6 @@ elif st.session_state.adim == 2:
                 st.markdown(f"**{ogr_ad} ({bilgi['durum']})**")
                 st.write(davranis)
 
-    # Yapay Zekanın Bağlamsal Şık Üretimi
     dinamik_eylem_1_list, dinamik_eylem_2_list = dinamik_eylem_secenekleri_uret(secilen_tema, secilen_kazanim_obj["kod"], secilen_surec, secilen_kazanim_obj["kriz"])
 
     col_sol, col_sag = st.columns([1.2, 0.8], gap="large")
@@ -397,8 +459,8 @@ elif st.session_state.adim == 2:
         st.markdown('<div class="sade-kart"><div class="baslik-mavi">🎙️ Pedagojik Müdahale Konsolu</div>', unsafe_allow_html=True)
         sesli_girdi = st.text_area("✍️ Öğrencilere Söyleyecekleriniz *", placeholder="Hitabınızı yazın...", height=85)
         
-        eylem_1 = st.selectbox("1. Pedagojik Eylem (AI Dinamik Seçenekleri) *", dinamik_eylem_1_list)
-        eylem_2 = st.selectbox("2. Pedagojik Eylem (AI Dinamik Seçenekleri) *", dinamik_eylem_2_list)
+        eylem_1 = st.selectbox("1. Pedagojik Eylem (AI Dinamik Şıklar) *", dinamik_eylem_1_list)
+        eylem_2 = st.selectbox("2. Pedagojik Eylem (AI Dinamik Şıklar) *", dinamik_eylem_2_list)
         materyal = st.selectbox("Materyal Seçimi *", MATERYAL_SECENEKLER)
         
         ozgun_tanitim, ozgun_ad = "", ""
@@ -409,9 +471,8 @@ elif st.session_state.adim == 2:
         else:
             materyal_etiketi = materyal
             
-        mat_aciklama = st.text_area("Nasıl Kullanacaksınız? *", height=85)
+        mat_aciklama = st.text_area("Nasıl Kullanacaksınız? (Detaylı Açıklayın) *", height=85)
 
-        # "Kaydet" butonu sadece transkripte işleyip 3. Adıma geçmek için kullanılır.
         if st.button("📥 Ders Transkriptine İşle ve 3. Adıma Geç", type="primary", use_container_width=True):
             eksik_ozgun = materyal == "Kendi Geliştirdiğim / Tasarladığım Materyal" and (not ozgun_ad.strip() or not ozgun_tanitim.strip())
             if not sesli_girdi.strip() or eylem_1 == "Seçiniz..." or eylem_2 == "Seçiniz..." or materyal == "Seçiniz..." or not mat_aciklama.strip() or eksik_ozgun:
@@ -419,11 +480,10 @@ elif st.session_state.adim == 2:
             else:
                 ai_tepkileri = {}
                 for ogr_ad in secili_liste:
-                    ai_tepkileri[ogr_ad] = ai_profil_davranisi_uret(ogr_ad, secilen_sinif, secilen_tema, secilen_kazanim_obj["kod"], secilen_kazanim_obj["cikti"], secilen_surec, secilen_kazanim_obj["kriz"], sesli_girdi, eylem_1, eylem_2, materyal_etiketi, mat_aciklama)
+                    ai_tepkileri[ogr_ad] = ai_profil_davranisi_uret(ogr_ad, secilen_sinif, secilen_tema, secilen_kazanim_obj["kod"], secilen_kazanim_obj["cikti"], secilen_surec, secilen_kazanim_obj["kriz"], sesli_girdi, eylem_1, eylem_2, materyal_etiketi)
                 
                 durumlar = [ogrenci_profilleri[o]["durum"] for o in secili_liste]
-                d1, d2 = eylem_uygunlugu_degerlendir(eylem_1, eylem_2, durumlar[0])
-                ai_puan, ai_mesaj = ai_rubrik_degerlendirmesi(eylem_1, eylem_2, materyal_etiketi, d1, d2, durumlar)
+                ai_puan, ai_mesaj = kapsamli_ai_degerlendirmesi(eylem_1, eylem_2, materyal_etiketi, mat_aciklama, sesli_girdi, durumlar, st.session_state.onceki_rapor)
 
                 st.session_state.simulasyon_gecmisi.append({
                     "tarih": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -437,71 +497,68 @@ elif st.session_state.adim == 2:
         st.markdown('</div>', unsafe_allow_html=True)
         
     with col_sag:
-        st.markdown('<div class="sade-kart"><div class="baslik-mavi">💡 Canlı Rubrik Analizi ve Anlık Dönütler</div>', unsafe_allow_html=True)
-        
-        # CANLI/ANLIK DEĞERLENDİRME MANTIĞI: Kullanıcı şıkları seçtikçe burası otomatik güncellenir.
+        st.markdown('<div class="sade-kart"><div class="baslik-mavi">💡 Canlı Analiz ve Anlık Dönütler</div>', unsafe_allow_html=True)
         if eylem_1 != "Seçiniz..." and eylem_2 != "Seçiniz..." and materyal != "Seçiniz...":
             durumlar = [ogrenci_profilleri[o]["durum"] for o in secili_liste]
-            d1, d2 = eylem_uygunlugu_degerlendir(eylem_1, eylem_2, durumlar[0])
-            
             gecici_etiket = f"{ozgun_ad.strip()} (Özgün Materyal)" if materyal == "Kendi Geliştirdiğim / Tasarladığım Materyal" else materyal
-            ai_puan, ai_mesaj = ai_rubrik_degerlendirmesi(eylem_1, eylem_2, gecici_etiket, d1, d2, durumlar)
+            gecici_aciklama = mat_aciklama if mat_aciklama.strip() else "..."
             
-            st.markdown(f"<div class='anlik-bildirim'>{ai_mesaj}<br><b>📊 Anlık Sistem Puanınız:</b> {ai_puan} / 100</div>", unsafe_allow_html=True)
+            ai_puan, ai_mesaj = kapsamli_ai_degerlendirmesi(eylem_1, eylem_2, gecici_etiket, gecici_aciklama, sesli_girdi, durumlar, st.session_state.onceki_rapor)
+            
+            st.markdown(f"<div class='anlik-bildirim'>{ai_mesaj}</div>", unsafe_allow_html=True)
             st.markdown("#### 🤖 Şıklara Göre Anlık Öğrenci Tepkileri:")
             for ogr_ad in secili_liste:
                 gecici_soz = sesli_girdi.strip() if sesli_girdi.strip() else "İletişim kuruluyor..."
-                tepki = ai_profil_davranisi_uret(ogr_ad, secilen_sinif, secilen_tema, secilen_kazanim_obj["kod"], secilen_kazanim_obj["cikti"], secilen_surec, secilen_kazanim_obj["kriz"], gecici_soz, eylem_1, eylem_2, gecici_etiket, mat_aciklama)
+                tepki = ai_profil_davranisi_uret(ogr_ad, secilen_sinif, secilen_tema, secilen_kazanim_obj["kod"], secilen_kazanim_obj["cikti"], secilen_surec, secilen_kazanim_obj["kriz"], gecici_soz, eylem_1, eylem_2, gecici_etiket)
                 st.write(tepki)
         else:
-            st.info("👈 Sol taraftan 1. Eylemi, 2. Eylemi ve Materyali seçtiğiniz anda yapay zeka, müdahalenizi canlı olarak puanlayacak ve öğrenci tepkilerini burada gösterecektir.")
+            st.info("👈 Sol taraftan seçimlerinizi yaptığınız anda yapay zeka, müdahalenizi canlı olarak puanlayacak, gelişim durumunuzu, hatalarınızı/önerileri ve öğrenci tepkilerini burada detaylıca gösterecektir.")
         st.markdown('</div>', unsafe_allow_html=True)
 
 # ==========================================
-# 7. ADIM 3: DERS TRANSKRİPTİ VE HOCA DÖNÜTÜ
+# 7. ADIM 3: KAPSAMLI DERS TRANSKRİPTİ VE HOCA DÖNÜTÜ
 # ==========================================
 elif st.session_state.adim == 3:
     st.markdown('<span class="rozet">ADIM 3 / 3</span>', unsafe_allow_html=True)
     st.subheader("📊 2024 TYMM Detaylı Ders Transkripti ve Öğretim Elemanı Kararı")
     
     son_kayit = st.session_state.simulasyon_gecmisi[-1]
-    tab_trans, tab_hoca = st.tabs(["📝 Detaylı Ders Transkripti & Öğrenci Tepkileri", "👨‍🏫 Öğretim Elemanı Kararı"])
+    tab_trans, tab_hoca = st.tabs(["📝 Detaylı Ders Transkripti & Akademik Rapor", "👨‍🏫 Öğretim Elemanı Kararı"])
     
     with tab_trans:
-        st.success(f"Simülasyon Tamamlandı. Sistem Puanınız: {son_kayit['ai_puan']} / 100")
-        ozg_metin = f"\n- **Özgün Materyal:** {son_kayit['ozgun_tanitim']}" if son_kayit["ozgun_tanitim"] else ""
+        st.markdown(f"<div class='anlik-bildirim'>{son_kayit['ai_mesaj']}</div>", unsafe_allow_html=True)
+        ozg_metin = f"\n- **Özgün Materyal Tanıtımı:** {son_kayit['ozgun_tanitim']}" if son_kayit["ozgun_tanitim"] else ""
         
-        # Transkript metni
         ogrenci_satirlari = "\n".join([f"  - {t}" for ogr, t in son_kayit["ai_tepkileri"].items()])
         transkript = (
-            f"**Tarih:** {son_kayit['tarih']} | **Aday:** {st.session_state.ogretmen_adi}\n"
+            f"**Tarih:** {son_kayit['tarih']} | **Aday:** {st.session_state.ogretmen_adi} ({st.session_state.universite_adi})\n"
             f"**Kazanım:** {son_kayit['kod']} ({son_kayit['surec']})\n\n"
             f"**1. Eylem (AI Dinamik Seçimi):** {son_kayit['eylem_1']}\n**2. Eylem (AI Dinamik Seçimi):** {son_kayit['eylem_2']}\n"
             f"**Materyal:** {son_kayit['materyal_etiketi']}{ozg_metin}\n"
-            f"**Kullanım:** {son_kayit['mat_aciklama']}\n**Adayın İletişimi:** {son_kayit['sesli_girdi']}\n\n"
+            f"**Kullanım Açıklaması:** {son_kayit['mat_aciklama']}\n**Adayın İletişimi:** {son_kayit['sesli_girdi']}\n\n"
             f"**Öğrenci Tepkileri:**\n{ogrenci_satirlari}"
         )
         st.markdown(f"<div class='transkript-kutu'>{transkript}</div>", unsafe_allow_html=True)
         
         st.download_button(
-            label="⬇️ Yazılı Ders Transkriptini İndir (.txt)",
-            data=transkript.replace("**", "").replace("*", "").replace("`", ""),
-            file_name=f"2024_TYMM_Ders_Transkripti_{st.session_state.get('okul_numarasi', 'aday')}.txt",
+            label="⬇️ Yazılı Ders Transkripti ve AI Raporunu İndir (.txt)",
+            data=(son_kayit['ai_mesaj'] + "\n\n" + transkript).replace("**", "").replace("*", "").replace("`", ""),
+            file_name=f"2024_TYMM_Transkript_{st.session_state.get('okul_numarasi', 'aday')}.txt",
             mime="text/plain",
         )
 
     with tab_hoca:
         st.markdown("### Danışman Öğretim Elemanı Geri Dönütü")
-        hoca_notu = st.text_area("AI değerlendirmesini ve transkripti göz önünde bulundurarak adaya resmî geri dönütünüzü yazın *")
+        hoca_notu = st.text_area("AI detaylı değerlendirmesini ve transkripti göz önünde bulundurarak adaya resmî geri dönütünüzü yazın *")
         if st.button("📤 Geri Dönütü Kaydet", type="primary"):
-            if hoca_notu.strip(): st.success("✅ Öğretim elemanı geri dönütü kaydedildi.")
+            if hoca_notu.strip(): st.success("✅ Öğretim elemanı geri dönütü başarıyla sisteme kaydedildi.")
             else: st.error("❌ Geri dönüt alanı boş bırakılamaz.")
                 
     st.divider()
-    st.warning("⚠️ Ezber oluşmasını önlemek amacıyla aynı senaryoya dönülemez. Lütfen yeni bir simülasyon başlatınız.")
+    st.warning("⚠️ Ezber oluşmasını önlemek amacıyla aynı senaryoya dönülemez. Hatalarınızı ve gelişim raporunuzu inceledikten sonra yeni bir simülasyon başlatınız.")
     if st.button("🔄 Yeni Bir Simülasyon Başlat (Sıfırla)"):
         st.session_state.simulasyon_gecmisi = []
         st.session_state.secili_ogrenciler = []
-        st.session_state.otur_seed = random.randint(1, 1000) # Ezberi kırmak için seed güncellemesi
+        st.session_state.otur_seed = random.randint(1, 1000)
         st.session_state.adim = 1
         st.rerun()
